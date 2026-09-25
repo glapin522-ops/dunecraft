@@ -168,15 +168,21 @@ export function SkinCapeStudio({ user, dict, open, onClose, onUser }: Props) {
 
           <div className="flex flex-col items-center rounded-3xl border border-white/5 bg-[#12101c] p-4">
             <div className="flex h-64 w-full items-center justify-center sm:h-72">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={user.capeUrl || DEFAULT_CAPE_URL}
-                alt=""
-                width={320}
-                height={160}
-                className="h-40 w-80 max-w-full"
-                style={{ imageRendering: "pixelated" }}
-              />
+              <div className="relative h-56 w-[8.75rem] overflow-hidden">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={user.capeUrl || DEFAULT_CAPE_URL}
+                  alt=""
+                  className="absolute max-w-none"
+                  style={{
+                    imageRendering: "pixelated",
+                    width: 64 * 14,
+                    height: 32 * 14,
+                    left: -14,
+                    top: -14,
+                  }}
+                />
+              </div>
             </div>
             <input
               ref={capeInput}
