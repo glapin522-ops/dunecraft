@@ -78,18 +78,22 @@ export async function PATCH(request: Request, ctx: Ctx) {
     await saveUser(target);
     const sessionUser = toSessionUser(target);
 
-    await appendAdminLog({
-      actor: session!.username,
-      kind: "email_change_admin",
-      message: raw
-        ? `${session!.username} установил почту ${raw} игроку ${target.username}`
-        : `${session!.username} очистил почту игрока ${target.username}`,
-      meta: {
-        target: target.username,
-        email: raw || null,
-        cleared: !raw,
-      },
-    });
+    try {
+      await appendAdminLog({
+        actor: session!.username,
+        kind: "email_change_admin",
+        message: raw
+          ? `${session!.username} установил почту ${raw} игроку ${target.username}`
+          : `${session!.username} очистил почту игрока ${target.username}`,
+        meta: {
+          target: target.username,
+          email: raw || null,
+          cleared: !raw,
+        },
+      });
+    } catch (error) {
+      console.error("[admin/players/email] log failed", error);
+    }
 
     return NextResponse.json(
       {

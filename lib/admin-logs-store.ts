@@ -1,4 +1,4 @@
-import { isBlobConflict, readPublicJson, writePublicJson } from "./blob-json";
+import { readPublicJson, writePublicJson } from "./blob-json";
 import { promises as fs } from "fs";
 import path from "path";
 
@@ -100,11 +100,10 @@ export async function appendAdminLog(
         await writeLocal(trimmed);
         return entry;
       }
-      await writePublicJson(BLOB_PATHNAME, trimmed, etag);
+      await writePublicJson(BLOB_PATHNAME, trimmed, attempt === 0 ? etag : null);
       await writeLocal(trimmed).catch(() => undefined);
       return entry;
     } catch (err) {
-      if (isBlobConflict(err) && attempt < 5) continue;
       lastError = err;
       console.error(`[admin-logs] append attempt ${attempt + 1} failed`, err);
     }

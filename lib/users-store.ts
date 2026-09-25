@@ -1,4 +1,4 @@
-import { isBlobConflict, readPublicJson, writePublicJson } from "./blob-json";
+import { readPublicJson, writePublicJson } from "./blob-json";
 import { promises as fs } from "fs";
 import path from "path";
 import type { StoredUser } from "./auth/types";
@@ -31,20 +31,21 @@ async function readBlob(): Promise<StoredUser[]> {
 }
 
 async function mutateBlob(mut: (users: StoredUser[]) => StoredUser[]): Promise<void> {
-  for (let attempt = 0; attempt < 6; attempt++) {
+  let lastErr: unknown;
+  for (let attempt = 0; attempt < 4; attempt++) {
     const { data, etag } = await readPublicJson<StoredUser[]>(BLOB_PATHNAME);
     const base = Array.isArray(data) ? data : [];
     const next = mut(base);
     try {
-      await writePublicJson(BLOB_PATHNAME, next, etag);
+      await writePublicJson(BLOB_PATHNAME, next, attempt === 0 ? etag : null);
       await writeLocal(next).catch(() => undefined);
       return;
     } catch (err) {
-      if (isBlobConflict(err) && attempt < 5) continue;
-      console.error("[users-store] blob write failed", err);
-      throw err;
+      lastErr = err;
+      console.error(`[users-store] blob write attempt ${attempt + 1} failed`, err);
     }
   }
+  throw lastErr instanceof Error ? lastErr : new Error("users store write failed");
 }
 
 export async function listUsers(): Promise<StoredUser[]> {
