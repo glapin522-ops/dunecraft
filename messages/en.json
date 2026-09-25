@@ -40,12 +40,15 @@
     "donateTitle": "Support the project",
     "donateLead": "Stub packs. Purchases open when the server launches.",
     "ctaTitle": "Stay in touch",
-    "ctaLead": "Player cabinet is in the header. Discord and IP arrive closer to release.",
+    "ctaLead": "The cabinet is already in the header. VK, Telegram, and Discord open closer to release.",
     "ctaNews": "To news",
     "discordTitle": "DuneCraft Discord",
     "discordLead": "Server community — news, lore, and voice. The invite opens closer to launch.",
     "discordCta": "Open Discord",
     "launcherCta": "Download launcher",
+    "socialVk": "VK",
+    "socialTelegram": "Telegram",
+    "socialDiscord": "Discord",
     "ctaDonate": "To donate"
   },
   "news": {

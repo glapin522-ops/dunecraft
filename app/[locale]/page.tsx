@@ -6,6 +6,7 @@ import { DonateBg } from "@/components/DonateBg";
 import { StubBadge } from "@/components/StubBadge";
 import { Button } from "@/components/Button";
 import { DiscordInvite } from "@/components/DiscordInvite";
+import { StayInTouch } from "@/components/StayInTouch";
 import { FadeIn } from "@/components/motion/FadeIn";
 import { Stagger, StaggerItem } from "@/components/motion/Stagger";
 import { HeroMistLazy } from "@/components/HeroMistLazy";
@@ -283,20 +284,11 @@ export default async function HomePage({ params }: Props) {
               <p className="mx-auto mt-4 max-w-xl text-base text-muted sm:text-lg">
                 {dict.home.ctaLead}
               </p>
-              <div className="mt-8 flex w-full flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center sm:gap-4">
-                <Link
-                  href={`/${locale}/news`}
-                  className="glow-btn glass inline-flex w-full items-center justify-center rounded-xl border border-border px-8 py-4 text-base font-bold tracking-wide text-foreground hover:border-moss-light/40 sm:w-auto sm:text-lg"
-                >
-                  {dict.home.ctaNews}
-                </Link>
-                <Link
-                  href={`/${locale}/donate`}
-                  className="glow-btn glass inline-flex w-full items-center justify-center rounded-xl px-8 py-4 text-base font-bold tracking-wide hover:border-moss-light/40 sm:w-auto sm:text-lg"
-                >
-                  {dict.home.ctaDonate}
-                </Link>
-              </div>
+              <StayInTouch
+                vk={dict.home.socialVk}
+                telegram={dict.home.socialTelegram}
+                discord={dict.home.socialDiscord}
+              />
             </div>
           </div>
         </section>

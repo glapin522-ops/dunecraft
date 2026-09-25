@@ -40,12 +40,15 @@
     "donateTitle": "Поддержка проекта",
     "donateLead": "Пакеты-заглушки. Покупка откроется на запуске сервера.",
     "ctaTitle": "Будьте на связи",
-    "ctaLead": "Личный кабинет уже в шапке. Discord и IP появятся ближе к релизу.",
+    "ctaLead": "Кабинет уже в шапке. ВКонтакте, Telegram и Discord откроются ближе к релизу.",
     "ctaNews": "К новостям",
     "discordTitle": "Discord DuneCraft",
     "discordLead": "Сообщество сервера — новости, лор и голос. Ссылка откроется ближе к запуску.",
     "discordCta": "Открыть Discord",
     "launcherCta": "Скачать лаунчер",
+    "socialVk": "ВК",
+    "socialTelegram": "Telegram",
+    "socialDiscord": "Discord",
     "ctaDonate": "К донату"
   },
   "news": {

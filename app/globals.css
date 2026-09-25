@@ -246,6 +246,34 @@ h1 {
   color: var(--ember);
 }
 
+.social-plate {
+  display: grid;
+  width: 4.75rem;
+  height: 4.75rem;
+  place-items: center;
+  border-radius: 1.15rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+}
+
+.social-vk {
+  color: var(--accent-skin);
+  border-color: color-mix(in srgb, var(--accent-skin) 45%, var(--border));
+  box-shadow: var(--glow-skin-sm);
+}
+
+.social-tg {
+  color: color-mix(in srgb, var(--accent-skin) 62%, white);
+  border-color: color-mix(in srgb, var(--accent-skin) 28%, var(--border));
+  box-shadow: 0 0 22px color-mix(in srgb, var(--accent-skin) 28%, transparent);
+}
+
+.social-dc {
+  color: var(--gold);
+  border-color: color-mix(in srgb, var(--gold) 45%, var(--border));
+  box-shadow: var(--glow-gold-sm);
+}
+
 .glow-btn:active:not(:disabled) {
   transform: translateY(1px);
 }
