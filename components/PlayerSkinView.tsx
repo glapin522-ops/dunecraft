@@ -49,20 +49,38 @@ export function PlayerSkinView({
     viewer.autoRotate = autoRotate;
     viewer.autoRotateSpeed = 0.6;
     viewer.playerObject.rotation.y = yaw;
+    let capeTimer = 0;
     if (capeOnly) {
-      const player = viewer.playerObject;
-      const skin = player.skin;
-      skin.visible = false;
-      skin.head.visible = false;
-      skin.body.visible = false;
-      skin.rightArm.visible = false;
-      skin.leftArm.visible = false;
-      skin.rightLeg.visible = false;
-      skin.leftLeg.visible = false;
-      player.remove(skin);
-      player.rotation.y = Math.PI;
-      player.cape.position.set(0, 8, 0);
-      viewer.zoom = 2.4;
+      const applyCapeOnly = () => {
+        const player = viewer.playerObject;
+        const skin = player.skin;
+        skin.visible = false;
+        skin.scale.set(0, 0, 0);
+        skin.head.visible = false;
+        skin.body.visible = false;
+        skin.rightArm.visible = false;
+        skin.leftArm.visible = false;
+        skin.rightLeg.visible = false;
+        skin.leftLeg.visible = false;
+        if (skin.parent) player.remove(skin);
+        player.elytra.visible = false;
+        player.ears.visible = false;
+        player.cape.visible = true;
+        player.rotation.y = Math.PI;
+        player.cape.position.set(0, 8, 0);
+        viewer.zoom = 2.4;
+      };
+      applyCapeOnly();
+      const loadSkin = viewer.loadSkin.bind(viewer);
+      viewer.loadSkin = ((source: Parameters<SkinViewer["loadSkin"]>[0], options?: Parameters<SkinViewer["loadSkin"]>[1]) => {
+        if (source == null) return loadSkin(source);
+        const pending = loadSkin(source, { ...options, makeVisible: false });
+        void Promise.resolve(pending).then(applyCapeOnly);
+        return pending;
+      }) as SkinViewer["loadSkin"];
+      const timer = window.setInterval(applyCapeOnly, 100);
+      capeTimer = timer;
+      window.setTimeout(() => window.clearInterval(timer), 2000);
     }
     if (capeUrl) {
       void viewer.loadCape(capeUrl);
@@ -77,6 +95,7 @@ export function PlayerSkinView({
     ro.observe(wrap);
 
     return () => {
+      window.clearInterval(capeTimer);
       ro.disconnect();
       viewer.dispose();
       viewerRef.current = null;
