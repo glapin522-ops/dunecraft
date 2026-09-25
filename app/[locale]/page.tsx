@@ -50,8 +50,7 @@ export default async function HomePage({ params }: Props) {
               "linear-gradient(180deg, #0a0812cc 0%, #0a081233 28%, #0a081200 45%)",
               "linear-gradient(0deg, #0a0812f2 0%, #0a081299 22%, transparent 55%)",
               "radial-gradient(ellipse 90% 70% at 50% 40%, transparent 30%, #0a081288 100%)",
-              "radial-gradient(ellipse 42% 32% at 18% 78%, #e07a4a26, transparent 58%)",
-              "radial-gradient(ellipse 36% 30% at 82% 18%, #67b8ff1c, transparent 55%)",
+              "radial-gradient(ellipse 46% 40% at 12% 70%, #67b8ff14, transparent 62%)",
             ].join(", "),
           }}
         />
@@ -193,7 +192,7 @@ export default async function HomePage({ params }: Props) {
           style={{
             background: [
               "linear-gradient(180deg, #0a0812cc 0%, #0a081255 22%, #0a081233 50%, #0a081266 78%, #0a0812e6 100%)",
-              "radial-gradient(ellipse 75% 55% at 50% 40%, #c9a8ef28, transparent 60%)",
+              "radial-gradient(ellipse 42% 36% at 10% 60%, #67b8ff12, transparent 64%)",
               "radial-gradient(ellipse 95% 80% at 50% 55%, transparent 40%, #0a081299 100%)",
             ].join(", "),
           }}
@@ -201,7 +200,7 @@ export default async function HomePage({ params }: Props) {
         <div
           aria-hidden
           className="pointer-events-none absolute inset-0 opacity-50"
-          style={{ boxShadow: "inset 0 0 140px color-mix(in srgb, var(--gold) 22%, transparent)" }}
+          style={{ boxShadow: "inset 0 0 120px color-mix(in srgb, var(--accent-skin) 8%, transparent)" }}
         />
 
         <div className="relative mx-auto max-w-6xl px-4">

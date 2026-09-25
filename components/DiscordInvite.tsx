@@ -37,8 +37,7 @@ export function DiscordInvite({
           background: [
             "linear-gradient(90deg, #0a0812f2 0%, #0a0812cc 42%, #0a081266 70%, #0a081233 100%)",
             "linear-gradient(0deg, #0a0812e6 0%, transparent 45%)",
-            "radial-gradient(ellipse 50% 60% at 75% 40%, #c9a8ef22, transparent 55%)",
-            "radial-gradient(ellipse 40% 50% at 20% 70%, #5c3d7a33, transparent 50%)",
+            "radial-gradient(ellipse 42% 50% at 16% 70%, #67b8ff18, transparent 58%)",
           ].join(", "),
         }}
       />

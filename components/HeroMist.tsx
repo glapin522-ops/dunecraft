@@ -49,11 +49,11 @@ export function HeroMist({ particlesId = "dunecraft-hero-mist" }: HeroMistProps 
           density: { enable: true, width: 1400, height: 900 },
         },
         color: {
-          value: ["#e2d0ff", "#c9a8ef", "#9b7ec9", "#d4b8f5"],
+          value: ["#9a95a8", "#67b8ff", "#8aa4c4"],
         },
         shape: { type: "circle" },
         opacity: {
-          value: { min: 0.18, max: 0.55 },
+          value: { min: 0.12, max: 0.32 },
           animation: {
             enable: true,
             speed: 0.22,

@@ -30,8 +30,7 @@ export function PageAtmosphere({ children, particlesId }: PageAtmosphereProps) {
             "linear-gradient(180deg, #0a0812f2 0%, #0a0812cc 22%, #0a081280 52%, #0a0812e8 100%)",
             "linear-gradient(0deg, #0a0812f5 0%, #0a0812b8 28%, transparent 62%)",
             "radial-gradient(ellipse 90% 70% at 50% 38%, transparent 20%, #0a0812b8 100%)",
-            "radial-gradient(ellipse 50% 40% at 20% 28%, #5c3d7a44, transparent 58%)",
-            "radial-gradient(ellipse 40% 35% at 80% 24%, #c9a8ef2c, transparent 52%)",
+            "radial-gradient(ellipse 46% 40% at 14% 62%, #67b8ff16, transparent 62%)",
           ].join(", "),
         }}
       />

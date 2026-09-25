@@ -34,7 +34,7 @@ export default async function DonatePage({ params }: Props) {
         style={{
           background: [
             "linear-gradient(180deg, #0a0812cc 0%, #0a081255 20%, #0a081244 55%, #0a0812e8 100%)",
-            "radial-gradient(ellipse 75% 50% at 50% 30%, #c9a8ef22, transparent 60%)",
+            "radial-gradient(ellipse 42% 36% at 12% 55%, #67b8ff12, transparent 64%)",
             "radial-gradient(ellipse 95% 80% at 50% 60%, transparent 35%, #0a081299 100%)",
           ].join(", "),
         }}
