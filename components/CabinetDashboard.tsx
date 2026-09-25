@@ -8,6 +8,7 @@ import { SkinCapeStudio } from "./SkinCapeStudio";
 import type { Dictionary } from "@/lib/dictionaries";
 import type { Locale } from "@/lib/i18n";
 import type { SessionUser } from "@/lib/auth/types";
+import { DEFAULT_STEVE_DATA_URL } from "@/lib/default-skin";
 
 const PlayerSkinView = dynamic(
   () => import("./PlayerSkinView").then((m) => m.PlayerSkinView),
@@ -156,12 +157,21 @@ export function CabinetDashboard({
               <div className="relative flex h-24 w-24 items-center justify-center">
                 <div className="pointer-events-none absolute inset-[-20%] rounded-full bg-[conic-gradient(from_180deg,color-mix(in_srgb,var(--moss-light)_55%,transparent),color-mix(in_srgb,var(--gold)_50%,transparent),color-mix(in_srgb,var(--accent-skin)_45%,transparent),color-mix(in_srgb,var(--moss-light)_55%,transparent))] opacity-60 blur-md" aria-hidden />
                 <div className="relative flex h-20 w-20 items-center justify-center overflow-hidden rounded-full border border-[color-mix(in_srgb,var(--accent-skin)_45%,var(--border))] bg-surface shadow-[var(--glow-skin-sm)]">
-                  {viewUser.skinUrl ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img src={viewUser.skinUrl} alt="" className="h-12 w-12" style={{ imageRendering: "pixelated" }} />
-                  ) : (
-                    <div className="h-10 w-10 rounded-[2px] border border-gold/45 bg-surface-3" aria-hidden />
-                  )}
+                  <div className="relative h-16 w-16 overflow-hidden">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={viewUser.skinUrl || DEFAULT_STEVE_DATA_URL}
+                      alt=""
+                      className="absolute max-w-none"
+                      style={{
+                        imageRendering: "pixelated",
+                        width: 512,
+                        height: 512,
+                        left: -64,
+                        top: -64,
+                      }}
+                    />
+                  </div>
                 </div>
               </div>
               <button

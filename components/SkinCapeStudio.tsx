@@ -172,7 +172,9 @@ export function SkinCapeStudio({ user, dict, open, onClose, onUser }: Props) {
               <img
                 src={user.capeUrl || DEFAULT_CAPE_URL}
                 alt=""
-                className="max-h-40 w-auto max-w-[88%] object-contain"
+                width={320}
+                height={160}
+                className="h-40 w-80 max-w-full"
                 style={{ imageRendering: "pixelated" }}
               />
             </div>
