@@ -215,10 +215,94 @@ h1 {
 @keyframes donate-bob {
   0%,
   100% {
-    transform: translateY(0) rotate(-2deg);
+    transform: translateY(0);
   }
   50% {
-    transform: translateY(-7px) rotate(3deg);
+    transform: translateY(-6px);
+  }
+}
+
+.cut {
+  --cut: 9px;
+  border-radius: 0;
+  clip-path: polygon(
+    var(--cut) 0,
+    calc(100% - var(--cut)) 0,
+    100% var(--cut),
+    100% calc(100% - var(--cut)),
+    calc(100% - var(--cut)) 100%,
+    var(--cut) 100%,
+    0 calc(100% - var(--cut)),
+    0 var(--cut)
+  );
+}
+
+.cabinet-btn {
+  border: 1px solid color-mix(in srgb, var(--ember) 50%, var(--border));
+  background: color-mix(in srgb, var(--ember) 22%, var(--surface-2));
+  color: var(--foreground);
+}
+
+.cabinet-btn:hover {
+  background: color-mix(in srgb, var(--ember) 34%, var(--surface-2));
+}
+
+.cabinet-seal {
+  color: var(--ember);
+  flex-shrink: 0;
+}
+
+.cabinet-seal circle:first-of-type {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-dasharray: 22 78;
+  animation: seal-turn 2.8s linear infinite;
+}
+
+.cabinet-seal circle:last-of-type {
+  fill: currentColor;
+  stroke: none;
+}
+
+@keyframes seal-turn {
+  to {
+    stroke-dashoffset: -100;
+  }
+}
+
+.donate-rune {
+  display: block;
+  overflow: visible;
+  color: var(--ember);
+}
+
+.donate-rune path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.4;
+  stroke-linecap: square;
+  stroke-linejoin: miter;
+  stroke-dasharray: 100;
+  animation: rune-trace 3.2s ease-in-out infinite;
+}
+
+@keyframes rune-trace {
+  0% {
+    stroke-dashoffset: 100;
+    opacity: 0.35;
+  }
+  42% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  68% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  100% {
+    stroke-dashoffset: -100;
+    opacity: 0.35;
   }
 }
 
@@ -294,8 +378,17 @@ h1 {
     scroll-behavior: auto;
   }
 
-  .donate-bob {
+  .donate-bob,
+  .donate-rune path,
+  .cabinet-seal circle:first-of-type {
     animation: none;
+  }
+
+  .donate-rune path,
+  .cabinet-seal circle:first-of-type {
+    stroke-dasharray: none;
+    stroke-dashoffset: 0;
+    opacity: 1;
   }
 
   .glow-btn,

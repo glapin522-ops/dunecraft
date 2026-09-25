@@ -23,23 +23,30 @@ const navKeys = [
   "contacts",
 ] as const;
 
-function DonateCube({ size = 36 }: { size?: number }) {
+function DonateRune({ size = 40 }: { size?: number }) {
   return (
     <span className="donate-bob" aria-hidden>
       <svg
-        viewBox="0 0 64 72"
-        width={size}
-        height={Math.round(size * 1.12)}
-        className="donate-cube"
+        viewBox="0 0 36 72"
+        width={Math.round(size * 0.5)}
+        height={size}
+        className="donate-rune"
       >
-        <ellipse cx="32" cy="66" rx="14" ry="4.5" fill="#e07a4a" opacity="0.45" />
-        <polygon points="32,6 58,21 32,36 6,21" fill="#ffc14d" />
-        <polygon points="6,21 32,36 32,58 6,43" fill="#f08a3a" />
-        <polygon points="58,21 32,36 32,58 58,43" fill="#c85a22" />
-        <polygon points="32,12 48,21 32,30 16,21" fill="#ffe7b0" />
-        <polygon points="22,40 32,46 32,54 22,48" fill="#a84416" opacity="0.55" />
+        <path pathLength={100} d="M18 4 V68" />
+        <path pathLength={100} d="M18 26 L28 36 L18 46 L8 36 Z" />
+        <path pathLength={100} d="M9 16 L16 22" />
+        <path pathLength={100} d="M27 50 L20 56" />
       </svg>
     </span>
+  );
+}
+
+function CabinetSeal() {
+  return (
+    <svg viewBox="0 0 24 24" className="cabinet-seal" width="16" height="16" aria-hidden>
+      <circle cx="12" cy="12" r="8" pathLength={100} />
+      <circle cx="12" cy="12" r="2.2" />
+    </svg>
   );
 }
 function hrefFor(locale: Locale, key: (typeof navKeys)[number]) {
@@ -87,6 +94,7 @@ function UserCabinetPill({
       title={`${dict.nav.signedInAs} ${user.username}`}
       className={`glow-btn glow-ring-gold inline-flex max-w-[14rem] items-center gap-2 rounded-full border border-gold/45 bg-gold/15 py-1 pl-1 pr-2.5 text-sm font-bold tracking-wide text-gold-light shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] transition-colors hover:bg-gold/25 sm:max-w-[16rem] ${className}`}
     >
+      <CabinetSeal />
       <span
         className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-gold/40 bg-void text-xs font-bold text-gold-light"
         aria-hidden
@@ -162,11 +170,11 @@ export function Header({ locale, dict }: Props) {
                   key={key}
                   href={hrefFor(locale, key)}
                   aria-current={active ? "page" : undefined}
-                  className={`donate-link rounded-lg px-3 pb-2 text-sm font-bold tracking-wide ${
+                  className={`donate-link px-3 pb-2 text-sm font-bold tracking-wide ${
                     active ? "donate-link-active" : ""
                   }`}
                 >
-                  <DonateCube />
+                  <DonateRune />
                   {dict.nav[key]}
                 </Link>
               );
@@ -176,7 +184,7 @@ export function Header({ locale, dict }: Props) {
                 key={key}
                 href={hrefFor(locale, key)}
                 aria-current={active ? "page" : undefined}
-                className={`rounded-lg px-3 py-2 text-sm font-bold tracking-wide transition-colors ${
+                className={`cut px-3 py-2 text-sm font-bold tracking-wide transition-colors ${
                   active
                     ? "bg-moss/30 text-gold-light shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]"
                     : "text-ash-light hover:bg-surface-2/90 hover:text-foreground"
@@ -203,14 +211,15 @@ export function Header({ locale, dict }: Props) {
           ) : (
             <Link
               href={`/${locale}/cabinet`}
-              className="glow-btn glow-ring-gold hidden items-center justify-center rounded-lg border border-gold/50 bg-gold/20 px-3.5 py-2 text-sm font-bold tracking-wide text-gold-light shadow-[inset_0_1px_0_rgba(255,255,255,0.1)] transition-colors hover:bg-gold/30 sm:inline-flex"
+              className="cabinet-btn cut hidden items-center justify-center gap-2 px-3.5 py-2 text-sm font-bold tracking-wide sm:inline-flex"
             >
+              <CabinetSeal />
               {dict.nav.cabinet}
             </Link>
           )}
           <button
             type="button"
-            className="glow-btn inline-flex items-center justify-center rounded-lg border border-border bg-surface-2 p-2.5 text-ash-light hover:border-gold/35 hover:text-gold-light lg:hidden"
+            className="cut inline-flex items-center justify-center border border-border bg-surface-2 p-2.5 text-ash-light hover:border-gold/35 hover:text-gold-light lg:hidden"
             aria-expanded={open}
             aria-controls="mobile-nav"
             onClick={() => setOpen((v) => !v)}
@@ -241,7 +250,7 @@ export function Header({ locale, dict }: Props) {
                   <Link
                     href={hrefFor(locale, key)}
                     aria-current={active ? "page" : undefined}
-                    className={`flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-bold tracking-wide ${
+                    className={`cut flex items-center gap-2 px-3 py-2.5 text-sm font-bold tracking-wide ${
                       key === "donate"
                         ? "text-ember"
                         : active
@@ -250,7 +259,7 @@ export function Header({ locale, dict }: Props) {
                     }`}
                     onClick={() => setOpen(false)}
                   >
-                    {key === "donate" && <DonateCube size={28} />}
+                    {key === "donate" && <DonateRune size={28} />}
                     {dict.nav[key]}
                   </Link>
                 </li>
@@ -268,9 +277,10 @@ export function Header({ locale, dict }: Props) {
               ) : (
                 <Link
                   href={`/${locale}/cabinet`}
-                  className="glow-btn glow-ring-gold block rounded-lg border border-gold/50 bg-gold/20 px-3 py-2.5 text-center text-sm font-bold tracking-wide text-gold-light hover:bg-gold/30"
+                  className="cabinet-btn cut flex items-center justify-center gap-2 px-3 py-2.5 text-center text-sm font-bold tracking-wide"
                   onClick={() => setOpen(false)}
                 >
+                  <CabinetSeal />
                   {dict.nav.cabinet}
                 </Link>
               )}
