@@ -161,7 +161,7 @@ export function Header({ locale, dict }: Props) {
           </span>
         </Link>
 
-        <nav className="hidden items-end gap-1 lg:flex" aria-label="Main">
+        <nav className="hidden items-center gap-1 lg:flex" aria-label="Main">
           {navKeys.map((key) => {
             const active = isActive(pathname, locale, key);
             if (key === "donate") {
@@ -170,11 +170,11 @@ export function Header({ locale, dict }: Props) {
                   key={key}
                   href={hrefFor(locale, key)}
                   aria-current={active ? "page" : undefined}
-                  className={`donate-link px-3 pb-2 text-sm font-bold tracking-wide ${
-                    active ? "donate-link-active" : ""
+                  className={`donate-link rounded-lg px-3 py-2 text-sm font-bold tracking-wide ${
+                    active ? "donate-link-active bg-moss/30" : "hover:bg-surface-2/90"
                   }`}
                 >
-                  <DonateRune />
+                  <DonateRune size={30} />
                   {dict.nav[key]}
                 </Link>
               );
@@ -184,7 +184,7 @@ export function Header({ locale, dict }: Props) {
                 key={key}
                 href={hrefFor(locale, key)}
                 aria-current={active ? "page" : undefined}
-                className={`cut px-3 py-2 text-sm font-bold tracking-wide transition-colors ${
+                className={`rounded-lg px-3 py-2 text-sm font-bold tracking-wide transition-colors ${
                   active
                     ? "bg-moss/30 text-gold-light shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]"
                     : "text-ash-light hover:bg-surface-2/90 hover:text-foreground"
@@ -211,7 +211,7 @@ export function Header({ locale, dict }: Props) {
           ) : (
             <Link
               href={`/${locale}/cabinet`}
-              className="cabinet-btn cut hidden items-center justify-center gap-2 px-3.5 py-2 text-sm font-bold tracking-wide sm:inline-flex"
+              className="cabinet-btn hidden items-center justify-center gap-2 px-3.5 py-2 text-sm font-bold tracking-wide sm:inline-flex"
             >
               <CabinetSeal />
               {dict.nav.cabinet}
@@ -219,7 +219,7 @@ export function Header({ locale, dict }: Props) {
           )}
           <button
             type="button"
-            className="cut inline-flex items-center justify-center border border-border bg-surface-2 p-2.5 text-ash-light hover:border-gold/35 hover:text-gold-light lg:hidden"
+            className="inline-flex items-center justify-center rounded-lg border border-border bg-surface-2 p-2.5 text-ash-light hover:border-gold/35 hover:text-gold-light lg:hidden"
             aria-expanded={open}
             aria-controls="mobile-nav"
             onClick={() => setOpen((v) => !v)}
@@ -250,7 +250,7 @@ export function Header({ locale, dict }: Props) {
                   <Link
                     href={hrefFor(locale, key)}
                     aria-current={active ? "page" : undefined}
-                    className={`cut flex items-center gap-2 px-3 py-2.5 text-sm font-bold tracking-wide ${
+                    className={`flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-bold tracking-wide ${
                       key === "donate"
                         ? "text-ember"
                         : active
@@ -277,7 +277,7 @@ export function Header({ locale, dict }: Props) {
               ) : (
                 <Link
                   href={`/${locale}/cabinet`}
-                  className="cabinet-btn cut flex items-center justify-center gap-2 px-3 py-2.5 text-center text-sm font-bold tracking-wide"
+                  className="cabinet-btn flex items-center justify-center gap-2 px-3 py-2.5 text-center text-sm font-bold tracking-wide"
                   onClick={() => setOpen(false)}
                 >
                   <CabinetSeal />

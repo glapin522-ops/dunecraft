@@ -215,29 +215,15 @@ h1 {
 @keyframes donate-bob {
   0%,
   100% {
-    transform: translateY(0);
+    transform: translateX(-50%) translateY(0);
   }
   50% {
-    transform: translateY(-6px);
+    transform: translateX(-50%) translateY(-5px);
   }
-}
-
-.cut {
-  --cut: 9px;
-  border-radius: 0;
-  clip-path: polygon(
-    var(--cut) 0,
-    calc(100% - var(--cut)) 0,
-    100% var(--cut),
-    100% calc(100% - var(--cut)),
-    calc(100% - var(--cut)) 100%,
-    var(--cut) 100%,
-    0 calc(100% - var(--cut)),
-    0 var(--cut)
-  );
 }
 
 .cabinet-btn {
+  border-radius: 0.5rem;
   border: 1px solid color-mix(in srgb, var(--ember) 50%, var(--border));
   background: color-mix(in srgb, var(--ember) 22%, var(--surface-2));
   color: var(--foreground);
@@ -307,12 +293,11 @@ h1 {
 }
 
 .donate-link {
+  position: relative;
   display: inline-flex;
-  flex-direction: column;
   align-items: center;
-  gap: 0;
-  margin-top: -18px;
-  line-height: 1;
+  justify-content: center;
+  line-height: 1.25;
   color: var(--ember);
 }
 
@@ -322,8 +307,17 @@ h1 {
 
 .donate-bob {
   display: block;
-  animation: donate-bob 2.4s ease-in-out infinite;
-  filter: drop-shadow(0 8px 12px color-mix(in srgb, var(--ember) 50%, transparent));
+  filter: drop-shadow(0 6px 10px color-mix(in srgb, var(--ember) 45%, transparent));
+}
+
+@media (min-width: 1024px) {
+  .donate-link .donate-bob {
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% - 2px);
+    transform: translateX(-50%);
+    animation: donate-bob 2.4s ease-in-out infinite;
+  }
 }
 
 .text-ember {
@@ -378,10 +372,9 @@ h1 {
     scroll-behavior: auto;
   }
 
-  .donate-bob,
-  .donate-rune path,
-  .cabinet-seal circle:first-of-type {
+  .donate-link .donate-bob {
     animation: none;
+    transform: translateX(-50%);
   }
 
   .donate-rune path,
