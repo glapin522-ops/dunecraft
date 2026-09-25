@@ -1,13 +1,18 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { Button } from "./Button";
-import { ModelViewportStub } from "./ModelViewportStub";
-import { StubBadge } from "./StubBadge";
+import { SkinCapeStudio } from "./SkinCapeStudio";
 import type { Dictionary } from "@/lib/dictionaries";
 import type { Locale } from "@/lib/i18n";
 import type { SessionUser } from "@/lib/auth/types";
+
+const PlayerSkinView = dynamic(
+  () => import("./PlayerSkinView").then((m) => m.PlayerSkinView),
+  { ssr: false },
+);
 
 type Props = {
   user: SessionUser;
@@ -15,6 +20,7 @@ type Props = {
   locale: Locale;
   onLogout: () => void;
   logoutBusy?: boolean;
+  onUser?: (user: SessionUser) => void;
 };
 
 function greetingKeyForHour(hour: number): keyof Dictionary["cabinet"] {
@@ -37,11 +43,11 @@ export function CabinetDashboard({
   locale,
   onLogout,
   logoutBusy = false,
+  onUser,
 }: Props) {
   const c = dict.cabinet;
-  const soon = dict.common.comingSoon;
   const [hour, setHour] = useState<number | null>(null);
-  const [skinNote, setSkinNote] = useState(false);
+  const [studioOpen, setStudioOpen] = useState(false);
 
   useEffect(() => {
     setHour(new Date().getHours());
@@ -60,7 +66,6 @@ export function CabinetDashboard({
 
   return (
     <section className="flex min-w-0 flex-col gap-4 min-[56rem]:gap-5">
-      {/* Greeting stays above the skin+cards row (split: where the tall skin used to start) */}
       <header className="min-w-0">
         <h2 className="text-xl font-bold tracking-tight text-foreground sm:text-2xl min-[56rem]:text-3xl">
           {greeting}, {user.username}!
@@ -75,22 +80,29 @@ export function CabinetDashboard({
         </div>
       </header>
 
-      {/* Skin aligned with group/balance cards — same top edge in split */}
       <div className="grid min-w-0 gap-4 min-[56rem]:grid-cols-[minmax(10rem,0.34fr)_minmax(0,1fr)] min-[56rem]:items-stretch min-[56rem]:gap-4 min-[72rem]:gap-6">
-        <ModelViewportStub
+        <div
           id="cabinet-model-viewport"
-          tall
-          placeholder={c.statsModelPlaceholder}
-          hint={c.statsModelHint}
-          className="order-1 h-full min-[56rem]:order-none"
-        />
+          className="order-1 relative flex min-h-[16rem] w-full flex-col overflow-hidden rounded-3xl border border-[color:var(--glass-stroke-gold)] bg-surface shadow-[var(--glow-gold-sm)] min-[56rem]:order-none min-[56rem]:min-h-0 min-[56rem]:h-full"
+        >
+          <div
+            className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_40%,color-mix(in_srgb,var(--moss)_45%,transparent),transparent_70%)]"
+            aria-hidden
+          />
+          <div className="relative z-[1] min-h-0 flex-1">
+            <PlayerSkinView
+              skinUrl={user.skinUrl}
+              capeUrl={user.capeUrl}
+              className="h-full min-h-[16rem] min-[56rem]:min-h-full"
+            />
+          </div>
+          <p className="relative z-[1] px-3 pb-3 text-center text-[10px] leading-snug text-ash md:text-xs">
+            {c.skinHintLive}
+          </p>
+        </div>
 
         <div className="order-2 flex min-w-0 flex-col gap-4 min-[56rem]:order-none">
           <div className="panel-solid relative min-w-0 overflow-hidden rounded-3xl p-4 sm:p-5">
-            <div
-              className="pointer-events-none absolute -right-6 -top-8 h-28 w-28 rotate-12 rounded-lg border border-border bg-surface-3 opacity-50"
-              aria-hidden
-            />
             <p className="text-xs uppercase tracking-wide text-ash">{c.yourGroup}</p>
             <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
               <span className="inline-flex items-center rounded-full border border-border bg-surface px-4 py-1.5 text-sm font-bold uppercase tracking-wider text-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]">
@@ -143,31 +155,28 @@ export function CabinetDashboard({
                   aria-hidden
                 />
                 <div className="relative flex h-20 w-20 items-center justify-center overflow-hidden rounded-full border border-[color-mix(in_srgb,var(--accent-skin)_45%,var(--border))] bg-surface shadow-[var(--glow-skin-sm)]">
-                  <div
-                    className="h-10 w-10 rounded-[2px] border border-gold/45 bg-surface-3"
-                    aria-hidden
-                  />
+                  {user.skinUrl ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={user.skinUrl}
+                      alt=""
+                      className="h-12 w-12"
+                      style={{ imageRendering: "pixelated" }}
+                    />
+                  ) : (
+                    <div className="h-10 w-10 rounded-[2px] border border-gold/45 bg-surface-3" aria-hidden />
+                  )}
                 </div>
               </div>
               <button
                 type="button"
                 className="glow-btn glow-btn-skin mt-4 inline-flex w-full items-center justify-center gap-2 rounded-2xl border border-[color-mix(in_srgb,var(--accent-skin)_45%,var(--border))] bg-[color-mix(in_srgb,var(--accent-skin)_16%,var(--surface-3))] px-4 py-2.5 text-sm font-semibold text-[color:var(--accent-skin)] shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] transition-colors hover:bg-[color-mix(in_srgb,var(--accent-skin)_26%,var(--surface-3))]"
-                aria-describedby="skin-cape-stub-note"
-                onClick={() => {
-                  setSkinNote(true);
-                  const el = document.getElementById("cabinet-model-viewport");
-                  el?.scrollIntoView({ behavior: "smooth", block: "nearest" });
-                }}
+                onClick={() => setStudioOpen(true)}
               >
                 {c.setupSkinCape}
-                <StubBadge label={soon} />
               </button>
-              <p
-                id="skin-cape-stub-note"
-                className={`mt-2 text-center text-[11px] text-ash ${skinNote ? "text-moss-light" : ""}`}
-                role="status"
-              >
-                {skinNote ? c.skinStubNote : c.statsModelHint}
+              <p className="mt-2 text-center text-[11px] text-ash" role="status">
+                {c.skinHintLive}
               </p>
             </div>
           </div>
@@ -182,6 +191,14 @@ export function CabinetDashboard({
           </Button>
         </div>
       </div>
+
+      <SkinCapeStudio
+        user={user}
+        dict={dict}
+        open={studioOpen}
+        onClose={() => setStudioOpen(false)}
+        onUser={(next) => onUser?.(next)}
+      />
     </section>
   );
 }
