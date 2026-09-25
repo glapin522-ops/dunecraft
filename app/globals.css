@@ -246,32 +246,22 @@ h1 {
   color: var(--ember);
 }
 
-.social-plate {
-  display: grid;
-  width: 4.75rem;
-  height: 4.75rem;
-  place-items: center;
-  border-radius: 1.15rem;
-  background: var(--surface);
+.social-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  border-radius: 999px;
   border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--surface) 88%, black);
+  padding: 0.4rem 0.85rem 0.4rem 0.4rem;
 }
 
-.social-vk {
-  color: var(--accent-skin);
-  border-color: color-mix(in srgb, var(--accent-skin) 45%, var(--border));
-  box-shadow: var(--glow-skin-sm);
-}
-
-.social-tg {
-  color: color-mix(in srgb, var(--accent-skin) 62%, white);
-  border-color: color-mix(in srgb, var(--accent-skin) 28%, var(--border));
-  box-shadow: 0 0 22px color-mix(in srgb, var(--accent-skin) 28%, transparent);
-}
-
-.social-dc {
-  color: var(--gold);
-  border-color: color-mix(in srgb, var(--gold) 45%, var(--border));
-  box-shadow: var(--glow-gold-sm);
+.social-tile {
+  display: grid;
+  width: 2rem;
+  height: 2rem;
+  place-items: center;
+  border-radius: 0.55rem;
 }
 
 .glow-btn:active:not(:disabled) {
