@@ -1,3 +1,2 @@
-/** Fallback Steve-like 64×64 PNG so the viewer works before a custom skin. */
-export const DEFAULT_STEVE_DATA_URL =
-  "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAAmklEQVR42u3YsQmDQBiGYUfIBklsA6lSCVbukRlcIRu4RRprpzs5KxFykiKC+Z8HPrSxeTksrqoAAD64XS+pNAEE+HPT65lKCxMgq+/D8p7fWagA4U9AXt89loUNEPIEALE07Tutt/vBOKbifvxTFkAAAQQQQAABBBBAAAEAAAAAAI739aXqxukvPQUQQAABBBBAAAEEEOAcAWaKuzVOuC8tEwAAAABJRU5ErkJggg==";
+/** Classic wide-arm Steve. Public file, not an empty PNG. */
+export const DEFAULT_STEVE_DATA_URL = "/steve.png";
