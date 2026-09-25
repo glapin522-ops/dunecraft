@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import type { Dictionary } from "@/lib/dictionaries";
 import type { AdminLogEntry, AdminLogKind } from "@/lib/admin-logs-store";
-import type { Role } from "@/lib/auth/types";
+import { PlayerProfileModal } from "./PlayerProfileModal";
 
 type Props = {
   dict: Dictionary;
@@ -76,32 +76,9 @@ const CATEGORIES: LogCategory[] = [
   "news",
 ];
 
-type BriefProfile = {
-  username: string;
-  role: Role;
-  email: string | null;
-  balance: number;
-  createdAt: string | null;
-  banned: boolean;
-  muted: boolean;
-};
-
 function logTarget(entry: AdminLogEntry): string | null {
   const target = entry.meta?.target;
   return typeof target === "string" && target.trim() ? target.trim() : null;
-}
-
-function roleName(c: Dictionary["cabinet"], role: Role): string {
-  if (role === "creator") return c.roleCreator;
-  if (role === "editor") return c.roleEditor;
-  return c.rolePlayer;
-}
-
-function maskMail(email: string): string {
-  const at = email.indexOf("@");
-  if (at <= 0) return "•••";
-  const local = email.slice(0, at);
-  return `${local.slice(0, 2)}•••@${email.slice(at + 1)}`;
 }
 
 function LogMessage({
@@ -150,37 +127,7 @@ export function CreatorLogsPanel({ dict }: Props) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<"forbidden" | "generic" | null>(null);
   const [category, setCategory] = useState<LogCategory>("all");
-  const [brief, setBrief] = useState<BriefProfile | null>(null);
-  const [briefError, setBriefError] = useState<string | null>(null);
-  const [briefLoading, setBriefLoading] = useState(false);
-
-  async function openBrief(username: string) {
-    setBrief(null);
-    setBriefError(null);
-    setBriefLoading(true);
-    try {
-      const res = await fetch(
-        `/api/admin/players/${encodeURIComponent(username)}`,
-        { credentials: "same-origin", cache: "no-store" },
-      );
-      const data = (await res.json()) as {
-        player?: BriefProfile;
-        error?: string;
-      };
-      if (!res.ok || !data.player) {
-        setBrief(null);
-        setBriefError(
-          data.error === "user_not_found" ? c.roleUserNotFound : c.logsLoadError,
-        );
-        return;
-      }
-      setBrief(data.player);
-    } catch {
-      setBriefError(c.logsLoadError);
-    } finally {
-      setBriefLoading(false);
-    }
-  }
+  const [profileUser, setProfileUser] = useState<string | null>(null);
 
   async function reloadLogs(signal?: AbortSignal) {
     setLoading(true);
@@ -331,89 +278,18 @@ export function CreatorLogsPanel({ dict }: Props) {
               <LogMessage
                 message={entry.message}
                 target={logTarget(entry)}
-                onOpen={(name) => void openBrief(name)}
+                onOpen={setProfileUser}
               />
             </li>
           ))}
         </ul>
       )}
-      {briefLoading || brief || briefError ? (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4"
-          onClick={() => {
-            setBrief(null);
-            setBriefError(null);
-            setBriefLoading(false);
-          }}
-        >
-          <div
-            role="dialog"
-            aria-modal="true"
-            aria-label={brief?.username ?? c.profileOpen}
-            className="panel-solid w-full max-w-sm rounded-2xl border border-border p-4"
-            onClick={(event) => event.stopPropagation()}
-          >
-            {briefLoading ? (
-              <p className="text-sm text-ash">{c.profileLoading}</p>
-            ) : briefError && !brief ? (
-              <p className="text-sm text-red-400">{briefError}</p>
-            ) : brief ? (
-              <div className="space-y-3">
-                <div className="flex items-start justify-between gap-3">
-                  <div>
-                    <p className="text-lg font-semibold">{brief.username}</p>
-                    <p className="text-sm text-ash">{roleName(c, brief.role)}</p>
-                  </div>
-                  <button
-                    type="button"
-                    className="rounded-md border border-border px-2 py-1 text-xs text-ash hover:text-foreground"
-                    onClick={() => {
-                      setBrief(null);
-                      setBriefError(null);
-                    }}
-                  >
-                    {c.profileClose}
-                  </button>
-                </div>
-                {briefError ? (
-                  <p className="text-sm text-red-400">{briefError}</p>
-                ) : (
-                  <dl className="space-y-1.5 text-sm">
-                    <div className="flex justify-between gap-3">
-                      <dt className="text-ash">{c.profileBalance}</dt>
-                      <dd className="tabular-nums">{brief.balance}</dd>
-                    </div>
-                    <div className="flex justify-between gap-3">
-                      <dt className="text-ash">{c.profileEmail}</dt>
-                      <dd className="truncate">
-                        {brief.email ? maskMail(brief.email) : c.profileEmailNone}
-                      </dd>
-                    </div>
-                    <div className="flex justify-between gap-3">
-                      <dt className="text-ash">{c.profileRegistered}</dt>
-                      <dd className="text-right text-xs">
-                        {brief.createdAt
-                          ? new Date(brief.createdAt).toLocaleString()
-                          : c.profileNoData}
-                      </dd>
-                    </div>
-                    <div className="flex justify-between gap-3">
-                      <dt className="text-ash">{c.profileStatus}</dt>
-                      <dd>
-                        {brief.banned
-                          ? c.badgeBanned
-                          : brief.muted
-                            ? c.badgeMuted
-                            : c.profileStatusOk}
-                      </dd>
-                    </div>
-                  </dl>
-                )}
-              </div>
-            ) : null}
-          </div>
-        </div>
-      ) : null}
+      <PlayerProfileModal
+        dict={dict}
+        username={profileUser ?? ""}
+        open={profileUser !== null}
+        onClose={() => setProfileUser(null)}
+      />
     </section>
   );
 }
