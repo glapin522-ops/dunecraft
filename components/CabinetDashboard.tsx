@@ -136,14 +136,12 @@ export function CabinetDashboard({
           <div className="grid min-w-0 gap-4 sm:grid-cols-2">
             <div className="panel-solid flex min-w-0 flex-col items-center rounded-3xl p-4 sm:p-5">
               <div className="relative flex h-24 w-24 items-center justify-center">
-                <div className="pointer-events-none absolute inset-[-20%] rounded-full bg-[conic-gradient(from_180deg,color-mix(in_srgb,var(--moss-light)_55%,transparent),color-mix(in_srgb,var(--gold)_50%,transparent),color-mix(in_srgb,var(--accent-skin)_45%,transparent),color-mix(in_srgb,var(--moss-light)_55%,transparent))] opacity-60 blur-md" aria-hidden />
-                <div className="relative flex h-20 w-20 items-center justify-center rounded-full border border-[color-mix(in_srgb,var(--accent-skin)_45%,var(--border))] bg-surface shadow-[var(--glow-skin-sm)]">
-                  <svg width="40" height="48" viewBox="0 0 40 48" aria-hidden className="text-[color:var(--accent-skin)]">
-                    <path
-                      fill="currentColor"
-                      d="M6 8c6 5 11 7 14 7s8-2 14-7l3 5c-1 18-6 29-17 33C9 42 4 31 3 13z"
-                    />
-                    <path fill="currentColor" opacity="0.35" d="M20 16v28c6-3 10-12 11-22z" />
+                <div className="pointer-events-none absolute inset-[-20%] rounded-full bg-[conic-gradient(from_180deg,color-mix(in_srgb,var(--ember)_50%,transparent),color-mix(in_srgb,var(--gold)_35%,transparent),color-mix(in_srgb,var(--ember)_40%,transparent))] opacity-70 blur-md" aria-hidden />
+                <div className="relative flex h-20 w-20 items-center justify-center rounded-full border border-[color-mix(in_srgb,var(--ember)_55%,var(--border))] bg-surface shadow-[0_0_24px_color-mix(in_srgb,var(--ember)_35%,transparent)]">
+                  <svg width="36" height="52" viewBox="0 0 24 40" fill="none" aria-hidden className="skin-rune text-[color:var(--ember)]">
+                    <path d="M12 2v36" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="miter" />
+                    <path d="M12 14l6 6-6 6-6-6z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="miter" />
+                    <path d="M6 9l4 4M18 27l-4 4" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="miter" />
                   </svg>
                 </div>
               </div>
