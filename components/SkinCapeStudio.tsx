@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import { PlayerSkinView } from "./PlayerSkinView";
+import { DEFAULT_CAPE_URL } from "@/lib/default-skin";
 import type { Dictionary } from "@/lib/dictionaries";
 import type { SessionUser } from "@/lib/auth/types";
 
@@ -167,20 +168,13 @@ export function SkinCapeStudio({ user, dict, open, onClose, onUser }: Props) {
 
           <div className="flex flex-col items-center rounded-3xl border border-white/5 bg-[#12101c] p-4">
             <div className="flex h-64 w-full items-center justify-center sm:h-72">
-              {user.capeUrl ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  src={user.capeUrl}
-                  alt=""
-                  className="max-h-56 max-w-[70%] rounded-md"
-                  style={{ imageRendering: "pixelated" }}
-                />
-              ) : (
-                <div
-                  className="h-48 w-28 rounded-md border border-white/10 bg-[repeating-linear-gradient(45deg,#1a1220,#1a1220_8px,#24182e_8px,#24182e_16px)]"
-                  aria-hidden
-                />
-              )}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={user.capeUrl || DEFAULT_CAPE_URL}
+                alt=""
+                className="max-h-40 w-auto max-w-[88%] object-contain"
+                style={{ imageRendering: "pixelated" }}
+              />
             </div>
             <input
               ref={capeInput}
