@@ -88,9 +88,9 @@ export async function appendAdminLog(
   let lastError: unknown;
   for (let attempt = 0; attempt < 6; attempt++) {
     try {
-      const { data, etag } = hasBlob()
+      const { data } = hasBlob()
         ? await readPublicJson<AdminLogEntry[]>(BLOB_PATHNAME)
-        : { data: await readLocal(), etag: null };
+        : { data: await readLocal() };
       const logs = Array.isArray(data) ? data : [];
       if (!logs.some((item) => item.id === entry.id)) {
         logs.unshift(entry);
@@ -100,7 +100,7 @@ export async function appendAdminLog(
         await writeLocal(trimmed);
         return entry;
       }
-      await writePublicJson(BLOB_PATHNAME, trimmed, attempt === 0 ? etag : null);
+      await writePublicJson(BLOB_PATHNAME, trimmed);
       await writeLocal(trimmed).catch(() => undefined);
       return entry;
     } catch (err) {

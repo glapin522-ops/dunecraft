@@ -112,6 +112,7 @@ export async function PATCH(request: Request, ctx: Ctx) {
     );
   } catch (error) {
     console.error("[admin/players/email] failed", error);
-    return NextResponse.json({ error: "server_error" }, { status: 500 });
+    const detail = error instanceof Error ? error.message : "unknown";
+    return NextResponse.json({ error: "server_error", detail }, { status: 500 });
   }
 }

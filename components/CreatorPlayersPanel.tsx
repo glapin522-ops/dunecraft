@@ -356,13 +356,16 @@ export function CreatorPlayersPanel({ dict, currentUsername }: Props) {
       const data = (await res.json()) as {
         ok?: boolean;
         error?: string;
+        detail?: string;
         user?: Player;
       };
       if (!res.ok || !data.ok || !data.user) {
         const mapped = mapAuthError(c, data.error);
         setMsg({
           ok: false,
-          text: mapped === c.errorGeneric ? c.adminEmailError : mapped,
+          text:
+            data.detail ||
+            (mapped === c.errorGeneric ? c.adminEmailError : mapped),
         });
         return;
       }

@@ -31,7 +31,6 @@ export async function readPublicJson<T>(
 export async function writePublicJson(
   pathname: string,
   data: unknown,
-  etag: string | null,
 ): Promise<void> {
   await put(pathname, JSON.stringify(data), {
     access: "public",
@@ -39,7 +38,6 @@ export async function writePublicJson(
     allowOverwrite: true,
     contentType: "application/json",
     cacheControlMaxAge: 60,
-    ...(etag ? { ifMatch: etag } : {}),
   });
 }
 

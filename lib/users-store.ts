@@ -32,12 +32,12 @@ async function readBlob(): Promise<StoredUser[]> {
 
 async function mutateBlob(mut: (users: StoredUser[]) => StoredUser[]): Promise<void> {
   let lastErr: unknown;
-  for (let attempt = 0; attempt < 4; attempt++) {
-    const { data, etag } = await readPublicJson<StoredUser[]>(BLOB_PATHNAME);
-    const base = Array.isArray(data) ? data : [];
-    const next = mut(base);
+  for (let attempt = 0; attempt < 3; attempt++) {
     try {
-      await writePublicJson(BLOB_PATHNAME, next, attempt === 0 ? etag : null);
+      const { data } = await readPublicJson<StoredUser[]>(BLOB_PATHNAME);
+      const base = Array.isArray(data) ? data : [];
+      const next = mut(base);
+      await writePublicJson(BLOB_PATHNAME, next);
       await writeLocal(next).catch(() => undefined);
       return;
     } catch (err) {
