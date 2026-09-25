@@ -13,7 +13,9 @@ export async function GET(req: Request) {
   if (!buf) {
     return NextResponse.json({ error: "not_found" }, { status: 404 });
   }
-  return new NextResponse(buf, {
+  const bytes = new Uint8Array(buf.byteLength);
+  bytes.set(buf);
+  return new NextResponse(bytes, {
     headers: {
       "Content-Type": "image/png",
       "Cache-Control": "no-store",
