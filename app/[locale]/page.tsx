@@ -69,7 +69,7 @@ export default async function HomePage({ params }: Props) {
 
         <div className="relative z-10 mx-auto w-full max-w-6xl px-4 py-16 sm:py-24 md:py-32">
           <FadeIn delay={0} y={20}>
-            <p className="kicker-mix text-sm font-semibold uppercase tracking-[0.35em] sm:text-base">
+            <p className="kicker-mix text-base uppercase sm:text-lg">
               Minecraft RPG
             </p>
           </FadeIn>

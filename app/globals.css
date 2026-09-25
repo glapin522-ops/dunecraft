@@ -238,6 +238,9 @@ h1 {
 
 .kicker-mix {
   color: color-mix(in srgb, var(--gold) 46%, var(--accent-skin));
+  font-family: var(--font-unbounded), var(--font-geist-sans), system-ui, sans-serif;
+  font-weight: 800;
+  letter-spacing: 0.12em;
 }
 
 @keyframes donate-bob {
