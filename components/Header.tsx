@@ -23,6 +23,25 @@ const navKeys = [
   "contacts",
 ] as const;
 
+function DonateCube({ size = 36 }: { size?: number }) {
+  return (
+    <span className="donate-bob" aria-hidden>
+      <svg
+        viewBox="0 0 64 72"
+        width={size}
+        height={Math.round(size * 1.12)}
+        className="donate-cube"
+      >
+        <ellipse cx="32" cy="66" rx="14" ry="4.5" fill="#e07a4a" opacity="0.45" />
+        <polygon points="32,6 58,21 32,36 6,21" fill="#ffc14d" />
+        <polygon points="6,21 32,36 32,58 6,43" fill="#f08a3a" />
+        <polygon points="58,21 32,36 32,58 58,43" fill="#c85a22" />
+        <polygon points="32,12 48,21 32,30 16,21" fill="#ffe7b0" />
+        <polygon points="22,40 32,46 32,54 22,48" fill="#a84416" opacity="0.55" />
+      </svg>
+    </span>
+  );
+}
 function hrefFor(locale: Locale, key: (typeof navKeys)[number]) {
   if (key === "home") return `/${locale}`;
   return `/${locale}/${key}`;
@@ -134,9 +153,24 @@ export function Header({ locale, dict }: Props) {
           </span>
         </Link>
 
-        <nav className="hidden items-center gap-1 lg:flex" aria-label="Main">
+        <nav className="hidden items-end gap-1 lg:flex" aria-label="Main">
           {navKeys.map((key) => {
             const active = isActive(pathname, locale, key);
+            if (key === "donate") {
+              return (
+                <Link
+                  key={key}
+                  href={hrefFor(locale, key)}
+                  aria-current={active ? "page" : undefined}
+                  className={`donate-link rounded-lg px-3 pb-2 text-sm font-bold tracking-wide ${
+                    active ? "donate-link-active" : ""
+                  }`}
+                >
+                  <DonateCube />
+                  {dict.nav[key]}
+                </Link>
+              );
+            }
             return (
               <Link
                 key={key}
@@ -207,13 +241,16 @@ export function Header({ locale, dict }: Props) {
                   <Link
                     href={hrefFor(locale, key)}
                     aria-current={active ? "page" : undefined}
-                    className={`block rounded-lg px-3 py-2.5 text-sm font-bold tracking-wide ${
-                      active
-                        ? "bg-moss/30 text-gold-light"
-                        : "text-ash-light hover:bg-surface-2 hover:text-foreground"
+                    className={`flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-bold tracking-wide ${
+                      key === "donate"
+                        ? "text-ember"
+                        : active
+                          ? "bg-moss/30 text-gold-light"
+                          : "text-ash-light hover:bg-surface-2 hover:text-foreground"
                     }`}
                     onClick={() => setOpen(false)}
                   >
+                    {key === "donate" && <DonateCube size={28} />}
                     {dict.nav[key]}
                   </Link>
                 </li>
