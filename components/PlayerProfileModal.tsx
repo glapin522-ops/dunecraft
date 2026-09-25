@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { createPortal } from "react-dom";
 import dynamic from "next/dynamic";
 import { Button } from "./Button";
 import type { Dictionary } from "@/lib/dictionaries";
@@ -177,16 +178,16 @@ export function PlayerProfileModal({ dict, username, open, onClose }: Props) {
       ? c.profileVipNone
       : `VIP ${profile.vipLevel}`;
 
-  return (
+  return createPortal(
     <div
-      className="fixed inset-0 z-50 flex items-end justify-center bg-black/70 p-3 sm:items-center sm:p-6"
+      className="fixed inset-0 z-[80] flex items-center justify-center overflow-y-auto bg-black/70 p-4 sm:p-8"
       role="dialog"
       aria-modal="true"
       aria-label={c.profileTitle}
       onClick={onClose}
     >
       <div
-        className="panel-solid-raised flex max-h-[92vh] w-full max-w-5xl flex-col overflow-hidden rounded-2xl border border-border shadow-[0_0_40px_rgba(0,0,0,0.55)]"
+        className="panel-solid-raised my-auto flex max-h-[min(92vh,52rem)] w-full max-w-5xl flex-col overflow-hidden rounded-2xl border border-border shadow-[0_0_40px_rgba(0,0,0,0.55)]"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between gap-3 border-b border-border px-5 py-4">
@@ -457,6 +458,7 @@ export function PlayerProfileModal({ dict, username, open, onClose }: Props) {
           ) : null}
         </div>
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }
