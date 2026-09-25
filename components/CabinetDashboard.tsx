@@ -48,27 +48,37 @@ export function CabinetDashboard({
   const c = dict.cabinet;
   const [hour, setHour] = useState<number | null>(null);
   const [studioOpen, setStudioOpen] = useState(false);
+  const [viewUser, setViewUser] = useState(user);
 
   useEffect(() => {
     setHour(new Date().getHours());
   }, []);
+
+  useEffect(() => {
+    setViewUser(user);
+  }, [user]);
 
   const greeting = useMemo(() => {
     if (hour === null) return c.welcome;
     return String(c[greetingKeyForHour(hour)]);
   }, [hour, c]);
 
-  const level = user.level ?? 1;
-  const vipLevel = user.vipLevel ?? 0;
-  const balance = user.balance ?? 0;
+  const level = viewUser.level ?? 1;
+  const vipLevel = viewUser.vipLevel ?? 0;
+  const balance = viewUser.balance ?? 0;
   const vipDisplay = vipLevel <= 0 ? c.statsVipNone : `VIP ${vipLevel}`;
   const donateHref = `/${locale}/donate`;
+
+  function handleUser(next: SessionUser) {
+    setViewUser(next);
+    onUser?.(next);
+  }
 
   return (
     <section className="flex min-w-0 flex-col gap-4 min-[56rem]:gap-5">
       <header className="min-w-0">
         <h2 className="text-xl font-bold tracking-tight text-foreground sm:text-2xl min-[56rem]:text-3xl">
-          {greeting}, {user.username}!
+          {greeting}, {viewUser.username}!
         </h2>
         <div className="mt-2 flex flex-wrap items-center gap-2">
           <span className="inline-flex items-center rounded-full border border-border bg-surface-3 px-2.5 py-0.5 text-xs font-medium text-ash-light">
@@ -91,8 +101,8 @@ export function CabinetDashboard({
           />
           <div className="relative z-[1] min-h-0 flex-1">
             <PlayerSkinView
-              skinUrl={user.skinUrl}
-              capeUrl={user.capeUrl}
+              skinUrl={viewUser.skinUrl}
+              capeUrl={viewUser.capeUrl}
               className="h-full min-h-[16rem] min-[56rem]:min-h-full"
             />
           </div>
@@ -106,9 +116,9 @@ export function CabinetDashboard({
             <p className="text-xs uppercase tracking-wide text-ash">{c.yourGroup}</p>
             <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
               <span className="inline-flex items-center rounded-full border border-border bg-surface px-4 py-1.5 text-sm font-bold uppercase tracking-wider text-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]">
-                {roleLabel(dict, user.role)}
+                {roleLabel(dict, viewUser.role)}
               </span>
-              {user.role === "creator" ? (
+              {viewUser.role === "creator" ? (
                 <p className="max-w-xs text-sm text-moss-light sm:text-right">
                   {c.upgradeGroupMax}
                 </p>
@@ -126,14 +136,8 @@ export function CabinetDashboard({
           <div className="grid min-w-0 gap-4 sm:grid-cols-2">
             <div className="panel-solid flex min-w-0 flex-col rounded-3xl p-4 sm:p-5">
               <div className="flex items-end gap-2">
-                <span className="text-4xl font-bold tabular-nums text-foreground">
-                  {balance}
-                </span>
-                <span
-                  className="mb-1 inline-flex h-7 w-7 items-center justify-center rounded-md border border-[color-mix(in_srgb,var(--accent-balance)_50%,var(--border))] bg-[color-mix(in_srgb,var(--accent-balance)_14%,var(--surface))] text-sm shadow-[var(--glow-balance-sm)]"
-                  aria-hidden
-                  title="💎"
-                >
+                <span className="text-4xl font-bold tabular-nums text-foreground">{balance}</span>
+                <span className="mb-1 inline-flex h-7 w-7 items-center justify-center rounded-md border border-[color-mix(in_srgb,var(--accent-balance)_50%,var(--border))] bg-[color-mix(in_srgb,var(--accent-balance)_14%,var(--surface))] text-sm shadow-[var(--glow-balance-sm)]" aria-hidden>
                   💎
                 </span>
               </div>
@@ -150,19 +154,11 @@ export function CabinetDashboard({
 
             <div className="panel-solid flex min-w-0 flex-col items-center rounded-3xl p-4 sm:p-5">
               <div className="relative flex h-24 w-24 items-center justify-center">
-                <div
-                  className="pointer-events-none absolute inset-[-20%] rounded-full bg-[conic-gradient(from_180deg,color-mix(in_srgb,var(--moss-light)_55%,transparent),color-mix(in_srgb,var(--gold)_50%,transparent),color-mix(in_srgb,var(--accent-skin)_45%,transparent),color-mix(in_srgb,var(--moss-light)_55%,transparent))] opacity-60 blur-md"
-                  aria-hidden
-                />
+                <div className="pointer-events-none absolute inset-[-20%] rounded-full bg-[conic-gradient(from_180deg,color-mix(in_srgb,var(--moss-light)_55%,transparent),color-mix(in_srgb,var(--gold)_50%,transparent),color-mix(in_srgb,var(--accent-skin)_45%,transparent),color-mix(in_srgb,var(--moss-light)_55%,transparent))] opacity-60 blur-md" aria-hidden />
                 <div className="relative flex h-20 w-20 items-center justify-center overflow-hidden rounded-full border border-[color-mix(in_srgb,var(--accent-skin)_45%,var(--border))] bg-surface shadow-[var(--glow-skin-sm)]">
-                  {user.skinUrl ? (
+                  {viewUser.skinUrl ? (
                     // eslint-disable-next-line @next/next/no-img-element
-                    <img
-                      src={user.skinUrl}
-                      alt=""
-                      className="h-12 w-12"
-                      style={{ imageRendering: "pixelated" }}
-                    />
+                    <img src={viewUser.skinUrl} alt="" className="h-12 w-12" style={{ imageRendering: "pixelated" }} />
                   ) : (
                     <div className="h-10 w-10 rounded-[2px] border border-gold/45 bg-surface-3" aria-hidden />
                   )}
@@ -181,23 +177,18 @@ export function CabinetDashboard({
             </div>
           </div>
 
-          <Button
-            variant="secondary"
-            className="w-full rounded-2xl py-3"
-            disabled={logoutBusy}
-            onClick={onLogout}
-          >
+          <Button variant="secondary" className="w-full rounded-2xl py-3" disabled={logoutBusy} onClick={onLogout}>
             {c.logoutAccount}
           </Button>
         </div>
       </div>
 
       <SkinCapeStudio
-        user={user}
+        user={viewUser}
         dict={dict}
         open={studioOpen}
         onClose={() => setStudioOpen(false)}
-        onUser={(next) => onUser?.(next)}
+        onUser={handleUser}
       />
     </section>
   );
