@@ -1,4 +1,4 @@
-import { put, list } from "@vercel/blob";
+import { isBlobConflict, readPublicJson, writePublicJson } from "./blob-json";
 import { promises as fs } from "fs";
 import path from "path";
 import type { StoredUser } from "./auth/types";
@@ -26,36 +26,25 @@ async function writeLocal(users: StoredUser[]): Promise<void> {
 }
 
 async function readBlob(): Promise<StoredUser[]> {
-  const { blobs } = await list({ prefix: BLOB_PATHNAME, limit: 10 });
-  const hit = blobs.find((b) => b.pathname === BLOB_PATHNAME) ?? blobs[0];
-  if (!hit) return [];
-  const res = await fetch(`${hit.url}${hit.url.includes("?") ? "&" : "?"}t=${Date.now()}`, { cache: "no-store" });
-  if (!res.ok) return [];
-  const parsed = (await res.json()) as StoredUser[];
-  return Array.isArray(parsed) ? parsed : [];
+  const { data } = await readPublicJson<StoredUser[]>(BLOB_PATHNAME);
+  return Array.isArray(data) ? data : [];
 }
 
-async function writeBlob(users: StoredUser[]): Promise<void> {
-  await put(BLOB_PATHNAME, JSON.stringify(users, null, 2), {
-    access: "public",
-    addRandomSuffix: false,
-    allowOverwrite: true,
-    contentType: "application/json",
-    cacheControlMaxAge: 0,
-  });
-}
-
-async function persist(users: StoredUser[]): Promise<void> {
-  if (hasBlob()) {
+async function mutateBlob(mut: (users: StoredUser[]) => StoredUser[]): Promise<void> {
+  for (let attempt = 0; attempt < 6; attempt++) {
+    const { data, etag } = await readPublicJson<StoredUser[]>(BLOB_PATHNAME);
+    const base = Array.isArray(data) ? data : [];
+    const next = mut(base);
     try {
-      await writeBlob(users);
-      await writeLocal(users).catch(() => undefined);
+      await writePublicJson(BLOB_PATHNAME, next, etag);
+      await writeLocal(next).catch(() => undefined);
       return;
     } catch (err) {
-      console.error("[users-store] blob write failed, writing local", err);
+      if (isBlobConflict(err) && attempt < 5) continue;
+      console.error("[users-store] blob write failed", err);
+      throw err;
     }
   }
-  await writeLocal(users);
 }
 
 export async function listUsers(): Promise<StoredUser[]> {
@@ -97,25 +86,43 @@ export async function findUserByEmail(
 }
 
 export async function saveUser(user: StoredUser): Promise<void> {
-  const users = await listUsers();
-  const idx = users.findIndex(
-    (u) => u.username.toLowerCase() === user.username.toLowerCase(),
-  );
-  if (idx >= 0) users[idx] = user;
-  else users.push(user);
-  await persist(users);
+  const apply = (users: StoredUser[]) => {
+    const next = users.map((entry) => ({ ...entry }));
+    const idx = next.findIndex(
+      (entry) => entry.username.toLowerCase() === user.username.toLowerCase(),
+    );
+    if (idx >= 0) next[idx] = user;
+    else next.push(user);
+    return next;
+  };
+  if (!hasBlob()) {
+    await writeLocal(apply(await readLocal()));
+    return;
+  }
+  await mutateBlob(apply);
 }
 
 /** Remove a user by username. Returns the removed user or null if missing. */
 export async function deleteUser(
   username: string,
 ): Promise<StoredUser | null> {
-  const users = await listUsers();
-  const idx = users.findIndex(
-    (u) => u.username.toLowerCase() === username.trim().toLowerCase(),
-  );
-  if (idx < 0) return null;
-  const [removed] = users.splice(idx, 1);
-  await persist(users);
-  return removed ?? null;
+  const key = username.trim().toLowerCase();
+  let removed: StoredUser | null = null;
+  const apply = (users: StoredUser[]) => {
+    const next = users.map((entry) => ({ ...entry }));
+    const idx = next.findIndex((entry) => entry.username.toLowerCase() === key);
+    if (idx < 0) {
+      removed = null;
+      return next;
+    }
+    const [found] = next.splice(idx, 1);
+    removed = found ?? null;
+    return next;
+  };
+  if (!hasBlob()) {
+    await writeLocal(apply(await readLocal()));
+    return removed;
+  }
+  await mutateBlob(apply);
+  return removed;
 }

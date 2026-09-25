@@ -62,6 +62,12 @@ export async function PATCH(request: Request, ctx: Ctx) {
     }
 
     const prevRole = target.role;
+    if (prevRole === nextRole) {
+      return NextResponse.json(
+        { ok: true, user: { username: target.username, role: target.role } },
+        { headers: { "Cache-Control": "no-store" } },
+      );
+    }
     target.role = nextRole;
     await saveUser(target);
     const sessionUser = toSessionUser(target);

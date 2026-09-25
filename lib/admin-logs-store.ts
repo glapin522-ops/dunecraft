@@ -1,4 +1,4 @@
-import { put, list } from "@vercel/blob";
+import { isBlobConflict, readPublicJson, writePublicJson } from "./blob-json";
 import { promises as fs } from "fs";
 import path from "path";
 
@@ -51,26 +51,8 @@ async function writeLocal(logs: AdminLogEntry[]): Promise<void> {
 }
 
 async function readBlob(): Promise<AdminLogEntry[]> {
-  const { blobs } = await list({ prefix: BLOB_PATHNAME, limit: 10 });
-  const hit = blobs.find((b) => b.pathname === BLOB_PATHNAME) ?? blobs[0];
-  if (!hit) return [];
-  const res = await fetch(
-    `${hit.url}${hit.url.includes("?") ? "&" : "?"}t=${Date.now()}`,
-    { cache: "no-store" },
-  );
-  if (!res.ok) return [];
-  const parsed = (await res.json()) as AdminLogEntry[];
-  return Array.isArray(parsed) ? parsed : [];
-}
-
-async function writeBlob(logs: AdminLogEntry[]): Promise<void> {
-  await put(BLOB_PATHNAME, JSON.stringify(logs, null, 2), {
-    access: "public",
-    addRandomSuffix: false,
-    allowOverwrite: true,
-    contentType: "application/json",
-    cacheControlMaxAge: 0,
-  });
+  const { data } = await readPublicJson<AdminLogEntry[]>(BLOB_PATHNAME);
+  return Array.isArray(data) ? data : [];
 }
 
 async function loadRaw(): Promise<AdminLogEntry[]> {
@@ -83,19 +65,6 @@ async function loadRaw(): Promise<AdminLogEntry[]> {
     }
   }
   return readLocal();
-}
-
-async function persist(logs: AdminLogEntry[]): Promise<void> {
-  if (hasBlob()) {
-    try {
-      await writeBlob(logs);
-      await writeLocal(logs).catch(() => undefined);
-      return;
-    } catch (err) {
-      console.error("[admin-logs] blob write failed, writing local", err);
-    }
-  }
-  await writeLocal(logs);
 }
 
 export type AppendAdminLogInput = {
@@ -117,17 +86,25 @@ export async function appendAdminLog(
     meta: input.meta,
   };
   let lastError: unknown;
-  for (let attempt = 0; attempt < 3; attempt++) {
+  for (let attempt = 0; attempt < 6; attempt++) {
     try {
-      const logs = await loadRaw();
-      // Avoid duplicate if a prior attempt already persisted this id
-      if (!logs.some((l) => l.id === entry.id)) {
+      const { data, etag } = hasBlob()
+        ? await readPublicJson<AdminLogEntry[]>(BLOB_PATHNAME)
+        : { data: await readLocal(), etag: null };
+      const logs = Array.isArray(data) ? data : [];
+      if (!logs.some((item) => item.id === entry.id)) {
         logs.unshift(entry);
       }
       const trimmed = logs.slice(0, MAX_ENTRIES);
-      await persist(trimmed);
+      if (!hasBlob()) {
+        await writeLocal(trimmed);
+        return entry;
+      }
+      await writePublicJson(BLOB_PATHNAME, trimmed, etag);
+      await writeLocal(trimmed).catch(() => undefined);
       return entry;
     } catch (err) {
+      if (isBlobConflict(err) && attempt < 5) continue;
       lastError = err;
       console.error(`[admin-logs] append attempt ${attempt + 1} failed`, err);
     }
