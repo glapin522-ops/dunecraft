@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import type { Locale } from "@/lib/i18n";
 import type { Dictionary } from "@/lib/dictionaries";
-import type { Role, SessionUser } from "@/lib/auth/types";
+import type { SessionUser } from "@/lib/auth/types";
 import { LocaleSwitcher } from "./LocaleSwitcher";
 
 type Props = {
@@ -60,20 +60,7 @@ function isActive(pathname: string, locale: Locale, key: (typeof navKeys)[number
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
-
-function roleLabel(dict: Dictionary, role: Role): string {
-  if (role === "creator") return dict.cabinet.roleCreator;
-  if (role === "editor") return dict.cabinet.roleEditor;
-  return dict.cabinet.rolePlayer;
-}
-
-function roleBadgeClass(role: Role): string {
-  if (role === "creator") return "border-gold/55 bg-gold/25 text-gold-light";
-  if (role === "editor") return "border-moss-light/50 bg-moss/30 text-moss-light";
-  return "border-border bg-surface-2 text-ash-light";
-}
-
-function UserCabinetPill({
+function CabinetEntry({
   locale,
   dict,
   user,
@@ -82,31 +69,25 @@ function UserCabinetPill({
 }: {
   locale: Locale;
   dict: Dictionary;
-  user: SessionUser;
+  user: SessionUser | null;
   className?: string;
   onNavigate?: () => void;
 }) {
-  const initial = (user.username.trim().charAt(0) || "?").toUpperCase();
+  const nick = user?.username.trim();
   return (
     <Link
       href={`/${locale}/cabinet`}
       onClick={onNavigate}
-      title={`${dict.nav.signedInAs} ${user.username}`}
-      className={`glow-btn glow-ring-gold inline-flex max-w-[14rem] items-center gap-2 rounded-full border border-gold/45 bg-gold/15 py-1 pl-1 pr-2.5 text-sm font-bold tracking-wide text-gold-light shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] transition-colors hover:bg-gold/25 sm:max-w-[16rem] ${className}`}
+      aria-label={nick ? `${dict.nav.signedInAs} ${nick}` : dict.nav.cabinet}
+      title={nick ? `${dict.nav.signedInAs} ${nick}` : dict.nav.cabinet}
+      className={`cabinet-btn inline-flex max-w-[14rem] items-center justify-center gap-2 px-3.5 py-2 text-sm font-bold tracking-wide ${nick ? "" : "min-w-[6.75rem]"} ${className}`}
     >
       <CabinetSeal />
-      <span
-        className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-gold/40 bg-void text-xs font-bold text-gold-light"
-        aria-hidden
-      >
-        {initial}
-      </span>
-      <span className="min-w-0 truncate">{user.username}</span>
-      <span
-        className={`shrink-0 rounded-full border px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide ${roleBadgeClass(user.role)}`}
-      >
-        {roleLabel(dict, user.role)}
-      </span>
+      {nick ? (
+        <span className="min-w-0 truncate">{nick}</span>
+      ) : (
+        <span className="sr-only">{dict.nav.cabinet}</span>
+      )}
     </Link>
   );
 }
@@ -201,22 +182,12 @@ export function Header({ locale, dict }: Props) {
             locale={locale}
             labels={{ ru: dict.common.localeRu, en: dict.common.localeEn }}
           />
-          {user ? (
-            <UserCabinetPill
-              locale={locale}
-              dict={dict}
-              user={user}
-              className="hidden sm:inline-flex"
-            />
-          ) : (
-            <Link
-              href={`/${locale}/cabinet`}
-              className="cabinet-btn hidden items-center justify-center gap-2 px-3.5 py-2 text-sm font-bold tracking-wide sm:inline-flex"
-            >
-              <CabinetSeal />
-              {dict.nav.cabinet}
-            </Link>
-          )}
+          <CabinetEntry
+            locale={locale}
+            dict={dict}
+            user={user}
+            className="hidden sm:inline-flex"
+          />
           <button
             type="button"
             className="inline-flex items-center justify-center rounded-lg border border-border bg-surface-2 p-2.5 text-ash-light hover:border-gold/35 hover:text-gold-light lg:hidden"
@@ -266,24 +237,13 @@ export function Header({ locale, dict }: Props) {
               );
             })}
             <li className="mt-2">
-              {user ? (
-                <UserCabinetPill
-                  locale={locale}
-                  dict={dict}
-                  user={user}
-                  className="w-full max-w-none justify-center"
-                  onNavigate={() => setOpen(false)}
-                />
-              ) : (
-                <Link
-                  href={`/${locale}/cabinet`}
-                  className="cabinet-btn flex items-center justify-center gap-2 px-3 py-2.5 text-center text-sm font-bold tracking-wide"
-                  onClick={() => setOpen(false)}
-                >
-                  <CabinetSeal />
-                  {dict.nav.cabinet}
-                </Link>
-              )}
+              <CabinetEntry
+                locale={locale}
+                dict={dict}
+                user={user}
+                className="w-full max-w-none"
+                onNavigate={() => setOpen(false)}
+              />
             </li>
           </ul>
         </nav>

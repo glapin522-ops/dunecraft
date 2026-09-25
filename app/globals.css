@@ -223,14 +223,55 @@ h1 {
 }
 
 .cabinet-btn {
-  border-radius: 0.5rem;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border-radius: 0.75rem;
   border: 1px solid color-mix(in srgb, var(--ember) 50%, var(--border));
-  background: color-mix(in srgb, var(--ember) 22%, var(--surface-2));
+  background: color-mix(in srgb, var(--ember) 16%, var(--surface-2));
   color: var(--foreground);
 }
 
+.cabinet-btn::before {
+  content: "";
+  position: absolute;
+  inset: -20%;
+  z-index: 0;
+  opacity: 0.7;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 40' fill='none' stroke='%23e07a4a' stroke-width='1.5' stroke-linejoin='miter'><path d='M12 2v36M12 14l6 6-6 6-6-6zM6 9l4 4M18 27l-4 4'/></svg>");
+  background-repeat: repeat;
+  background-size: 22px 36px;
+  animation: rune-drift 7s linear infinite;
+}
+
+.cabinet-btn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--surface-2) 28%, transparent),
+    color-mix(in srgb, var(--surface-2) 62%, transparent)
+  );
+}
+
+.cabinet-btn > * {
+  position: relative;
+  z-index: 1;
+}
+
 .cabinet-btn:hover {
-  background: color-mix(in srgb, var(--ember) 34%, var(--surface-2));
+  background: color-mix(in srgb, var(--ember) 28%, var(--surface-2));
+}
+
+@keyframes rune-drift {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 22px 36px;
+  }
 }
 
 .cabinet-seal {
@@ -375,6 +416,10 @@ h1 {
   .donate-link .donate-bob {
     animation: none;
     transform: translateX(-50%);
+  }
+
+  .cabinet-btn::before {
+    animation: none;
   }
 
   .donate-rune path,
