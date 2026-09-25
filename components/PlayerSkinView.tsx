@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { SkinViewer } from "skinview3d";
-import { DEFAULT_STEVE_DATA_URL } from "@/lib/default-skin";
+import { DEFAULT_CAPE_URL, DEFAULT_STEVE_DATA_URL } from "@/lib/default-skin";
 
 type Props = {
   skinUrl?: string | null;
@@ -35,6 +35,7 @@ export function PlayerSkinView({
       width,
       height,
       skin: skinUrl || DEFAULT_STEVE_DATA_URL,
+      cape: capeUrl || DEFAULT_CAPE_URL,
     });
     viewer.controls.enableRotate = true;
     viewer.controls.enableZoom = true;
@@ -71,7 +72,7 @@ export function PlayerSkinView({
     const viewer = viewerRef.current;
     if (!viewer) return;
     if (capeUrl) void viewer.loadCape(capeUrl);
-    else viewer.resetCape();
+    else void viewer.loadCape(DEFAULT_CAPE_URL);
   }, [capeUrl]);
 
   useEffect(() => {
@@ -86,7 +87,7 @@ export function PlayerSkinView({
       ref={wrapRef}
       className={`relative h-full min-h-[12rem] w-full overflow-hidden ${className}`}
     >
-      <canvas ref={canvasRef} className="block h-full w-full" />
+      <canvas ref={canvasRef} className="block h-full w-full touch-none" />
     </div>
   );
 }
