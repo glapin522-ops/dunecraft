@@ -1,0 +1,25 @@
+# secrets / env
+.env
+.env.*
+!.env.example
+
+# deps & build
+node_modules/
+.next/
+out/
+dist/
+build/
+*.tsbuildinfo
+next-env.d.ts
+
+# vercel local
+.vercel/
+
+# local data mirrors
+data/
+
+# OS / IDE
+.DS_Store
+*.log
+.idea/
+.vscode/

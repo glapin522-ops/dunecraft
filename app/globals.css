@@ -1,0 +1,265 @@
+@import "tailwindcss";
+
+:root {
+  /* Dark mid-fantasy — Void Orchid (violet / moon-lilac) */
+  --black: #0a0812;
+  --moss: #5c3d7a;          /* deep royal violet (primary) */
+  --moss-light: #9b7ec9;    /* mist violet */
+  --ash: #9a95a8;
+  --ash-light: #c8c2d4;
+  --gold: #c9a8ef;          /* moon orchid accent */
+  --gold-light: #e2d0ff;
+  --surface: #12101a;
+  --surface-2: #1a1626;
+  --surface-3: #241e32;
+  --border: #322a42;
+  --foreground: #ebe6f4;
+  --muted: #9a95a8;
+  --background: var(--black);
+
+  /* Accent neon (Void Orchid family — balance / skin / upgrade) */
+  --accent-balance: #5ee9a0;
+  --accent-balance-dim: #2dd4a0;
+  --accent-skin: #67b8ff;
+  --accent-skin-dim: #4a90e2;
+  --accent-upgrade: #e879f9;
+  --accent-danger: #f87171;
+
+  /* Glass (kept for hero CTAs / rare overlays — prefer .panel-solid in ЛК) */
+  --glass-bg: color-mix(in srgb, var(--surface) 55%, transparent);
+  --glass-bg-strong: color-mix(in srgb, var(--surface-2) 72%, transparent);
+  --glass-stroke: color-mix(in srgb, var(--ash) 22%, transparent);
+  --glass-stroke-gold: color-mix(in srgb, var(--gold) 35%, transparent);
+  --glow-gold: 0 0 48px color-mix(in srgb, var(--gold) 35%, transparent);
+  --glow-moss: 0 0 48px color-mix(in srgb, var(--moss-light) 40%, transparent);
+  --glow-gold-sm: 0 0 24px color-mix(in srgb, var(--gold) 28%, transparent);
+  --glow-moss-sm: 0 0 24px color-mix(in srgb, var(--moss-light) 30%, transparent);
+  --glow-balance-sm: 0 0 22px color-mix(in srgb, var(--accent-balance) 45%, transparent);
+  --glow-skin-sm: 0 0 22px color-mix(in srgb, var(--accent-skin) 42%, transparent);
+  --glow-upgrade-sm: 0 0 22px color-mix(in srgb, var(--accent-upgrade) 40%, transparent);
+  --glow-danger-sm: 0 0 20px color-mix(in srgb, var(--accent-danger) 35%, transparent);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-black: var(--black);
+  --color-moss: var(--moss);
+  --color-moss-light: var(--moss-light);
+  --color-ash: var(--ash);
+  --color-ash-light: var(--ash-light);
+  --color-gold: var(--gold);
+  --color-gold-light: var(--gold-light);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+  --color-border: var(--border);
+  --color-muted: var(--muted);
+  --color-accent-balance: var(--accent-balance);
+  --color-accent-skin: var(--accent-skin);
+  --color-accent-upgrade: var(--accent-upgrade);
+  --color-accent-danger: var(--accent-danger);
+  --font-sans: var(--font-geist-sans);
+  --font-display: var(--font-unbounded);
+  --font-mono: var(--font-geist-mono);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-weight: 500;
+  min-height: 100vh;
+}
+
+/* Display font for headings + hero title */
+h1,
+h2,
+h3,
+.font-display {
+  font-family: var(--font-unbounded), var(--font-geist-sans), system-ui, sans-serif;
+  font-weight: 700;
+}
+
+h1 {
+  font-weight: 800;
+}
+
+.pb-safe {
+  padding-bottom: max(1.25rem, env(safe-area-inset-bottom, 0px));
+}
+
+::selection {
+  background: color-mix(in srgb, var(--moss-light) 40%, transparent);
+  color: var(--foreground);
+}
+
+:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+
+.prose-dc p + p {
+  margin-top: 0.75rem;
+}
+
+/* --- Solid panel (cabinet / lists — anti-glass mush) --- */
+.panel-solid {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, #ffffff 5%, transparent),
+    0 10px 28px color-mix(in srgb, #000000 55%, transparent);
+}
+
+.panel-solid-deep {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, #ffffff 4%, transparent),
+    0 8px 24px color-mix(in srgb, #000000 50%, transparent);
+}
+
+.panel-solid-raised {
+  background: var(--surface-3);
+  border: 1px solid var(--border);
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, #ffffff 6%, transparent),
+    0 12px 32px color-mix(in srgb, #000000 55%, transparent);
+}
+
+/* --- Glass panel (hero overlays only — prefer .panel-solid in ЛК) --- */
+.glass {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-stroke);
+  backdrop-filter: blur(16px) saturate(1.2);
+  -webkit-backdrop-filter: blur(16px) saturate(1.2);
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, #ffffff 6%, transparent),
+    0 8px 32px color-mix(in srgb, #000000 45%, transparent);
+}
+
+.glass-strong {
+  background: var(--glass-bg-strong);
+  border: 1px solid var(--glass-stroke);
+  backdrop-filter: blur(20px) saturate(1.25);
+  -webkit-backdrop-filter: blur(20px) saturate(1.25);
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, #ffffff 8%, transparent),
+    0 12px 40px color-mix(in srgb, #000000 50%, transparent);
+}
+
+/* --- Glow buttons --- */
+.glow-btn {
+  position: relative;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  transition:
+    box-shadow 0.25s ease,
+    background-color 0.25s ease,
+    border-color 0.25s ease,
+    transform 0.2s ease,
+    filter 0.2s ease;
+}
+
+.glow-btn:hover:not(:disabled) {
+  box-shadow: var(--glow-gold-sm);
+}
+
+.glow-btn-moss:hover:not(:disabled) {
+  box-shadow: var(--glow-moss-sm);
+}
+
+.glow-btn-balance:hover:not(:disabled) {
+  box-shadow: var(--glow-balance-sm);
+}
+
+.glow-btn-skin:hover:not(:disabled) {
+  box-shadow: var(--glow-skin-sm);
+}
+
+.glow-btn-upgrade:hover:not(:disabled) {
+  box-shadow: var(--glow-upgrade-sm);
+}
+
+.glow-btn-danger:hover:not(:disabled) {
+  box-shadow: var(--glow-danger-sm);
+}
+
+.glow-btn:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+/* Soft gold ring for featured / primary CTAs */
+.glow-ring-gold {
+  box-shadow: var(--glow-gold-sm), inset 0 1px 0 color-mix(in srgb, #ffffff 8%, transparent);
+}
+
+.glow-ring-moss {
+  box-shadow: var(--glow-moss-sm), inset 0 1px 0 color-mix(in srgb, #ffffff 6%, transparent);
+}
+
+.glow-ring-balance {
+  box-shadow: var(--glow-balance-sm), inset 0 1px 0 color-mix(in srgb, #ffffff 8%, transparent);
+}
+
+.glow-ring-skin {
+  box-shadow: var(--glow-skin-sm), inset 0 1px 0 color-mix(in srgb, #ffffff 8%, transparent);
+}
+
+.glow-ring-upgrade {
+  box-shadow: var(--glow-upgrade-sm), inset 0 1px 0 color-mix(in srgb, #ffffff 8%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .glow-btn,
+  .glow-btn:hover:not(:disabled),
+  .glow-btn:active:not(:disabled) {
+    transition: none;
+    transform: none;
+  }
+
+  .glass,
+  .glass-strong {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
+
+/* Donate section Ken Burns — CSS only, paused off reduced-motion */
+@keyframes donate-kenburns {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.06);
+  }
+}
+
+.donate-kenburns {
+  animation: donate-kenburns 45s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .donate-kenburns {
+    animation: none;
+  }
+}
+
+/* Hero mist particles (tsParticles) */
+#dunecraft-hero-mist,
+#dunecraft-hero-mist canvas {
+  width: 100% !important;
+  height: 100% !important;
+  pointer-events: none !important;
+}
