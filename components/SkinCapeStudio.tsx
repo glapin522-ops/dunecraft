@@ -171,7 +171,7 @@ export function SkinCapeStudio({ user, dict, open, onClose, onUser }: Props) {
                 skinUrl={user.skinUrl}
                 capeUrl={user.capeUrl}
                 autoRotate={false}
-                yaw={Math.PI}
+                capeOnly
               />
             </div>
             <input
