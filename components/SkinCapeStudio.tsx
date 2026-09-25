@@ -149,7 +149,7 @@ export function SkinCapeStudio({ user, dict, open, onClose, onUser }: Props) {
               type="button"
               disabled={Boolean(busy)}
               onClick={() => skinInput.current?.click()}
-              className="mt-3 inline-flex min-w-[10rem] items-center justify-center rounded-full bg-[#ff2d8b] px-6 py-2.5 text-sm font-bold uppercase tracking-wide text-white shadow-[0_0_24px_rgba(255,45,139,0.35)] transition hover:bg-[#ff4aa0] disabled:opacity-50"
+              className="glow-btn btn-fill-ember mt-3 inline-flex min-w-[10rem] items-center justify-center rounded-full px-6 py-2.5 text-sm font-bold uppercase tracking-wide disabled:opacity-50"
             >
               {busy === "skin" ? c.skinUploading : c.skinUpload}
             </button>
@@ -189,7 +189,7 @@ export function SkinCapeStudio({ user, dict, open, onClose, onUser }: Props) {
               type="button"
               disabled={Boolean(busy)}
               onClick={() => capeInput.current?.click()}
-              className="mt-3 inline-flex min-w-[10rem] items-center justify-center rounded-full bg-[#ff2d8b] px-6 py-2.5 text-sm font-bold uppercase tracking-wide text-white shadow-[0_0_24px_rgba(255,45,139,0.35)] transition hover:bg-[#ff4aa0] disabled:opacity-50"
+              className="glow-btn btn-fill-ember mt-3 inline-flex min-w-[10rem] items-center justify-center rounded-full px-6 py-2.5 text-sm font-bold uppercase tracking-wide disabled:opacity-50"
             >
               {busy === "cape" ? c.skinUploading : c.skinUpload}
             </button>

@@ -147,7 +147,7 @@ export function CabinetDashboard({
               </div>
               <button
                 type="button"
-                className="glow-btn glow-btn-skin mt-4 inline-flex w-full items-center justify-center gap-2 rounded-2xl border border-[color-mix(in_srgb,var(--accent-skin)_45%,var(--border))] bg-[color-mix(in_srgb,var(--accent-skin)_16%,var(--surface-3))] px-4 py-2.5 text-sm font-semibold text-[color:var(--accent-skin)] shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] transition-colors hover:bg-[color-mix(in_srgb,var(--accent-skin)_26%,var(--surface-3))]"
+                className="glow-btn btn-fill-ember mt-4 inline-flex w-full items-center justify-center gap-2 rounded-2xl px-4 py-2.5 text-sm font-semibold"
                 onClick={() => setStudioOpen(true)}
               >
                 {c.setupSkinCape}
@@ -165,7 +165,7 @@ export function CabinetDashboard({
               <div className="mt-auto pt-4">
                 <Link
                   href={donateHref}
-                  className="glow-btn glow-btn-balance glow-ring-balance inline-flex w-full items-center justify-center rounded-2xl border border-[color-mix(in_srgb,var(--accent-balance)_45%,var(--border))] bg-[color-mix(in_srgb,var(--accent-balance)_18%,var(--surface-3))] px-4 py-2.5 text-sm font-semibold text-[color:var(--accent-balance)] shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] transition-colors hover:bg-[color-mix(in_srgb,var(--accent-balance)_28%,var(--surface-3))]"
+                  className="glow-btn btn-fill-balance inline-flex w-full items-center justify-center rounded-2xl px-4 py-2.5 text-sm font-semibold"
                 >
                   {c.topUpBalance}
                 </Link>

@@ -208,6 +208,34 @@ h1 {
   cursor: not-allowed;
 }
 
+.btn-fill-ember {
+  color: #1a0d08;
+  background: var(--ember);
+  border: 1px solid color-mix(in srgb, #fff 22%, var(--ember));
+  box-shadow: inset 0 1px 0 color-mix(in srgb, #fff 32%, transparent);
+}
+
+.glow-btn.btn-fill-ember:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--ember) 78%, #fff);
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, #fff 40%, transparent),
+    var(--glow-ember-sm);
+}
+
+.btn-fill-balance {
+  color: #062018;
+  background: var(--accent-balance);
+  border: 1px solid color-mix(in srgb, #fff 24%, var(--accent-balance));
+  box-shadow: inset 0 1px 0 color-mix(in srgb, #fff 35%, transparent);
+}
+
+.glow-btn.btn-fill-balance:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--accent-balance) 82%, #fff);
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, #fff 42%, transparent),
+    var(--glow-balance-sm);
+}
+
 .kicker-mix {
   color: color-mix(in srgb, var(--gold) 46%, var(--accent-skin));
 }
