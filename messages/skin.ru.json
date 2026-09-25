@@ -1,0 +1,20 @@
+{
+  "skinStudioTitle": "Скин и плащ",
+  "skinStudioLead": "PNG: скин 64×64 (или 64×32), плащ 64×32. Можно крутить модель мышью.",
+  "skinStudioClose": "Закрыть",
+  "skinUpload": "Загрузить",
+  "skinUploading": "Загрузка…",
+  "skinUploaded": "Скин сохранён",
+  "capeUploaded": "Плащ сохранён",
+  "skinReset": "Сбросить скин",
+  "capeReset": "Сбросить плащ",
+  "skinCleared": "Скин сброшен",
+  "capeCleared": "Плащ сброшен",
+  "skinFileTooLarge": "Файл больше 512 КБ",
+  "skinNotPng": "Нужен PNG",
+  "skinBadSize": "Неверный размер. Скин: 64×64 / 64×32 / 128×128. Плащ: 64×32.",
+  "skinNeedAccount": "Сначала зарегистрируйтесь — seed-создатель без записи в store не может сохранить скин.",
+  "skinMissingFile": "Выберите файл",
+  "skinUploadError": "Не удалось загрузить",
+  "skinHintLive": "Тяни мышью, чтобы вертеть модель"
+}
