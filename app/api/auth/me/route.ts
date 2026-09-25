@@ -12,7 +12,6 @@ export async function GET() {
   if (stored) {
     return NextResponse.json({ user: toSessionUser(stored) });
   }
-  // Seed-only session (no StoredUser row)
   return NextResponse.json({
     user: {
       username: session.username,
@@ -23,6 +22,8 @@ export async function GET() {
       level: session.level ?? 1,
       vipLevel: session.vipLevel ?? 0,
       balance: session.balance ?? 0,
+      skinUrl: session.skinUrl ?? null,
+      capeUrl: session.capeUrl ?? null,
       seedOnly: true,
     },
   });
