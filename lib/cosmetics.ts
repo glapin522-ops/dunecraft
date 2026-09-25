@@ -16,7 +16,14 @@ const SKIN_SIZES = new Set([
   "256x256",
 ]);
 
-const CAPE_SIZES = new Set(["22x17", "64x32", "128x64", "256x128"]);
+const CAPE_SIZES = new Set([
+  "22x17",
+  "64x32",
+  "128x64",
+  "256x128",
+  "512x256",
+  "1024x512",
+]);
 
 function hasBlob(): boolean {
   return Boolean(process.env.BLOB_READ_WRITE_TOKEN?.trim());
@@ -35,7 +42,7 @@ export function readPngSize(
   }
   const width = buf.readUInt32BE(16);
   const height = buf.readUInt32BE(20);
-  if (!width || !height || width > 512 || height > 512) return null;
+  if (!width || !height || width > 4096 || height > 4096) return null;
   return { width, height };
 }
 

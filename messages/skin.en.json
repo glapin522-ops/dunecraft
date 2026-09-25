@@ -1,6 +1,6 @@
 {
   "skinStudioTitle": "Skin and cape",
-  "skinStudioLead": "PNG only: skin 64×64 (or 64×32), cape 64×32. Drag to rotate the model.",
+  "skinStudioLead": "PNG only: skin 64×64 (or 64×32), cape 64×32 or HD up to 1024×512. Drag to rotate the model.",
   "skinStudioClose": "Close",
   "skinUpload": "Upload",
   "skinUploading": "Uploading…",
@@ -12,7 +12,7 @@
   "capeCleared": "Cape reset",
   "skinFileTooLarge": "File is larger than 512 KB",
   "skinNotPng": "PNG required",
-  "skinBadSize": "Wrong size. Skin: 64×64 / 64×32 / 128×128. Cape: 64×32.",
+  "skinBadSize": "Wrong size. Skin: 64×64 or 64×32. Cape: 64×32 or HD 1024×512.",
   "skinNeedAccount": "Register first — a seed creator with no store row cannot save a skin.",
   "skinMissingFile": "Choose a file",
   "skinUploadError": "Upload failed",
