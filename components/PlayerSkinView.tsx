@@ -10,6 +10,8 @@ type Props = {
   className?: string;
   id?: string;
   autoRotate?: boolean;
+  /** Radians. Math.PI shows the cape. */
+  yaw?: number;
 };
 
 export function PlayerSkinView({
@@ -18,6 +20,7 @@ export function PlayerSkinView({
   className = "",
   id,
   autoRotate = true,
+  yaw = 0,
 }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const wrapRef = useRef<HTMLDivElement>(null);
@@ -42,6 +45,7 @@ export function PlayerSkinView({
     viewer.controls.enablePan = false;
     viewer.autoRotate = autoRotate;
     viewer.autoRotateSpeed = 0.6;
+    viewer.playerObject.rotation.y = yaw;
     if (capeUrl) {
       void viewer.loadCape(capeUrl);
     }
