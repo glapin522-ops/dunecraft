@@ -35,6 +35,8 @@ export type SafePlayerProfile = {
   registrationGeo: GeoInfo | null;
   loginHistory: LoginHistoryEntry[];
   hasPassword: boolean;
+  skinUrl: string | null;
+  capeUrl: string | null;
 };
 
 function numField(value: unknown, fallback: number, min: number): number {
@@ -103,5 +105,7 @@ export function toSafePlayer(user: StoredUser): SafePlayerProfile {
     registrationGeo: sanitizeGeo(user.registrationGeo),
     loginHistory: sanitizeHistory(user.loginHistory),
     hasPassword: Boolean(user.passwordHash),
+    skinUrl: typeof user.skinUrl === "string" && user.skinUrl ? user.skinUrl : null,
+    capeUrl: typeof user.capeUrl === "string" && user.capeUrl ? user.capeUrl : null,
   };
 }

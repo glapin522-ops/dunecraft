@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import dynamic from "next/dynamic";
 import { Button } from "./Button";
-import { ModelViewportStub } from "./ModelViewportStub";
 import type { Dictionary } from "@/lib/dictionaries";
 import type {
   GeoInfo,
@@ -11,6 +11,11 @@ import type {
 } from "@/lib/auth/types";
 import type { SafePlayerProfile } from "@/lib/auth/safe-player";
 import { ipv4Subnet24 } from "@/lib/client-ip";
+
+const PlayerSkinView = dynamic(
+  () => import("./PlayerSkinView").then((m) => m.PlayerSkinView),
+  { ssr: false },
+);
 
 type Props = {
   dict: Dictionary;
@@ -216,10 +221,18 @@ export function PlayerProfileModal({ dict, username, open, onClose }: Props) {
             <div className="space-y-5">
               <div className="grid gap-5 md:grid-cols-[minmax(12rem,16rem)_minmax(0,1fr)]">
                 <div className="space-y-3">
-                  <ModelViewportStub
-                    placeholder={c.statsModelPlaceholder}
-                    hint={c.statsModelHint}
-                  />
+                  <div className="overflow-hidden rounded-xl border border-border bg-[#12101c]">
+                    <div className="h-64">
+                      <PlayerSkinView
+                        skinUrl={profile.skinUrl}
+                        capeUrl={profile.capeUrl}
+                        autoRotate={false}
+                      />
+                    </div>
+                    <p className="px-3 pb-3 text-center text-[11px] text-ash">
+                      {c.skinHintLive}
+                    </p>
+                  </div>
                   <dl className="divide-y divide-border rounded-lg border border-border bg-surface-2 text-sm">
                     <div className="flex justify-between gap-2 px-3 py-2">
                       <dt className="text-ash">{c.profileLevel}</dt>
