@@ -49,8 +49,8 @@ export default async function HomePage({ params }: Props) {
               "linear-gradient(180deg, #0a0812cc 0%, #0a081233 28%, #0a081200 45%)",
               "linear-gradient(0deg, #0a0812f2 0%, #0a081299 22%, transparent 55%)",
               "radial-gradient(ellipse 90% 70% at 50% 40%, transparent 30%, #0a081288 100%)",
-              "radial-gradient(ellipse 50% 40% at 20% 30%, #5c3d7a33, transparent 55%)",
-              "radial-gradient(ellipse 40% 35% at 80% 25%, #c9a8ef22, transparent 50%)",
+              "radial-gradient(ellipse 42% 32% at 18% 78%, #e07a4a26, transparent 58%)",
+              "radial-gradient(ellipse 36% 30% at 82% 18%, #67b8ff1c, transparent 55%)",
             ].join(", "),
           }}
         />
@@ -69,7 +69,7 @@ export default async function HomePage({ params }: Props) {
 
         <div className="relative z-10 mx-auto w-full max-w-6xl px-4 py-16 sm:py-24 md:py-32">
           <FadeIn delay={0} y={20}>
-            <p className="text-sm font-semibold uppercase tracking-[0.35em] text-moss-light sm:text-base">
+            <p className="kicker-mix text-sm font-semibold uppercase tracking-[0.35em] sm:text-base">
               Minecraft RPG
             </p>
           </FadeIn>
@@ -96,7 +96,7 @@ export default async function HomePage({ params }: Props) {
                 disabled
                 aria-disabled="true"
                 aria-label={dict.home.launcherCta}
-                className="glow-btn glass inline-flex w-full items-center justify-center gap-2 rounded-xl border border-gold/40 bg-gold/15 px-8 py-4 text-base font-bold tracking-wide text-gold-light opacity-80 sm:w-auto sm:text-lg"
+                className="cta-ember glow-btn inline-flex w-full items-center justify-center gap-2 rounded-xl px-8 py-4 text-base font-bold tracking-wide sm:w-auto sm:text-lg"
               >
                 <svg
                   width="20"
@@ -121,7 +121,7 @@ export default async function HomePage({ params }: Props) {
           </FadeIn>
 
           <FadeIn delay={0.38} y={12}>
-            <p className="mt-6 inline-flex items-center gap-2 text-sm text-ash">
+            <p className="mt-6 inline-flex items-center gap-2 text-sm text-accent-skin">
               <span>{dict.common.online}</span>
               <StubBadge label={dict.common.comingSoon} />
             </p>
@@ -143,7 +143,7 @@ export default async function HomePage({ params }: Props) {
             </div>
             <Link
               href={`/${locale}/news`}
-              className="text-base text-moss-light transition-colors hover:text-gold-light"
+              className="text-base text-accent-skin transition-colors hover:text-foreground"
             >
               {dict.common.seeAll} →
             </Link>
@@ -215,7 +215,7 @@ export default async function HomePage({ params }: Props) {
             </div>
             <Link
               href={`/${locale}/donate`}
-              className="text-base text-moss-light transition-colors hover:text-gold-light"
+              className="text-base text-accent-skin transition-colors hover:text-foreground"
             >
               {dict.common.seeAll} →
             </Link>
@@ -244,7 +244,7 @@ export default async function HomePage({ params }: Props) {
                     {pack.description[locale]}
                   </p>
                   <Button
-                    variant="gold"
+                    variant="danger"
                     size="lg"
                     disabled
                     className="mt-6 w-full"
@@ -286,7 +286,7 @@ export default async function HomePage({ params }: Props) {
               <div className="mt-8 flex w-full flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center sm:gap-4">
                 <Link
                   href={`/${locale}/news`}
-                  className="glow-btn glow-btn-moss glow-ring-moss inline-flex w-full items-center justify-center rounded-xl border border-moss-light/30 bg-moss px-8 py-4 text-base font-bold tracking-wide hover:bg-moss-light sm:w-auto sm:text-lg"
+                  className="glow-btn glass inline-flex w-full items-center justify-center rounded-xl border border-border px-8 py-4 text-base font-bold tracking-wide text-foreground hover:border-moss-light/40 sm:w-auto sm:text-lg"
                 >
                   {dict.home.ctaNews}
                 </Link>

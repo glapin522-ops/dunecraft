@@ -59,7 +59,7 @@ export default async function DonatePage({ params }: Props) {
               <h2 className="mt-1 text-xl font-semibold">{pack.title[locale]}</h2>
               <p className="mt-3 text-sm text-muted">{pack.description[locale]}</p>
               <Button
-                variant="gold"
+                variant="danger"
                 disabled
                 className="mt-6 w-full"
                 aria-disabled="true"
