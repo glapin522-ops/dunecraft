@@ -8,7 +8,6 @@ import { SkinCapeStudio } from "./SkinCapeStudio";
 import type { Dictionary } from "@/lib/dictionaries";
 import type { Locale } from "@/lib/i18n";
 import type { SessionUser } from "@/lib/auth/types";
-import { DEFAULT_STEVE_DATA_URL } from "@/lib/default-skin";
 
 const PlayerSkinView = dynamic(
   () => import("./PlayerSkinView").then((m) => m.PlayerSkinView),
@@ -135,6 +134,28 @@ export function CabinetDashboard({
           </div>
 
           <div className="grid min-w-0 gap-4 sm:grid-cols-2">
+            <div className="panel-solid flex min-w-0 flex-col items-center rounded-3xl p-4 sm:p-5">
+              <div className="relative flex h-24 w-24 items-center justify-center">
+                <div className="pointer-events-none absolute inset-[-20%] rounded-full bg-[conic-gradient(from_180deg,color-mix(in_srgb,var(--moss-light)_55%,transparent),color-mix(in_srgb,var(--gold)_50%,transparent),color-mix(in_srgb,var(--accent-skin)_45%,transparent),color-mix(in_srgb,var(--moss-light)_55%,transparent))] opacity-60 blur-md" aria-hidden />
+                <div className="relative flex h-20 w-20 items-center justify-center rounded-full border border-[color-mix(in_srgb,var(--accent-skin)_45%,var(--border))] bg-surface shadow-[var(--glow-skin-sm)]">
+                  <svg width="40" height="48" viewBox="0 0 40 48" aria-hidden className="text-[color:var(--accent-skin)]">
+                    <path
+                      fill="currentColor"
+                      d="M6 8c6 5 11 7 14 7s8-2 14-7l3 5c-1 18-6 29-17 33C9 42 4 31 3 13z"
+                    />
+                    <path fill="currentColor" opacity="0.35" d="M20 16v28c6-3 10-12 11-22z" />
+                  </svg>
+                </div>
+              </div>
+              <button
+                type="button"
+                className="glow-btn glow-btn-skin mt-4 inline-flex w-full items-center justify-center gap-2 rounded-2xl border border-[color-mix(in_srgb,var(--accent-skin)_45%,var(--border))] bg-[color-mix(in_srgb,var(--accent-skin)_16%,var(--surface-3))] px-4 py-2.5 text-sm font-semibold text-[color:var(--accent-skin)] shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] transition-colors hover:bg-[color-mix(in_srgb,var(--accent-skin)_26%,var(--surface-3))]"
+                onClick={() => setStudioOpen(true)}
+              >
+                {c.setupSkinCape}
+              </button>
+            </div>
+
             <div className="panel-solid flex min-w-0 flex-col rounded-3xl p-4 sm:p-5">
               <div className="flex items-end gap-2">
                 <span className="text-4xl font-bold tabular-nums text-foreground">{balance}</span>
@@ -151,39 +172,6 @@ export function CabinetDashboard({
                   {c.topUpBalance}
                 </Link>
               </div>
-            </div>
-
-            <div className="panel-solid flex min-w-0 flex-col items-center rounded-3xl p-4 sm:p-5">
-              <div className="relative flex h-24 w-24 items-center justify-center">
-                <div className="pointer-events-none absolute inset-[-20%] rounded-full bg-[conic-gradient(from_180deg,color-mix(in_srgb,var(--moss-light)_55%,transparent),color-mix(in_srgb,var(--gold)_50%,transparent),color-mix(in_srgb,var(--accent-skin)_45%,transparent),color-mix(in_srgb,var(--moss-light)_55%,transparent))] opacity-60 blur-md" aria-hidden />
-                <div className="relative flex h-20 w-20 items-center justify-center overflow-hidden rounded-full border border-[color-mix(in_srgb,var(--accent-skin)_45%,var(--border))] bg-surface shadow-[var(--glow-skin-sm)]">
-                  <div className="relative h-16 w-16 overflow-hidden">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={viewUser.skinUrl || DEFAULT_STEVE_DATA_URL}
-                      alt=""
-                      className="absolute max-w-none"
-                      style={{
-                        imageRendering: "pixelated",
-                        width: 512,
-                        height: 512,
-                        left: -64,
-                        top: -64,
-                      }}
-                    />
-                  </div>
-                </div>
-              </div>
-              <button
-                type="button"
-                className="glow-btn glow-btn-skin mt-4 inline-flex w-full items-center justify-center gap-2 rounded-2xl border border-[color-mix(in_srgb,var(--accent-skin)_45%,var(--border))] bg-[color-mix(in_srgb,var(--accent-skin)_16%,var(--surface-3))] px-4 py-2.5 text-sm font-semibold text-[color:var(--accent-skin)] shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] transition-colors hover:bg-[color-mix(in_srgb,var(--accent-skin)_26%,var(--surface-3))]"
-                onClick={() => setStudioOpen(true)}
-              >
-                {c.setupSkinCape}
-              </button>
-              <p className="mt-2 text-center text-[11px] text-ash" role="status">
-                {c.skinHintLive}
-              </p>
             </div>
           </div>
 
