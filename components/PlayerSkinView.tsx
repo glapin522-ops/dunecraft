@@ -50,9 +50,19 @@ export function PlayerSkinView({
     viewer.autoRotateSpeed = 0.6;
     viewer.playerObject.rotation.y = yaw;
     if (capeOnly) {
-      viewer.playerObject.skin.visible = false;
-      viewer.playerObject.rotation.y = Math.PI;
-      viewer.zoom = 1.7;
+      const player = viewer.playerObject;
+      const skin = player.skin;
+      skin.visible = false;
+      skin.head.visible = false;
+      skin.body.visible = false;
+      skin.rightArm.visible = false;
+      skin.leftArm.visible = false;
+      skin.rightLeg.visible = false;
+      skin.leftLeg.visible = false;
+      player.remove(skin);
+      player.rotation.y = Math.PI;
+      player.cape.position.set(0, 8, 0);
+      viewer.zoom = 2.4;
     }
     if (capeUrl) {
       void viewer.loadCape(capeUrl);
