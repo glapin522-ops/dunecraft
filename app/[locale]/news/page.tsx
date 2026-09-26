@@ -35,7 +35,7 @@ export default async function NewsPage({ params }: Props) {
       {posts.length === 0 ? (
         <p className="mt-10 text-ash">{dict.news.empty}</p>
       ) : (
-        <ul className="mt-10 grid gap-4 md:grid-cols-2">
+        <ul className="mt-10 grid gap-4">
           {posts.map((post) => (
             <li key={post.id}>
               <Link href={`/${locale}/news/${post.slug}`}>
