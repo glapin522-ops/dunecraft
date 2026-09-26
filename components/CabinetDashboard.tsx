@@ -7,6 +7,7 @@ import { Button } from "./Button";
 import { EtherDrop } from "./EtherDrop";
 import { RoleBadge } from "./RoleBadge";
 import { SkinCapeStudio } from "./SkinCapeStudio";
+import { currencyForm } from "@/lib/currency-form";
 import type { Dictionary } from "@/lib/dictionaries";
 import type { Locale } from "@/lib/i18n";
 import type { SessionUser } from "@/lib/auth/types";
@@ -61,6 +62,11 @@ export function CabinetDashboard({
   const level = viewUser.level ?? 1;
   const vipLevel = viewUser.vipLevel ?? 0;
   const balance = viewUser.balance ?? 0;
+  const etherWord = currencyForm(balance, locale, {
+    one: c.currencyEtherOne,
+    few: c.currencyEtherFew,
+    many: c.currencyEtherMany,
+  });
   const vipDisplay = vipLevel <= 0 ? c.statsVipNone : `VIP ${vipLevel}`;
   const donateHref = `/${locale}/donate`;
 
@@ -150,7 +156,7 @@ export function CabinetDashboard({
             <div className="panel-solid flex min-w-0 flex-col rounded-3xl p-4 sm:p-5">
               <div className="flex items-center gap-2.5">
                 <span className="text-4xl font-bold leading-none tabular-nums text-foreground">{balance}</span>
-                <span className="ether-name">{c.currencyEther}</span>
+                <span className="ether-name">{etherWord}</span>
                 <span className="ether-mark" aria-hidden>
                   <EtherDrop />
                 </span>
