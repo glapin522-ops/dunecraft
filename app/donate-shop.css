@@ -31,6 +31,34 @@
   transform: translateY(-2px);
 }
 
+.pack-pill {
+  display: inline-flex;
+  align-items: center;
+  border: 0;
+  border-radius: 999px;
+  padding: 0.28rem 0.78rem;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #120e1a;
+}
+
+.pack-pill-wanderer {
+  background: var(--ember);
+  color: #1a1008;
+}
+
+.pack-pill-pathfinder {
+  background: var(--gold);
+  color: #160e22;
+}
+
+.pack-pill-chronicler {
+  background: var(--accent-skin);
+  color: #071018;
+}
+
 .pack-rune {
   overflow: visible;
   filter: drop-shadow(0 0 10px color-mix(in srgb, var(--gold) 45%, transparent));
@@ -46,9 +74,6 @@
   animation: pack-rune-trace 3.4s ease-in-out infinite;
 }
 
-.pack-rune-wanderer {
-  color: var(--ember);
-}
 .pack-rune-wanderer path {
   stroke: var(--ember);
   animation-delay: 0s;
