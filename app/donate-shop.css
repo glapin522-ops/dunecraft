@@ -1,0 +1,54 @@
+.donate-shop-tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.7rem;
+  background: transparent;
+  border: 0;
+  color: inherit;
+  cursor: pointer;
+}
+
+.donate-shop-face {
+  width: 8.5rem;
+  height: 8.5rem;
+  display: grid;
+  place-items: center;
+  border-radius: 1.15rem;
+  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--surface-2) 88%, #0a0812);
+  font-family: var(--font-display), var(--font-unbounded), sans-serif;
+  font-size: 2.4rem;
+  font-weight: 800;
+  color: var(--gold-light);
+  transition: box-shadow 0.22s ease, border-color 0.22s ease, transform 0.22s ease;
+}
+
+.donate-shop-tile[data-on="1"] .donate-shop-face {
+  border-color: color-mix(in srgb, var(--gold) 65%, var(--border));
+  box-shadow:
+    0 0 0 3px color-mix(in srgb, var(--gold) 28%, transparent),
+    0 0 28px color-mix(in srgb, var(--gold) 32%, transparent);
+  transform: translateY(-2px);
+}
+
+.donate-shop-bar {
+  position: sticky;
+  bottom: 0.85rem;
+  z-index: 20;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.65rem 0.85rem;
+  padding: 0.55rem 0.55rem 0.55rem 0.85rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: color-mix(in srgb, #120e1a 92%, black);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .donate-shop-face {
+    transition: none;
+    transform: none;
+  }
+}
