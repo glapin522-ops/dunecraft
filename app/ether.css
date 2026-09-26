@@ -45,11 +45,14 @@
 }
 
 .ether-name {
-  font-size: 1.125rem;
-  font-weight: 700;
+  font-family: var(--font-unbounded), var(--font-geist-sans), system-ui, sans-serif;
+  font-size: 1.05rem;
+  font-weight: 800;
   line-height: 1;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
   color: var(--accent-ether);
+  text-shadow: 0 0 12px color-mix(in srgb, var(--accent-ether) 45%, transparent);
 }
 
 .btn-fill-ether {
