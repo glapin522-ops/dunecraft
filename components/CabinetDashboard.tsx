@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { Button } from "./Button";
+import { RoleBadge } from "./RoleBadge";
 import { SkinCapeStudio } from "./SkinCapeStudio";
 import type { Dictionary } from "@/lib/dictionaries";
 import type { Locale } from "@/lib/i18n";
@@ -28,13 +29,6 @@ function greetingKeyForHour(hour: number): keyof Dictionary["cabinet"] {
   if (hour >= 12 && hour <= 17) return "greetAfternoon";
   if (hour >= 18 && hour <= 22) return "greetEvening";
   return "greetNight";
-}
-
-function roleLabel(dict: Dictionary, role: SessionUser["role"]): string {
-  const c = dict.cabinet;
-  if (role === "creator") return c.roleCreator;
-  if (role === "editor") return c.roleEditor;
-  return c.rolePlayer;
 }
 
 export function CabinetDashboard({
@@ -115,11 +109,9 @@ export function CabinetDashboard({
           <div className="panel-solid relative min-w-0 overflow-hidden rounded-3xl p-4 sm:p-5">
             <p className="text-xs uppercase tracking-wide text-ash">{c.yourGroup}</p>
             <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
-              <span className="inline-flex items-center rounded-full border border-border bg-surface px-4 py-1.5 text-sm font-bold uppercase tracking-wider text-foreground shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]">
-                {roleLabel(dict, viewUser.role)}
-              </span>
+              <RoleBadge role={viewUser.role} dict={dict} />
               {viewUser.role === "creator" ? (
-                <p className="max-w-xs text-sm text-moss-light sm:text-right">
+                <p className="max-w-xs text-sm text-[color:var(--accent-creator)] sm:text-right">
                   {c.upgradeGroupMax}
                 </p>
               ) : (
