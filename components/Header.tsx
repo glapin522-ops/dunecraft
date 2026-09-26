@@ -74,13 +74,14 @@ function CabinetEntry({
   onNavigate?: () => void;
 }) {
   const nick = user?.username.trim();
+  const creator = user?.role === "creator";
   return (
     <Link
       href={`/${locale}/cabinet`}
       onClick={onNavigate}
       aria-label={nick ? `${dict.nav.signedInAs} ${nick}` : dict.nav.cabinet}
       title={nick ? `${dict.nav.signedInAs} ${nick}` : dict.nav.cabinet}
-      className={`cabinet-btn inline-flex max-w-[14rem] items-center justify-center gap-2 px-3.5 py-2 text-sm font-bold tracking-wide ${nick ? "" : "min-w-[6.75rem]"} ${className}`}
+      className={`cabinet-btn ${creator ? "cabinet-btn-creator" : ""} inline-flex max-w-[14rem] items-center justify-center gap-2 px-3.5 py-2 text-sm font-bold tracking-wide ${nick ? "" : "min-w-[6.75rem]"} ${className}`}
     >
       <CabinetSeal />
       {nick ? (
@@ -167,7 +168,7 @@ export function Header({ locale, dict }: Props) {
                 aria-current={active ? "page" : undefined}
                 className={`rounded-lg px-3 py-2 text-sm font-bold tracking-wide transition-colors ${
                   active
-                    ? "bg-moss/30 text-gold-light shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]"
+                    ? "nav-live"
                     : "text-ash-light hover:bg-surface-2/90 hover:text-foreground"
                 }`}
               >
@@ -225,7 +226,7 @@ export function Header({ locale, dict }: Props) {
                       key === "donate"
                         ? "text-ember"
                         : active
-                          ? "bg-moss/30 text-gold-light"
+                          ? "nav-live"
                           : "text-ash-light hover:bg-surface-2 hover:text-foreground"
                     }`}
                     onClick={() => setOpen(false)}
