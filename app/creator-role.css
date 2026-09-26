@@ -1,0 +1,61 @@
+:root {
+  /* Lamp gold — creator badge only. Not --gold (lilac) and not --ember (public CTA). */
+  --accent-creator: #e8c36a;
+  --accent-creator-dim: #c49a3e;
+  --glow-creator-sm: 0 0 22px color-mix(in srgb, var(--accent-creator) 42%, transparent);
+}
+
+@theme inline {
+  --color-accent-creator: var(--accent-creator);
+}
+
+.role-badge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 0.35rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.role-badge-player {
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--foreground);
+}
+
+.role-badge-editor {
+  border: 1px solid color-mix(in srgb, var(--accent-skin) 40%, var(--border));
+  background: color-mix(in srgb, var(--accent-skin) 12%, var(--surface));
+  color: var(--accent-skin);
+}
+
+.role-badge-creator {
+  border: 1px solid color-mix(in srgb, var(--accent-creator) 55%, var(--border));
+  background: color-mix(in srgb, var(--accent-creator) 16%, var(--surface));
+  color: var(--accent-creator);
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, #fff 10%, transparent),
+    var(--glow-creator-sm);
+}
+
+.cabinet-btn-creator {
+  border-color: color-mix(in srgb, var(--accent-creator) 55%, var(--border));
+  background: color-mix(in srgb, var(--accent-creator) 14%, var(--surface-2));
+}
+
+.cabinet-btn-creator .cabinet-seal {
+  color: var(--accent-creator);
+}
+
+.cabinet-btn-creator:hover {
+  background: color-mix(in srgb, var(--accent-creator) 24%, var(--surface-2));
+}
+
+.nav-live {
+  color: var(--accent-skin);
+  background: color-mix(in srgb, var(--accent-skin) 14%, transparent);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, #fff 6%, transparent);
+}
