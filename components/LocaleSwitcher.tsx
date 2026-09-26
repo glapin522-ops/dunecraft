@@ -31,9 +31,9 @@ export function LocaleSwitcher({ locale, labels }: Props) {
             hrefLang={loc}
             lang={loc}
             aria-current={active ? "true" : undefined}
-            className={`rounded-md px-2.5 py-1.5 text-xs font-bold tracking-wider transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-gold ${
+            className={`rounded-md px-2.5 py-1.5 text-xs font-bold tracking-wider transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-[color:var(--accent-skin)] ${
               active
-                ? "bg-gold/20 text-gold-light shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]"
+                ? "bg-[color-mix(in_srgb,var(--accent-skin)_20%,transparent)] text-[color:var(--accent-skin)] shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]"
                 : "text-ash hover:bg-surface-3/80 hover:text-foreground"
             }`}
           >
