@@ -8,12 +8,13 @@
 .ether-mark {
   position: relative;
   display: inline-flex;
-  height: 1.75rem;
-  width: 1.75rem;
+  height: 2.75rem;
+  width: 2.75rem;
+  flex-shrink: 0;
   align-items: center;
   justify-content: center;
   overflow: visible;
-  border-radius: 0.4rem;
+  border-radius: 0.55rem;
   border: 1px solid color-mix(in srgb, var(--accent-ether) 55%, var(--border));
   background: color-mix(in srgb, var(--accent-ether) 12%, var(--surface));
 }
@@ -21,8 +22,8 @@
 .ether-mark::before {
   content: "";
   position: absolute;
-  inset: -6px;
-  border-radius: 0.7rem;
+  inset: -8px;
+  border-radius: 0.9rem;
   background: radial-gradient(
     circle,
     color-mix(in srgb, var(--accent-ether) 55%, transparent),
@@ -36,9 +37,10 @@
 .ether-drop {
   position: relative;
   z-index: 1;
-  width: 16px;
-  height: 16px;
+  width: 36px;
+  height: 36px;
   image-rendering: pixelated;
+  image-rendering: crisp-edges;
   animation: ether-pulse 2.4s ease-in-out infinite;
 }
 
