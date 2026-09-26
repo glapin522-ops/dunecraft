@@ -148,13 +148,13 @@ export function CabinetDashboard({
             </div>
 
             <div className="panel-solid flex min-w-0 flex-col rounded-3xl p-4 sm:p-5">
-              <div className="flex items-end gap-2">
-                <span className="text-4xl font-bold tabular-nums text-foreground">{balance}</span>
-                <span className="ether-mark mb-1" aria-hidden>
+              <div className="flex items-center gap-2.5">
+                <span className="text-4xl font-bold leading-none tabular-nums text-foreground">{balance}</span>
+                <span className="ether-mark" aria-hidden>
                   <EtherDrop />
                 </span>
               </div>
-              <p className="mt-1 text-sm text-ash">{c.balanceNow}</p>
+              <p className="mt-2 text-sm text-ash">{c.balanceNow}</p>
               <div className="mt-auto pt-4">
                 <Link
                   href={donateHref}
