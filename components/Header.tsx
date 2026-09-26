@@ -7,7 +7,11 @@ import { useEffect, useState } from "react";
 import type { Locale } from "@/lib/i18n";
 import type { Dictionary } from "@/lib/dictionaries";
 import type { SessionUser } from "@/lib/auth/types";
+import { currencyForm } from "@/lib/currency-form";
 import { LocaleSwitcher } from "./LocaleSwitcher";
+import { RoleBadge } from "./RoleBadge";
+import { EtherDrop } from "./EtherDrop";
+import { StubBadge } from "./StubBadge";
 
 type Props = {
   locale: Locale;
@@ -63,33 +67,101 @@ function isActive(pathname: string, locale: Locale, key: (typeof navKeys)[number
 function CabinetEntry({
   locale,
   dict,
-  user,
   className = "",
   onNavigate,
 }: {
   locale: Locale;
   dict: Dictionary;
-  user: SessionUser | null;
   className?: string;
   onNavigate?: () => void;
 }) {
-  const nick = user?.username.trim();
-  const creator = user?.role === "creator";
   return (
     <Link
       href={`/${locale}/cabinet`}
       onClick={onNavigate}
-      aria-label={nick ? `${dict.nav.signedInAs} ${nick}` : dict.nav.cabinet}
-      title={nick ? `${dict.nav.signedInAs} ${nick}` : dict.nav.cabinet}
-      className={`cabinet-btn ${creator ? "cabinet-btn-creator" : ""} inline-flex max-w-[14rem] items-center justify-center gap-2 px-3.5 py-2 text-sm font-bold tracking-wide ${nick ? "" : "min-w-[6.75rem]"} ${className}`}
+      aria-label={dict.nav.cabinet}
+      title={dict.nav.cabinet}
+      className={`cabinet-btn inline-flex max-w-[14rem] items-center justify-center gap-2 px-3.5 py-2 text-sm font-bold tracking-wide min-w-[6.75rem] ${className}`}
     >
       <CabinetSeal />
-      {nick ? (
-        <span className="min-w-0 truncate">{nick}</span>
-      ) : (
-        <span className="sr-only">{dict.nav.cabinet}</span>
-      )}
+      <span className="sr-only">{dict.nav.cabinet}</span>
     </Link>
+  );
+}
+
+function DownloadStub({ dict }: { dict: Dictionary }) {
+  return (
+    <button
+      type="button"
+      disabled
+      aria-disabled="true"
+      className="header-download hidden sm:inline-flex"
+      aria-label={dict.home.launcherCta}
+    >
+      {dict.cabinet.headerDownload}
+      <StubBadge label={dict.common.comingSoon} />
+    </button>
+  );
+}
+
+function AccountMenu({
+  locale,
+  dict,
+  user,
+  onLogout,
+}: {
+  locale: Locale;
+  dict: Dictionary;
+  user: SessionUser;
+  onLogout: () => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const etherWord = currencyForm(user.balance, locale, {
+    one: dict.cabinet.currencyEtherOne,
+    few: dict.cabinet.currencyEtherFew,
+    many: dict.cabinet.currencyEtherMany,
+  });
+
+  return (
+    <div className={`account-menu hidden sm:block ${open ? "is-open" : ""}`}>
+      <button
+        type="button"
+        className="account-chip"
+        aria-haspopup="menu"
+        aria-expanded={open}
+        onClick={() => setOpen((v) => !v)}
+      >
+        <CabinetSeal />
+        <span className="min-w-0 truncate">{user.username}</span>
+        <span aria-hidden className="text-[0.65rem] text-ash-light">
+          ▾
+        </span>
+      </button>
+      <div className="account-menu-panel" role="menu">
+        <div className="account-menu-card">
+          <p className="truncate font-display text-base font-bold text-foreground">{user.username}</p>
+          <div className="mt-2">
+            <RoleBadge role={user.role} dict={dict} />
+          </div>
+          <p className="mt-3 flex items-center gap-2 text-sm text-foreground">
+            <span className="font-mono tabular-nums">{user.balance}</span>
+            <span className="ether-name text-xs">{etherWord}</span>
+            <EtherDrop className="h-4 w-4" />
+          </p>
+          <Link
+            href={`/${locale}/cabinet`}
+            role="menuitem"
+            className="account-menu-link mt-3"
+            onClick={() => setOpen(false)}
+          >
+            {dict.nav.cabinet}
+          </Link>
+          <button type="button" role="menuitem" className="account-menu-btn" onClick={onLogout}>
+            {dict.cabinet.headerLogout}
+          </button>
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -118,6 +190,13 @@ export function Header({ locale, dict }: Props) {
     })();
     return () => controller.abort();
   }, [pathname]);
+
+  async function logout() {
+    try {
+      await fetch("/api/auth/logout", { method: "POST", credentials: "same-origin" });
+    } catch { /* ignore */ }
+    setUser(null);
+  }
 
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-black/95 backdrop-blur-md">
@@ -179,16 +258,16 @@ export function Header({ locale, dict }: Props) {
         </nav>
 
         <div className="flex shrink-0 items-center gap-2 sm:gap-2.5">
+          <DownloadStub dict={dict} />
           <LocaleSwitcher
             locale={locale}
             labels={{ ru: dict.common.localeRu, en: dict.common.localeEn }}
           />
-          <CabinetEntry
-            locale={locale}
-            dict={dict}
-            user={user}
-            className="hidden sm:inline-flex"
-          />
+          {user ? (
+            <AccountMenu locale={locale} dict={dict} user={user} onLogout={() => void logout()} />
+          ) : (
+            <CabinetEntry locale={locale} dict={dict} className="hidden sm:inline-flex" />
+          )}
           <button
             type="button"
             className="inline-flex items-center justify-center rounded-lg border border-border bg-surface-2 p-2.5 text-ash-light hover:border-gold/35 hover:text-gold-light lg:hidden"
@@ -238,13 +317,29 @@ export function Header({ locale, dict }: Props) {
               );
             })}
             <li className="mt-2">
-              <CabinetEntry
-                locale={locale}
-                dict={dict}
-                user={user}
-                className="w-full max-w-none"
-                onNavigate={() => setOpen(false)}
-              />
+              {user ? (
+                <div className="space-y-2 rounded-xl border border-border bg-surface-2 p-3">
+                  <p className="truncate font-bold">{user.username}</p>
+                  <RoleBadge role={user.role} dict={dict} />
+                  <Link
+                    href={`/${locale}/cabinet`}
+                    className="account-menu-link"
+                    onClick={() => setOpen(false)}
+                  >
+                    {dict.nav.cabinet}
+                  </Link>
+                  <button type="button" className="account-menu-btn" onClick={() => void logout()}>
+                    {dict.cabinet.headerLogout}
+                  </button>
+                </div>
+              ) : (
+                <CabinetEntry
+                  locale={locale}
+                  dict={dict}
+                  className="w-full max-w-none"
+                  onNavigate={() => setOpen(false)}
+                />
+              )}
             </li>
           </ul>
         </nav>
