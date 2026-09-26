@@ -1,29 +1,13 @@
 import type { Metadata } from "next";
-import { JetBrains_Mono, Manrope, Unbounded } from "next/font/google";
 import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { getDictionary } from "@/lib/dictionaries";
+import { display } from "@/lib/fonts/unbounded";
+import { sans } from "@/lib/fonts/manrope";
+import { mono } from "@/lib/fonts/jetbrains";
 import { isLocale, locales, type Locale } from "@/lib/i18n";
-
-const display = Unbounded({
-  variable: "--font-unbounded",
-  subsets: ["latin", "cyrillic"],
-  weight: ["700", "800"],
-});
-
-const sans = Manrope({
-  variable: "--font-geist-sans",
-  subsets: ["latin", "cyrillic"],
-  weight: ["400", "500", "600", "700"],
-});
-
-const mono = JetBrains_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin", "cyrillic"],
-  weight: ["400", "500"],
-});
 
 type Props = {
   children: ReactNode;
