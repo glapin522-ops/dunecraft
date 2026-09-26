@@ -3,19 +3,36 @@
  * Blob CMS can replace this later — keep the KnowledgeEntry shape stable.
  */
 
+import { ruleSections } from "./rules";
+
 export type KnowledgeKind = "faq" | "guide" | "system";
 
 export type KnowledgeEntry = {
   id: string;
   kind: KnowledgeKind;
-  /** tags for search */
   tags?: string[];
   title: { ru: string; en: string };
-  /** short preview */
   summary: { ru: string; en: string };
-  /** body paragraphs or markdown-ish plain text for now */
   body: { ru: string; en: string };
 };
+
+const ruleFaqEntries: KnowledgeEntry[] = ruleSections.map((section) => ({
+  id: `faq-rules-${section.id}`,
+  kind: "faq",
+  tags: ["правила", "rules", section.id, section.title.ru, section.title.en],
+  title: {
+    ru: `Правила: ${section.title.ru}`,
+    en: `Rules: ${section.title.en}`,
+  },
+  summary: {
+    ru: section.items.ru[0] ?? section.title.ru,
+    en: section.items.en[0] ?? section.title.en,
+  },
+  body: {
+    ru: section.items.ru.map((line, i) => `${i + 1}. ${line}`).join("\n\n"),
+    en: section.items.en.map((line, i) => `${i + 1}. ${line}`).join("\n\n"),
+  },
+}));
 
 export const knowledgeEntries: KnowledgeEntry[] = [
   {
@@ -48,8 +65,8 @@ export const knowledgeEntries: KnowledgeEntry[] = [
       en: "Username and password on the Cabinet page. Username is Latin letters only.",
     },
     body: {
-      ru: "Откройте раздел «Кабинет» в шапке сайта. На вкладке регистрации укажите ник (4–24 символа, латиница и цифры, без пробелов и кириллицы) и пароль (минимум 8 символов: заглавная латинская буква, цифра и спецсимвол).\n\nПосле регистрации войдите тем же ником — сессия сохранится в браузере. Почту и 2FA можно привязать позже во вкладке «Безопасность».",
-      en: "Open Cabinet in the site header. On the register tab enter a username (4–24 chars, Latin letters and digits, no spaces or Cyrillic) and a password (at least 8 chars: uppercase Latin letter, a digit, and a special character).\n\nAfter registering, sign in with the same username — the session stays in the browser. You can link email and 2FA later under Security.",
+      ru: "Откройте раздел «Кабинет» в шапке сайта. На вкладке регистрации укажите ник (4–24 символа, латиница и цифры, без пробелов и кириллицы) и пароль (минимум 8 символов: заглавная латинская буква, цифра и спецсимвол).\n\nПосле регистрации войдите тем же ником — сессия сохранится в браузере. Почту нужно указать сразу. 2FA можно привязать позже во вкладке «Безопасность».",
+      en: "Open Cabinet in the site header. On the register tab enter a username (4–24 chars, Latin letters and digits, no spaces or Cyrillic) and a password (at least 8 chars: uppercase Latin letter, a digit, and a special character).\n\nAfter registering, sign in with the same username — the session stays in the browser. Email is required at register. You can enable 2FA later under Security.",
     },
   },
   {
@@ -95,14 +112,15 @@ export const knowledgeEntries: KnowledgeEntry[] = [
       en: "Where can I read the server rules?",
     },
     summary: {
-      ru: "Полный черновик — в разделе «Правила». Финальная редакция к запуску.",
-      en: "Full draft is under Rules. Final edition ships at launch.",
+      ru: "Те же пункты, что в разделе «Правила», разложены ниже отдельными вопросами FAQ.",
+      en: "The same points as the Rules page are listed below as separate FAQ items.",
     },
     body: {
-      ru: "Откройте «Правила» в меню: там разделы про общение, чат, гриф/PvP, донат и наказания. Это черновик — финальная редакция будет опубликована к запуску.\n\nКратко: уважайте игроков, без читов и дюпов, гриф вне разрешённых зон запрещён.",
-      en: "Open Rules in the nav: sections cover conduct, chat, grief/PvP, donate, and punishments. This is a draft — the final edition ships at launch.\n\nIn short: respect players, no cheats or dupes, griefing outside allowed zones is forbidden.",
+      ru: "Полный черновик живёт в меню «Правила». Те же разделы стоят в FAQ: Общие, Чат, Гриф и PvP, Донат, Наказания.\n\nЭто черновик до запуска. Новые нормы сюда не добавлялись.",
+      en: "The full draft lives under Rules in the nav. The same sections are in this FAQ: General, Chat, Grief & PvP, Donate, Punishments.\n\nThis is a pre-launch draft. No new norms were added here.",
     },
   },
+  ...ruleFaqEntries,
   {
     id: "faq-discord",
     kind: "faq",
