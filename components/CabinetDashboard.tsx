@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { Button } from "./Button";
+import { PlayerIdentityCard } from "./PlayerIdentityCard";
 import { RoleBadge } from "./RoleBadge";
 import { SkinCapeStudio } from "./SkinCapeStudio";
 import type { Dictionary } from "@/lib/dictionaries";
@@ -70,11 +71,15 @@ export function CabinetDashboard({
 
   return (
     <section className="flex min-w-0 flex-col gap-4 min-[56rem]:gap-5">
-      <header className="min-w-0">
-        <h2 className="text-xl font-bold tracking-tight text-foreground sm:text-2xl min-[56rem]:text-3xl">
-          {greeting}, {viewUser.username}!
-        </h2>
-        <div className="mt-2 flex flex-wrap items-center gap-2">
+      <header className="min-w-0 space-y-3">
+        <p className="text-sm text-ash">{greeting}</p>
+        <PlayerIdentityCard
+          username={viewUser.username}
+          role={viewUser.role}
+          skinUrl={viewUser.skinUrl}
+          dict={dict}
+        />
+        <div className="flex flex-wrap items-center gap-2">
           <span className="inline-flex items-center rounded-full border border-border bg-surface-3 px-2.5 py-0.5 text-xs font-medium text-ash-light">
             {c.statsLevel} {level}
           </span>
@@ -126,17 +131,14 @@ export function CabinetDashboard({
           </div>
 
           <div className="grid min-w-0 gap-4 sm:grid-cols-2">
-            <div className="panel-solid flex min-w-0 flex-col items-center rounded-3xl p-4 sm:p-5">
-              <div className="relative flex h-24 w-24 items-center justify-center">
-                <div className="pointer-events-none absolute inset-[-20%] rounded-full bg-[conic-gradient(from_180deg,color-mix(in_srgb,var(--ember)_50%,transparent),color-mix(in_srgb,var(--gold)_35%,transparent),color-mix(in_srgb,var(--ember)_40%,transparent))] opacity-70 blur-md" aria-hidden />
-                <div className="relative flex h-20 w-20 items-center justify-center rounded-full border border-[color-mix(in_srgb,var(--ember)_55%,var(--border))] bg-surface shadow-[0_0_24px_color-mix(in_srgb,var(--ember)_35%,transparent)]">
-                  <svg width="36" height="52" viewBox="0 0 24 40" fill="none" aria-hidden className="skin-rune text-[color:var(--ember)]">
-                    <path d="M12 2v36" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="miter" />
-                    <path d="M12 14l6 6-6 6-6-6z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="miter" />
-                    <path d="M6 9l4 4M18 27l-4 4" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="miter" />
-                  </svg>
-                </div>
-              </div>
+            <div className="panel-solid flex min-w-0 flex-col rounded-3xl p-4 sm:p-5">
+              <PlayerIdentityCard
+                username={viewUser.username}
+                role={viewUser.role}
+                skinUrl={viewUser.skinUrl}
+                dict={dict}
+                className="border-white/10 bg-[#0c1424] p-2.5 sm:p-2.5"
+              />
               <button
                 type="button"
                 className="glow-btn btn-fill-ember mt-4 inline-flex w-full items-center justify-center gap-2 rounded-2xl px-4 py-2.5 text-sm font-semibold"
