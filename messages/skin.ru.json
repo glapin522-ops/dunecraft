@@ -20,5 +20,6 @@
   "currencyEther": "эфир",
   "currencyEtherOne": "эфир",
   "currencyEtherFew": "эфира",
-  "currencyEtherMany": "эфиров"
+  "currencyEtherMany": "эфиров",
+  "registerEmailHint": "На почту сразу придёт код подтверждения. Пока домен не подтверждён в Resend, доходит не на все ящики."
 }
