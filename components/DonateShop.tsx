@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/Button";
 import { EtherDrop } from "@/components/EtherDrop";
+import { PackRune } from "@/components/PackRune";
 import { StubBadge } from "@/components/StubBadge";
 import type { DonatePack } from "@/content/donate";
 import type { SessionUser } from "@/lib/auth/types";
@@ -72,7 +73,6 @@ export function DonateShop({ locale, dict, packs }: Props) {
       <div id="donate-packs" className="mt-12 flex flex-wrap justify-center gap-8 scroll-mt-28">
         {packs.map((pack) => {
           const on = pack.id === active?.id;
-          const letter = pack.title[locale].slice(0, 1);
           return (
             <button
               key={pack.id}
@@ -81,7 +81,9 @@ export function DonateShop({ locale, dict, packs }: Props) {
               data-on={on ? "1" : "0"}
               onClick={() => setActiveId(pack.id)}
             >
-              <span className="donate-shop-face">{letter}</span>
+              <span className="donate-shop-face">
+                <PackRune packId={pack.id} />
+              </span>
               <span className="rounded-full border border-border bg-surface-3 px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wide text-gold-light">
                 {pack.title[locale]}
               </span>
