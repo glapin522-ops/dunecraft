@@ -50,7 +50,7 @@ export function DonateShop({ locale, dict, packs }: Props) {
   });
 
   return (
-    <div className="pb-24">
+    <div className="pb-24" data-pack={active?.id ?? ""}>
       <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
         <div className="max-w-xl">
           <h1 className="text-3xl font-bold md:text-4xl">{dict.donate.title}</h1>
