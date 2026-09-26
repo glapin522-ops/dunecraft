@@ -52,7 +52,7 @@ export function CabinetAuthCard({
             {c.register}
           </Button>
         </div>
-        <form className="space-y-3" onSubmit={onSubmit}>
+        <form className="space-y-3" method="post" action="/api/auth/login" onSubmit={onSubmit}>
           <label className="block text-sm">
             <span className="text-ash">{c.username}</span>
             <input name="username" autoComplete="username" value={username} onChange={(e) => setUsername(e.target.value)} className="mt-1 min-w-0 w-full rounded-md border border-border bg-surface px-3 py-2 text-foreground" placeholder="Steve" required minLength={mode === "register" ? 4 : undefined} maxLength={24} pattern={mode === "register" ? "[a-zA-Z][a-zA-Z0-9]{3,23}" : undefined} title={c.usernameHint} />
@@ -106,7 +106,7 @@ export function CabinetTwoFaCard({ dict, code, setCode, error, busy, onSubmit, o
       <Card>
         <h2 className="text-lg font-semibold">{c.login2faTitle}</h2>
         <p className="mt-2 text-sm text-muted">{c.login2faLead}</p>
-        <form className="mt-4 space-y-3" onSubmit={onSubmit}>
+        <form className="mt-4 space-y-3" method="post" action="/api/auth/login/2fa" onSubmit={onSubmit}>
           <label className="block text-sm">
             <span className="text-ash">{c.totpConfirmCode}</span>
             <input inputMode="numeric" autoComplete="one-time-code" pattern="[0-9]{6}" maxLength={6} value={code} onChange={(e) => setCode(e.target.value)} className="mt-1 min-w-0 w-full rounded-md border border-border bg-surface px-3 py-2 text-foreground tracking-widest" placeholder="000000" required />
