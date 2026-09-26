@@ -4,6 +4,7 @@ import "./creator-role.css";
 import "./ether.css";
 import "./header-menu.css";
 import "./donate-slide.css";
+import "./donate-shop.css";
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return children;
