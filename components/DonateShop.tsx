@@ -18,6 +18,10 @@ type Props = {
   packs: DonatePack[];
 };
 
+function pillClass(id: string) {
+  return `pack-pill pack-pill-${id}`;
+}
+
 export function DonateShop({ locale, dict, packs }: Props) {
   const featured = packs.find((p) => p.featured)?.id ?? packs[0]?.id ?? "";
   const [activeId, setActiveId] = useState(featured);
@@ -84,9 +88,7 @@ export function DonateShop({ locale, dict, packs }: Props) {
               <span className="donate-shop-face">
                 <PackRune packId={pack.id} />
               </span>
-              <span className="rounded-full border border-border bg-surface-3 px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wide text-gold-light">
-                {pack.title[locale]}
-              </span>
+              <span className={pillClass(pack.id)}>{pack.title[locale]}</span>
               <span className="text-sm text-muted">{pack.priceLabel[locale]}</span>
             </button>
           );
@@ -97,9 +99,7 @@ export function DonateShop({ locale, dict, packs }: Props) {
         <div className="mt-14 space-y-8">
           <section>
             <h2 className="flex flex-wrap items-center gap-3 text-2xl font-bold">
-              <span className="rounded-full border border-gold/35 bg-gold/10 px-3 py-1 text-sm text-gold-light">
-                {active.title[locale]}
-              </span>
+              <span className={pillClass(active.id)}>{active.title[locale]}</span>
               {dict.donate.kitsTitle}
             </h2>
             <p className="mt-4 max-w-2xl rounded-2xl border border-border bg-surface-2/70 px-5 py-6 text-sm text-muted">
@@ -108,9 +108,7 @@ export function DonateShop({ locale, dict, packs }: Props) {
           </section>
           <section>
             <h2 className="flex flex-wrap items-center gap-3 text-2xl font-bold">
-              <span className="rounded-full border border-gold/35 bg-gold/10 px-3 py-1 text-sm text-gold-light">
-                {active.title[locale]}
-              </span>
+              <span className={pillClass(active.id)}>{active.title[locale]}</span>
               {dict.donate.perksTitle}
             </h2>
             <p className="mt-4 max-w-2xl rounded-2xl border border-border bg-surface-2/70 px-5 py-6 text-sm text-muted">
@@ -122,9 +120,7 @@ export function DonateShop({ locale, dict, packs }: Props) {
 
       {active && (
         <div className="donate-shop-bar mt-12">
-          <span className="rounded-full bg-gold/15 px-3 py-1.5 text-xs font-bold uppercase tracking-wide text-gold-light">
-            {active.title[locale]}
-          </span>
+          <span className={pillClass(active.id)}>{active.title[locale]}</span>
           <span className="flex-1 text-xs text-ash sm:text-sm">{dict.donate.barHint}</span>
           <span className="font-mono text-base text-foreground">{active.priceLabel[locale]}</span>
           <Button variant="danger" disabled className="rounded-full" aria-disabled="true">
