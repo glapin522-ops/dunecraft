@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { DonateBg } from "@/components/DonateBg";
-import { DonatePackCard } from "@/components/DonatePackCard";
+import { DonateShop } from "@/components/DonateShop";
 import { donatePacks } from "@/content/donate";
 import { getDictionary } from "@/lib/dictionaries";
 import { isLocale, type Locale } from "@/lib/i18n";
@@ -39,15 +39,7 @@ export default async function DonatePage({ params }: Props) {
       />
 
       <div className="relative mx-auto max-w-6xl px-4 py-12 md:py-16">
-        <h1 className="text-3xl font-bold md:text-4xl">{dict.donate.title}</h1>
-        <p className="mt-2 max-w-2xl text-muted">{dict.donate.lead}</p>
-        <p className="mt-3 text-sm text-gold-light">{dict.donate.disclaimer}</p>
-
-        <div id="donate-packs" className="mt-10 grid scroll-mt-28 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {donatePacks.map((pack) => (
-            <DonatePackCard key={pack.id} pack={pack} locale={locale} dict={dict} />
-          ))}
-        </div>
+        <DonateShop locale={locale} dict={dict} packs={donatePacks} />
       </div>
     </div>
   );
