@@ -18,14 +18,7 @@ type Props = {
   dict: Dictionary;
 };
 
-const navKeys = [
-  "home",
-  "news",
-  "donate",
-  "rules",
-  "faq",
-  "contacts",
-] as const;
+const navKeys = ["home", "news", "donate", "rules", "faq", "contacts"] as const;
 
 function DonateRune({ size = 40 }: { size?: number }) {
   return (
@@ -72,13 +65,7 @@ function CabinetEntry({
   onNavigate?: () => void;
 }) {
   return (
-    <Link
-      href={`/${locale}/cabinet`}
-      onClick={onNavigate}
-      aria-label={dict.nav.cabinet}
-      title={dict.nav.cabinet}
-      className={`cabinet-btn inline-flex max-w-[14rem] items-center justify-center gap-2 px-3.5 py-2 text-sm font-bold tracking-wide min-w-[6.75rem] ${className}`}
-    >
+    <Link href={`/${locale}/cabinet`} onClick={onNavigate} aria-label={dict.nav.cabinet} title={dict.nav.cabinet} className={`cabinet-btn inline-flex max-w-[14rem] items-center justify-center gap-2 px-3.5 py-2 text-sm font-bold tracking-wide min-w-[6.75rem] ${className}`}>
       <CabinetSeal />
       <span className="sr-only">{dict.nav.cabinet}</span>
     </Link>
@@ -91,6 +78,60 @@ function DownloadStub({ dict }: { dict: Dictionary }) {
       {dict.cabinet.headerDownload}
       <StubBadge label={dict.common.comingSoon} />
     </button>
+  );
+}
+
+function AccountCard({
+  locale,
+  dict,
+  user,
+  onLogout,
+  onClose,
+}: {
+  locale: Locale;
+  dict: Dictionary;
+  user: SessionUser;
+  onLogout: () => void;
+  onClose?: () => void;
+}) {
+  const etherWord = currencyForm(user.balance, locale, {
+    one: dict.cabinet.currencyEtherOne,
+    few: dict.cabinet.currencyEtherFew,
+    many: dict.cabinet.currencyEtherMany,
+  });
+  return (
+    <div className="account-menu-card">
+      <div className="account-head">
+        <span className="account-head-mark">
+          <CabinetSeal />
+        </span>
+        <div className="min-w-0">
+          <p className="truncate font-display text-base font-bold text-foreground">{user.username}</p>
+          <div className="mt-1">
+            <RoleBadge role={user.role} dict={dict} />
+          </div>
+        </div>
+      </div>
+      <div className="account-row">
+        <p className="flex min-w-0 items-center gap-2 text-sm text-foreground">
+          <span className="font-mono tabular-nums">{user.balance}</span>
+          <span className="ether-name text-xs">{etherWord}</span>
+          <EtherDrop className="h-4 w-4" />
+        </p>
+        <Link href={`/${locale}/donate`} className="account-fill-btn" onClick={onClose}>
+          {dict.cabinet.headerTopUp}
+        </Link>
+      </div>
+      <Link href={`/${locale}/donate`} className="account-menu-link" onClick={onClose}>
+        {dict.cabinet.headerPrivileges}
+      </Link>
+      <Link href={`/${locale}/cabinet`} className="account-menu-link" onClick={onClose}>
+        {dict.nav.cabinet}
+      </Link>
+      <button type="button" className="account-menu-btn" onClick={onLogout}>
+        {dict.cabinet.headerLogout}
+      </button>
+    </div>
   );
 }
 
@@ -107,12 +148,6 @@ function AccountMenu({
 }) {
   const [open, setOpen] = useState(false);
   const closeTimer = useRef<number | null>(null);
-  const etherWord = currencyForm(user.balance, locale, {
-    one: dict.cabinet.currencyEtherOne,
-    few: dict.cabinet.currencyEtherFew,
-    many: dict.cabinet.currencyEtherMany,
-  });
-
   function cancelClose() {
     if (closeTimer.current) {
       window.clearTimeout(closeTimer.current);
@@ -127,7 +162,6 @@ function AccountMenu({
     cancelClose();
     closeTimer.current = window.setTimeout(() => setOpen(false), 120);
   }
-
   return (
     <div className="relative hidden sm:block" onMouseEnter={show} onMouseLeave={hideSoon}>
       <button type="button" className="account-chip" aria-haspopup="menu" aria-expanded={open} onClick={() => setOpen((v) => !v)} onFocus={show}>
@@ -136,24 +170,8 @@ function AccountMenu({
         <span aria-hidden className="text-[0.65rem] text-ash-light">▾</span>
       </button>
       {open && (
-        <div className="absolute right-0 top-full z-[80] w-64 pt-2" role="menu">
-          <div className="account-menu-card">
-            <p className="truncate font-display text-base font-bold text-foreground">{user.username}</p>
-            <div className="mt-2">
-              <RoleBadge role={user.role} dict={dict} />
-            </div>
-            <p className="mt-3 flex items-center gap-2 text-sm text-foreground">
-              <span className="font-mono tabular-nums">{user.balance}</span>
-              <span className="ether-name text-xs">{etherWord}</span>
-              <EtherDrop className="h-4 w-4" />
-            </p>
-            <Link href={`/${locale}/cabinet`} role="menuitem" className="account-menu-link mt-3" onClick={() => setOpen(false)}>
-              {dict.nav.cabinet}
-            </Link>
-            <button type="button" role="menuitem" className="account-menu-btn" onClick={onLogout}>
-              {dict.cabinet.headerLogout}
-            </button>
-          </div>
+        <div className="absolute right-0 top-full z-[80] w-[17.5rem] pt-2" role="menu">
+          <AccountCard locale={locale} dict={dict} user={user} onLogout={onLogout} onClose={() => setOpen(false)} />
         </div>
       )}
     </div>
@@ -199,11 +217,8 @@ export function Header({ locale, dict }: Props) {
           <span className="relative flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-gold/35 bg-void shadow-[0_0_22px_rgba(155,126,201,0.32)] transition group-hover:border-gold/60 group-hover:shadow-[0_0_28px_rgba(201,168,239,0.45)] sm:h-16 sm:w-16">
             <Image src="/logo-dc.png" alt="" width={64} height={64} sizes="64px" quality={80} className="h-full w-full object-contain" priority />
           </span>
-          <span className="min-w-0 truncate font-display text-lg font-bold tracking-wide text-foreground transition group-hover:text-gold-light sm:text-xl">
-            DuneCraft
-          </span>
+          <span className="min-w-0 truncate font-display text-lg font-bold tracking-wide text-foreground transition group-hover:text-gold-light sm:text-xl">DuneCraft</span>
         </Link>
-
         <nav className="hidden items-center gap-1 lg:flex" aria-label="Main">
           {navKeys.map((key) => {
             const active = isActive(pathname, locale, key);
@@ -222,28 +237,18 @@ export function Header({ locale, dict }: Props) {
             );
           })}
         </nav>
-
         <div className="relative z-50 flex shrink-0 items-center gap-2 overflow-visible sm:gap-2.5">
           <LocaleSwitcher locale={locale} labels={{ ru: dict.common.localeRu, en: dict.common.localeEn }} />
-          {user ? (
-            <AccountMenu locale={locale} dict={dict} user={user} onLogout={() => void logout()} />
-          ) : (
-            <CabinetEntry locale={locale} dict={dict} className="hidden sm:inline-flex" />
-          )}
+          {user ? <AccountMenu locale={locale} dict={dict} user={user} onLogout={() => void logout()} /> : <CabinetEntry locale={locale} dict={dict} className="hidden sm:inline-flex" />}
           <DownloadStub dict={dict} />
           <button type="button" className="inline-flex items-center justify-center rounded-lg border border-border bg-surface-2 p-2.5 text-ash-light hover:border-gold/35 hover:text-gold-light lg:hidden" aria-expanded={open} aria-controls="mobile-nav" onClick={() => setOpen((v) => !v)}>
             <span className="sr-only">Menu</span>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden>
-              {open ? (
-                <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" strokeWidth="2.25" strokeLinecap="round" />
-              ) : (
-                <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" strokeWidth="2.25" strokeLinecap="round" />
-              )}
+              {open ? <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" strokeWidth="2.25" strokeLinecap="round" /> : <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" strokeWidth="2.25" strokeLinecap="round" />}
             </svg>
           </button>
         </div>
       </div>
-
       {open && (
         <nav id="mobile-nav" className="border-t border-border bg-surface px-4 py-3 lg:hidden" aria-label="Mobile">
           <ul className="flex flex-col gap-1">
@@ -251,12 +256,7 @@ export function Header({ locale, dict }: Props) {
               const active = isActive(pathname, locale, key);
               return (
                 <li key={key}>
-                  <Link
-                    href={hrefFor(locale, key)}
-                    aria-current={active ? "page" : undefined}
-                    className={`flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-bold tracking-wide ${key === "donate" ? "text-ember" : active ? "nav-live" : "text-ash-light hover:bg-surface-2 hover:text-foreground"}`}
-                    onClick={() => setOpen(false)}
-                  >
+                  <Link href={hrefFor(locale, key)} aria-current={active ? "page" : undefined} className={`flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-bold tracking-wide ${key === "donate" ? "text-ember" : active ? "nav-live" : "text-ash-light hover:bg-surface-2 hover:text-foreground"}`} onClick={() => setOpen(false)}>
                     {key === "donate" && <DonateRune size={28} />}
                     {dict.nav[key]}
                   </Link>
@@ -265,16 +265,7 @@ export function Header({ locale, dict }: Props) {
             })}
             <li className="mt-2">
               {user ? (
-                <div className="space-y-2 rounded-xl border border-border bg-surface-2 p-3">
-                  <p className="truncate font-bold">{user.username}</p>
-                  <RoleBadge role={user.role} dict={dict} />
-                  <Link href={`/${locale}/cabinet`} className="account-menu-link" onClick={() => setOpen(false)}>
-                    {dict.nav.cabinet}
-                  </Link>
-                  <button type="button" className="account-menu-btn" onClick={() => void logout()}>
-                    {dict.cabinet.headerLogout}
-                  </button>
-                </div>
+                <AccountCard locale={locale} dict={dict} user={user} onLogout={() => void logout()} onClose={() => setOpen(false)} />
               ) : (
                 <CabinetEntry locale={locale} dict={dict} className="w-full max-w-none" onNavigate={() => setOpen(false)} />
               )}
