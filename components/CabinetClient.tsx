@@ -91,6 +91,7 @@ export function CabinetClient({ dict, locale, initialUser }: Props) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [registerPasswordConfirm, setRegisterPasswordConfirm] = useState("");
+  const [registerEmail, setRegisterEmail] = useState("");
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   const [tab, setTabState] = useState<Tab>("overview");
@@ -172,7 +173,9 @@ export function CabinetClient({ dict, locale, initialUser }: Props) {
         {
           username,
           password,
-          ...(mode === "register" ? { passwordConfirm: registerPasswordConfirm } : {}),
+          ...(mode === "register"
+            ? { passwordConfirm: registerPasswordConfirm, email: registerEmail }
+            : {}),
         },
       );
       if (data.requires2fa) {
@@ -187,6 +190,13 @@ export function CabinetClient({ dict, locale, initialUser }: Props) {
       }
       setUser(data.user as SessionUser);
       setPassword("");
+      if (mode === "register") {
+        const sentEmail = typeof data.email === "string" ? data.email : registerEmail;
+        if (sentEmail) setEmailInput(sentEmail);
+        setEmailAwaitingCode(Boolean(data.emailSent));
+        setSecMsg(c.emailCodeSent);
+        if (typeof data.devCode === "string") setEmailDevCode(data.devCode);
+      }
       setTab("overview");
     } catch {
       setError(c.errorGeneric);
@@ -317,7 +327,7 @@ export function CabinetClient({ dict, locale, initialUser }: Props) {
 
   if (!user) {
     return (
-      <CabinetAuthCard dict={dict} mode={mode} setMode={(next) => { setMode(next); setError(""); }} username={username} setUsername={setUsername} password={password} setPassword={setPassword} registerPasswordConfirm={registerPasswordConfirm} setRegisterPasswordConfirm={setRegisterPasswordConfirm} error={error} busy={busy} onSubmit={(e) => void submit(e)} />
+      <CabinetAuthCard dict={dict} mode={mode} setMode={(next) => { setMode(next); setError(""); }} username={username} setUsername={setUsername} password={password} setPassword={setPassword} registerPasswordConfirm={registerPasswordConfirm} setRegisterPasswordConfirm={setRegisterPasswordConfirm} registerEmail={registerEmail} setRegisterEmail={setRegisterEmail} error={error} busy={busy} onSubmit={(e) => void submit(e)} />
     );
   }
 
