@@ -1,0 +1,102 @@
+:root {
+  --accent-ether: #b91c3a;
+  --accent-ether-deep: #7f1d1d;
+  --accent-ether-ink: #2a0a12;
+  --glow-ether-sm: 0 0 16px color-mix(in srgb, var(--accent-ether) 48%, transparent);
+}
+
+.ether-mark {
+  position: relative;
+  display: inline-flex;
+  height: 1.75rem;
+  width: 1.75rem;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+  border-radius: 0.4rem;
+  border: 1px solid color-mix(in srgb, var(--accent-ether) 55%, var(--border));
+  background: color-mix(in srgb, var(--accent-ether) 12%, var(--surface));
+}
+
+.ether-mark::before {
+  content: "";
+  position: absolute;
+  inset: -6px;
+  border-radius: 0.7rem;
+  background: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--accent-ether) 55%, transparent),
+    transparent 70%
+  );
+  opacity: 0.85;
+  animation: ether-glow 2.4s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.ether-drop {
+  position: relative;
+  z-index: 1;
+  width: 16px;
+  height: 16px;
+  image-rendering: pixelated;
+  animation: ether-pulse 2.4s ease-in-out infinite;
+}
+
+.btn-fill-ether {
+  border: 1px solid color-mix(in srgb, var(--accent-ether) 70%, #000);
+  background: var(--accent-ether);
+  color: var(--accent-ether-ink);
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, #fff 18%, transparent),
+    var(--glow-ether-sm);
+  transition:
+    transform 160ms ease,
+    box-shadow 160ms ease,
+    filter 160ms ease;
+}
+
+.btn-fill-ether:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.06);
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, #fff 24%, transparent),
+    0 6px 16px color-mix(in srgb, var(--accent-ether-deep) 40%, transparent),
+    0 0 28px color-mix(in srgb, var(--accent-ether) 55%, transparent);
+}
+
+@keyframes ether-glow {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: scale(0.92);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+}
+
+@keyframes ether-pulse {
+  0%,
+  100% {
+    filter: brightness(1);
+  }
+  50% {
+    filter: brightness(1.25);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ether-mark::before,
+  .ether-drop {
+    animation: none;
+  }
+
+  .btn-fill-ether {
+    transition: none;
+  }
+
+  .btn-fill-ether:hover {
+    transform: none;
+  }
+}
