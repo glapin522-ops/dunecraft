@@ -8,6 +8,7 @@ import {
   saveUser,
 } from "@/lib/users-store";
 import { toSessionUser } from "@/lib/auth/types";
+import type { StoredUser } from "@/lib/auth/types";
 import {
   generateSixDigitCode,
   isEmailStubMode,
@@ -18,6 +19,24 @@ import { putAuthToken, removeAuthToken, takeAuthToken } from "@/lib/auth-tokens"
 
 const CODE_TTL_MS = 15 * 60 * 1000;
 
+function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function reloadUser(username: string): Promise<StoredUser | null> {
+  await sleep(250);
+  return findUserByUsername(username);
+}
+
+function hasPendingEmailCode(user: StoredUser): boolean {
+  return Boolean(
+    user.emailCodeHash &&
+      user.emailCodeExpiresAt &&
+      user.emailCodePurpose === "email_verify" &&
+      user.pendingEmail,
+  );
+}
+
 /** POST — request verification code for bind/change email */
 export async function POST(request: Request) {
   try {
@@ -25,7 +44,7 @@ export async function POST(request: Request) {
     const body = (await request.json()) as { email?: string; action?: string; code?: string };
     const action = body.action ?? "request";
 
-    const stored = await findUserByUsername(session.username);
+    let stored = await findUserByUsername(session.username);
     if (!stored) {
       return NextResponse.json(
         { error: "seed_only", message: "Аккаунт только из env — привязка почты недоступна. Создайте запись в store." },
@@ -54,7 +73,6 @@ export async function POST(request: Request) {
       stored.emailCodeHash = codeHash;
       stored.emailCodeExpiresAt = expiresAt;
       stored.emailCodePurpose = "email_verify";
-      // If changing from a different verified email, mark unverified until confirm
       if (stored.email?.toLowerCase() !== email) {
         stored.emailVerified = false;
       }
@@ -87,20 +105,27 @@ export async function POST(request: Request) {
       if (!/^\d{6}$/.test(code)) {
         return NextResponse.json({ error: "code_invalid" }, { status: 400 });
       }
-      if (
-        !stored.emailCodeHash ||
-        !stored.emailCodeExpiresAt ||
-        stored.emailCodePurpose !== "email_verify" ||
-        !stored.pendingEmail
-      ) {
+
+      if (!hasPendingEmailCode(stored)) {
+        const fresh = await reloadUser(session.username);
+        if (fresh) stored = fresh;
+      }
+      if (!hasPendingEmailCode(stored)) {
         return NextResponse.json({ error: "code_expired" }, { status: 400 });
       }
-      if (new Date(stored.emailCodeExpiresAt).getTime() <= Date.now()) {
+      if (new Date(stored.emailCodeExpiresAt!).getTime() <= Date.now()) {
         return NextResponse.json({ error: "code_expired" }, { status: 400 });
       }
-      const match = await bcrypt.compare(code, stored.emailCodeHash);
+
+      let match = await bcrypt.compare(code, stored.emailCodeHash!);
       if (!match) {
-        // also try blob token (in case of race)
+        const fresh = await reloadUser(session.username);
+        if (fresh && hasPendingEmailCode(fresh)) {
+          stored = fresh;
+          match = await bcrypt.compare(code, stored.emailCodeHash!);
+        }
+      }
+      if (!match) {
         const token = await takeAuthToken(stored.username, "email_verify");
         if (!token || !(await bcrypt.compare(code, token.codeHash))) {
           return NextResponse.json({ error: "code_invalid" }, { status: 400 });
