@@ -283,7 +283,6 @@ export function Header({ locale, dict }: Props) {
         </nav>
 
         <div className="relative z-50 flex shrink-0 items-center gap-2 overflow-visible sm:gap-2.5">
-          <DownloadStub dict={dict} />
           <LocaleSwitcher
             locale={locale}
             labels={{ ru: dict.common.localeRu, en: dict.common.localeEn }}
@@ -293,6 +292,7 @@ export function Header({ locale, dict }: Props) {
           ) : (
             <CabinetEntry locale={locale} dict={dict} className="hidden sm:inline-flex" />
           )}
+          <DownloadStub dict={dict} />
           <button
             type="button"
             className="inline-flex items-center justify-center rounded-lg border border-border bg-surface-2 p-2.5 text-ash-light hover:border-gold/35 hover:text-gold-light lg:hidden"
@@ -329,12 +329,10 @@ export function Header({ locale, dict }: Props) {
                     className={`flex items-center gap-2 rounded-lg px-3 py-2.5 text-sm font-bold tracking-wide ${
                       key === "donate"
                         ? "text-ember"
-                        : active
+                          : active
                           ? "nav-live"
                           : "text-ash-light hover:bg-surface-2 hover:text-foreground"
-                    }`}
-                    onClick={() => setOpen(false)}
-                  >
+                    }`>
                     {key === "donate" && <DonateRune size={28} />}
                     {dict.nav[key]}
                   </Link>
