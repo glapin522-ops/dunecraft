@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { Button } from "@/components/Button";
-import { Card } from "@/components/Card";
 import { DonateBg } from "@/components/DonateBg";
-import { StubBadge } from "@/components/StubBadge";
+import { DonatePackCard } from "@/components/DonatePackCard";
 import { donatePacks } from "@/content/donate";
 import { getDictionary } from "@/lib/dictionaries";
 import { isLocale, type Locale } from "@/lib/i18n";
@@ -47,27 +45,7 @@ export default async function DonatePage({ params }: Props) {
 
         <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {donatePacks.map((pack) => (
-            <Card
-              key={pack.id}
-              className={
-                pack.featured ? "border-gold/40 glow-ring-gold" : ""
-              }
-            >
-              <p className="text-sm font-medium text-gold-light">
-                {pack.priceLabel[locale]}
-              </p>
-              <h2 className="mt-1 text-xl font-semibold">{pack.title[locale]}</h2>
-              <p className="mt-3 text-sm text-muted">{pack.description[locale]}</p>
-              <Button
-                variant="danger"
-                disabled
-                className="mt-6 w-full"
-                aria-disabled="true"
-              >
-                {dict.donate.buy}
-                <StubBadge label={dict.donate.buyDisabled} />
-              </Button>
-            </Card>
+            <DonatePackCard key={pack.id} pack={pack} locale={locale} dict={dict} />
           ))}
         </div>
       </div>
