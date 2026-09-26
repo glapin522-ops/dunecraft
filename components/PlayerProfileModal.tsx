@@ -4,12 +4,9 @@ import { useEffect, useMemo, useState } from "react";
 import { createPortal } from "react-dom";
 import dynamic from "next/dynamic";
 import { Button } from "./Button";
+import { RoleBadge } from "./RoleBadge";
 import type { Dictionary } from "@/lib/dictionaries";
-import type {
-  GeoInfo,
-  LoginHistoryEntry,
-  Role,
-} from "@/lib/auth/types";
+import type { GeoInfo, LoginHistoryEntry } from "@/lib/auth/types";
 import type { SafePlayerProfile } from "@/lib/auth/safe-player";
 import { ipv4Subnet24 } from "@/lib/client-ip";
 
@@ -24,12 +21,6 @@ type Props = {
   open: boolean;
   onClose: () => void;
 };
-
-function roleLabel(c: Dictionary["cabinet"], role: Role): string {
-  if (role === "creator") return c.roleCreator;
-  if (role === "editor") return c.roleEditor;
-  return c.rolePlayer;
-}
 
 function maskEmail(email: string): string {
   const at = email.indexOf("@");
@@ -197,9 +188,9 @@ export function PlayerProfileModal({ dict, username, open, onClose }: Props) {
               {profile ? ` · ${profile.username}` : ` · ${username}`}
             </h2>
             {profile ? (
-              <p className="mt-0.5 text-xs text-ash">
-                {roleLabel(c, profile.role)}
-              </p>
+              <div className="mt-2">
+                <RoleBadge role={profile.role} dict={dict} />
+              </div>
             ) : null}
           </div>
           <button
