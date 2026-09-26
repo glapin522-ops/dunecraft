@@ -3,7 +3,8 @@ import { timingSafeEqual } from "crypto";
 import type { Role, SessionUser, StoredUser } from "./types";
 import { toSessionUser } from "./types";
 import { validateRegistration, validatePassword } from "./validation";
-import { findUserByUsername, listUsers, saveUser } from "../users-store";
+import { findUserByEmail, findUserByUsername, listUsers, saveUser } from "../users-store";
+import { isValidEmail } from "../email";
 
 function safeEqualString(a: string, b: string): boolean {
   const bufA = Buffer.from(a);
@@ -26,10 +27,6 @@ export type VerifyResult =
   | { ok: true; user: SessionUser; stored: StoredUser | null; needs2fa: boolean }
   | { ok: false };
 
-/**
- * Verify username+password. Does NOT set session.
- * Seed-only accounts (env, no StoredUser) skip 2FA for MVP.
- */
 export async function verifyCredentialsDetailed(
   username: string,
   password: string,
@@ -43,8 +40,6 @@ export async function verifyCredentialsDetailed(
     (u) => u.username.toLowerCase() === normalized.toLowerCase(),
   );
 
-  // If the account exists in the store, ONLY the store hash counts.
-  // Never fall through to CREATOR_PASSWORD — that was a session/2FA/ban bypass.
   if (found) {
     const ok = await bcrypt.compare(password, found.passwordHash);
     if (!ok) return { ok: false };
@@ -57,7 +52,6 @@ export async function verifyCredentialsDetailed(
     };
   }
 
-  // Seed-only creator: env credentials, no StoredUser row yet.
   if (
     seed &&
     safeEqualString(normalized.toLowerCase(), seed.username.toLowerCase()) &&
@@ -80,7 +74,6 @@ export async function verifyCredentialsDetailed(
   return { ok: false };
 }
 
-/** Back-compat: returns SessionUser or null (ignores 2FA gate). */
 export async function verifyCredentials(
   username: string,
   password: string,
@@ -92,11 +85,17 @@ export async function verifyCredentials(
 export async function registerPlayer(
   username: string,
   password: string,
+  email: string,
 ): Promise<{ ok: true; user: SessionUser } | { ok: false; error: string }> {
   const normalized = username.trim();
   const policyError = validateRegistration(normalized, password);
   if (policyError) {
     return { ok: false, error: policyError };
+  }
+
+  const normalizedEmail = email.trim().toLowerCase();
+  if (!isValidEmail(normalizedEmail)) {
+    return { ok: false, error: "email_invalid" };
   }
 
   const seed = getSeedCreator();
@@ -112,6 +111,11 @@ export async function registerPlayer(
     return { ok: false, error: "username_taken" };
   }
 
+  const taken = await findUserByEmail(normalizedEmail);
+  if (taken) {
+    return { ok: false, error: "email_taken" };
+  }
+
   const passwordHash = await bcrypt.hash(password, 10);
   const stored: StoredUser = {
     username: normalized,
@@ -121,15 +125,12 @@ export async function registerPlayer(
     email: null,
     emailVerified: false,
     totpEnabled: false,
+    pendingEmail: normalizedEmail,
   };
   await saveUser(stored);
   return { ok: true, user: toSessionUser(stored) };
 }
 
-/**
- * Upsert a StoredUser with role creator (full admin).
- * Preserves email / TOTP fields when updating password.
- */
 export async function ensureCreatorAccount(
   username: string,
   password: string,
