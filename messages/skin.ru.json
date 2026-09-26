@@ -17,5 +17,8 @@
   "skinMissingFile": "Выберите файл",
   "skinUploadError": "Не удалось загрузить",
   "skinHintLive": "Тяни мышью, чтобы вертеть модель",
-  "currencyEther": "Эфир"
+  "currencyEther": "эфир",
+  "currencyEtherOne": "эфир",
+  "currencyEtherFew": "эфира",
+  "currencyEtherMany": "эфиров"
 }

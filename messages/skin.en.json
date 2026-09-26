@@ -17,5 +17,8 @@
   "skinMissingFile": "Choose a file",
   "skinUploadError": "Upload failed",
   "skinHintLive": "Drag to rotate the model",
-  "currencyEther": "Ether"
+  "currencyEther": "ether",
+  "currencyEtherOne": "ether",
+  "currencyEtherFew": "ether",
+  "currencyEtherMany": "ether"
 }
