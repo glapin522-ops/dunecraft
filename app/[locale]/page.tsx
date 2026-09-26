@@ -4,8 +4,8 @@ import { notFound } from "next/navigation";
 import { BleedLayer } from "@/components/BleedLayer";
 import { Card } from "@/components/Card";
 import { DonateBg } from "@/components/DonateBg";
+import { DonatePackCard } from "@/components/DonatePackCard";
 import { StubBadge } from "@/components/StubBadge";
-import { Button } from "@/components/Button";
 import { DiscordInvite } from "@/components/DiscordInvite";
 import { StayInTouch } from "@/components/StayInTouch";
 import { FadeIn } from "@/components/motion/FadeIn";
@@ -161,15 +161,7 @@ export default async function HomePage({ params }: Props) {
           <Stagger inView stagger={0.1} className="grid grid-cols-1 gap-6 md:grid-cols-3 md:gap-8">
             {packs.map((pack) => (
               <StaggerItem key={pack.id} y={20} className="h-full">
-                <Card className={`h-full p-7 md:p-8 ${pack.featured ? "border-gold/40 glow-ring-gold" : ""}`}>
-                  <p className="text-base text-gold-light">{pack.priceLabel[locale]}</p>
-                  <h3 className="mt-2 text-xl font-semibold md:text-2xl">{pack.title[locale]}</h3>
-                  <p className="mt-3 text-base leading-relaxed text-muted">{pack.description[locale]}</p>
-                  <Button variant="danger" size="lg" disabled className="mt-6 w-full" aria-disabled>
-                    {dict.donate.buy}
-                    <StubBadge label={dict.donate.buyDisabled} />
-                  </Button>
-                </Card>
+                <DonatePackCard pack={pack} locale={locale} dict={dict} compact />
               </StaggerItem>
             ))}
           </Stagger>
