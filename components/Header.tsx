@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { Locale } from "@/lib/i18n";
 import type { Dictionary } from "@/lib/dictionaries";
 import type { SessionUser } from "@/lib/auth/types";
@@ -116,20 +116,43 @@ function AccountMenu({
   onLogout: () => void;
 }) {
   const [open, setOpen] = useState(false);
+  const closeTimer = useRef<number | null>(null);
   const etherWord = currencyForm(user.balance, locale, {
     one: dict.cabinet.currencyEtherOne,
     few: dict.cabinet.currencyEtherFew,
     many: dict.cabinet.currencyEtherMany,
   });
 
+  function cancelClose() {
+    if (closeTimer.current) {
+      window.clearTimeout(closeTimer.current);
+      closeTimer.current = null;
+    }
+  }
+
+  function show() {
+    cancelClose();
+    setOpen(true);
+  }
+
+  function hideSoon() {
+    cancelClose();
+    closeTimer.current = window.setTimeout(() => setOpen(false), 120);
+  }
+
   return (
-    <div className={`account-menu hidden sm:block ${open ? "is-open" : ""}`}>
+    <div
+      className="relative hidden sm:block"
+      onMouseEnter={show}
+      onMouseLeave={hideSoon}
+    >
       <button
         type="button"
         className="account-chip"
         aria-haspopup="menu"
         aria-expanded={open}
         onClick={() => setOpen((v) => !v)}
+        onFocus={show}
       >
         <CabinetSeal />
         <span className="min-w-0 truncate">{user.username}</span>
@@ -137,30 +160,32 @@ function AccountMenu({
           ▾
         </span>
       </button>
-      <div className="account-menu-panel" role="menu">
-        <div className="account-menu-card">
-          <p className="truncate font-display text-base font-bold text-foreground">{user.username}</p>
-          <div className="mt-2">
-            <RoleBadge role={user.role} dict={dict} />
+      {open && (
+        <div className="absolute right-0 top-full z-[80] w-64 pt-2" role="menu">
+          <div className="account-menu-card">
+            <p className="truncate font-display text-base font-bold text-foreground">{user.username}</p>
+            <div className="mt-2">
+              <RoleBadge role={user.role} dict={dict} />
+            </div>
+            <p className="mt-3 flex items-center gap-2 text-sm text-foreground">
+              <span className="font-mono tabular-nums">{user.balance}</span>
+              <span className="ether-name text-xs">{etherWord}</span>
+              <EtherDrop className="h-4 w-4" />
+            </p>
+            <Link
+              href={`/${locale}/cabinet`}
+              role="menuitem"
+              className="account-menu-link mt-3"
+              onClick={() => setOpen(false)}
+            >
+              {dict.nav.cabinet}
+            </Link>
+            <button type="button" role="menuitem" className="account-menu-btn" onClick={onLogout}>
+              {dict.cabinet.headerLogout}
+            </button>
           </div>
-          <p className="mt-3 flex items-center gap-2 text-sm text-foreground">
-            <span className="font-mono tabular-nums">{user.balance}</span>
-            <span className="ether-name text-xs">{etherWord}</span>
-            <EtherDrop className="h-4 w-4" />
-          </p>
-          <Link
-            href={`/${locale}/cabinet`}
-            role="menuitem"
-            className="account-menu-link mt-3"
-            onClick={() => setOpen(false)}
-          >
-            {dict.nav.cabinet}
-          </Link>
-          <button type="button" role="menuitem" className="account-menu-btn" onClick={onLogout}>
-            {dict.cabinet.headerLogout}
-          </button>
         </div>
-      </div>
+      )}
     </div>
   );
 }
@@ -199,8 +224,8 @@ export function Header({ locale, dict }: Props) {
   }
 
   return (
-    <header className="sticky top-0 z-40 border-b border-border bg-black/95 backdrop-blur-md">
-      <div className="mx-auto flex min-w-0 max-w-6xl items-center justify-between gap-3 px-4 py-4 sm:py-5">
+    <header className="sticky top-0 z-50 overflow-visible border-b border-border bg-black/95 backdrop-blur-md">
+      <div className="mx-auto flex min-w-0 max-w-6xl items-center justify-between gap-3 overflow-visible px-4 py-4 sm:py-5">
         <Link
           href={`/${locale}`}
           className="group flex min-w-0 shrink items-center gap-3 sm:gap-3.5"
@@ -257,7 +282,7 @@ export function Header({ locale, dict }: Props) {
           })}
         </nav>
 
-        <div className="flex shrink-0 items-center gap-2 sm:gap-2.5">
+        <div className="relative z-50 flex shrink-0 items-center gap-2 overflow-visible sm:gap-2.5">
           <DownloadStub dict={dict} />
           <LocaleSwitcher
             locale={locale}
