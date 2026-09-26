@@ -23,5 +23,7 @@
   "currencyEtherMany": "эфиров",
   "registerEmailHint": "На почту сразу придёт код подтверждения. Пока домен не подтверждён в Resend, доходит не на все ящики.",
   "headerLogout": "Выйти",
-  "headerDownload": "Скачать"
+  "headerDownload": "Скачать",
+  "headerTopUp": "Пополнить",
+  "headerPrivileges": "Купить привилегии"
 }
