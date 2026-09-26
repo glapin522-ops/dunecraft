@@ -16,5 +16,6 @@
   "skinNeedAccount": "Сначала зарегистрируйтесь — seed-создатель без записи в store не может сохранить скин.",
   "skinMissingFile": "Выберите файл",
   "skinUploadError": "Не удалось загрузить",
-  "skinHintLive": "Тяни мышью, чтобы вертеть модель"
+  "skinHintLive": "Тяни мышью, чтобы вертеть модель",
+  "currencyEther": "Эфир"
 }

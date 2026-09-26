@@ -16,5 +16,6 @@
   "skinNeedAccount": "Register first — a seed creator with no store row cannot save a skin.",
   "skinMissingFile": "Choose a file",
   "skinUploadError": "Upload failed",
-  "skinHintLive": "Drag to rotate the model"
+  "skinHintLive": "Drag to rotate the model",
+  "currencyEther": "Ether"
 }

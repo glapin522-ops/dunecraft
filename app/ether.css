@@ -44,6 +44,14 @@
   animation: ether-pulse 2.4s ease-in-out infinite;
 }
 
+.ether-name {
+  font-size: 1.125rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  color: var(--accent-ether);
+}
+
 .btn-fill-ether {
   border: 1px solid color-mix(in srgb, var(--accent-ether) 70%, #000);
   background: var(--accent-ether);
