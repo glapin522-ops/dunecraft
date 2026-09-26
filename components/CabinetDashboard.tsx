@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
 import { Button } from "./Button";
+import { EtherDrop } from "./EtherDrop";
 import { RoleBadge } from "./RoleBadge";
 import { SkinCapeStudio } from "./SkinCapeStudio";
 import type { Dictionary } from "@/lib/dictionaries";
@@ -149,15 +150,15 @@ export function CabinetDashboard({
             <div className="panel-solid flex min-w-0 flex-col rounded-3xl p-4 sm:p-5">
               <div className="flex items-end gap-2">
                 <span className="text-4xl font-bold tabular-nums text-foreground">{balance}</span>
-                <span className="mb-1 inline-flex h-7 w-7 items-center justify-center rounded-md border border-[color-mix(in_srgb,var(--accent-balance)_50%,var(--border))] bg-[color-mix(in_srgb,var(--accent-balance)_14%,var(--surface))] text-sm shadow-[var(--glow-balance-sm)]" aria-hidden>
-                  💎
+                <span className="ether-mark mb-1" aria-hidden>
+                  <EtherDrop />
                 </span>
               </div>
               <p className="mt-1 text-sm text-ash">{c.balanceNow}</p>
               <div className="mt-auto pt-4">
                 <Link
                   href={donateHref}
-                  className="glow-btn btn-fill-balance inline-flex w-full items-center justify-center rounded-2xl px-4 py-2.5 text-sm font-semibold"
+                  className="glow-btn btn-fill-ether inline-flex w-full items-center justify-center rounded-2xl px-4 py-2.5 text-sm font-semibold"
                 >
                   {c.topUpBalance}
                 </Link>
