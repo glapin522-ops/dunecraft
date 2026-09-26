@@ -114,7 +114,7 @@ export default async function HomePage({ params }: Props) {
               {dict.common.seeAll} →
             </Link>
           </FadeIn>
-          <Stagger inView stagger={0.1} className="grid gap-6 md:grid-cols-2 md:gap-8">
+          <Stagger inView stagger={0.1} className="grid gap-6">
             {pinnedOrRecent.map((post) => (
               <StaggerItem key={post.slug} y={20} className="h-full">
                 <Link href={`/${locale}/news/${post.slug}`} className="block h-full">
