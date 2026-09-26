@@ -43,7 +43,7 @@ export default async function DonatePage({ params }: Props) {
         <p className="mt-2 max-w-2xl text-muted">{dict.donate.lead}</p>
         <p className="mt-3 text-sm text-gold-light">{dict.donate.disclaimer}</p>
 
-        <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div id="donate-packs" className="mt-10 grid scroll-mt-28 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {donatePacks.map((pack) => (
             <DonatePackCard key={pack.id} pack={pack} locale={locale} dict={dict} />
           ))}
