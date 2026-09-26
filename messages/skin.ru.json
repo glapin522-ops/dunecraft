@@ -21,5 +21,7 @@
   "currencyEtherOne": "эфир",
   "currencyEtherFew": "эфира",
   "currencyEtherMany": "эфиров",
-  "registerEmailHint": "На почту сразу придёт код подтверждения. Пока домен не подтверждён в Resend, доходит не на все ящики."
+  "registerEmailHint": "На почту сразу придёт код подтверждения. Пока домен не подтверждён в Resend, доходит не на все ящики.",
+  "headerLogout": "Выйти",
+  "headerDownload": "Скачать"
 }
