@@ -20,5 +20,6 @@
   "currencyEther": "ether",
   "currencyEtherOne": "ether",
   "currencyEtherFew": "ether",
-  "currencyEtherMany": "ether"
+  "currencyEtherMany": "ether",
+  "registerEmailHint": "A confirmation code is sent immediately. Until a Resend domain is verified, not every inbox will receive it."
 }
