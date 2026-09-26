@@ -2,6 +2,7 @@
   /* Lamp gold — creator badge only. Not --gold (lilac) and not --ember (public CTA). */
   --accent-creator: #e8c36a;
   --accent-creator-dim: #c49a3e;
+  --accent-creator-ink: #1a1408;
   --glow-creator-sm: 0 0 22px color-mix(in srgb, var(--accent-creator) 42%, transparent);
 }
 
@@ -36,11 +37,11 @@
 }
 
 .role-badge-creator {
-  border: 1px solid color-mix(in srgb, var(--accent-creator) 55%, var(--border));
-  background: color-mix(in srgb, var(--accent-creator) 16%, var(--surface));
-  color: var(--accent-creator);
+  border: 1px solid var(--accent-creator-dim);
+  background: var(--accent-creator);
+  color: var(--accent-creator-ink);
   box-shadow:
-    inset 0 1px 0 color-mix(in srgb, #fff 10%, transparent),
+    inset 0 1px 0 color-mix(in srgb, #fff 28%, transparent),
     var(--glow-creator-sm);
   animation: creator-glow 3.4s ease-in-out infinite;
 }
@@ -91,13 +92,13 @@
   0%,
   100% {
     box-shadow:
-      inset 0 1px 0 color-mix(in srgb, #fff 10%, transparent),
-      0 0 18px color-mix(in srgb, var(--accent-creator) 32%, transparent);
+      inset 0 1px 0 color-mix(in srgb, #fff 22%, transparent),
+      0 0 16px color-mix(in srgb, var(--accent-creator) 36%, transparent);
   }
   50% {
     box-shadow:
-      inset 0 1px 0 color-mix(in srgb, #fff 14%, transparent),
-      0 0 28px color-mix(in srgb, var(--accent-creator) 55%, transparent);
+      inset 0 1px 0 color-mix(in srgb, #fff 30%, transparent),
+      0 0 26px color-mix(in srgb, var(--accent-creator) 58%, transparent);
   }
 }
 
