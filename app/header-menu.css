@@ -1,0 +1,113 @@
+.account-menu {
+  position: relative;
+}
+
+.account-chip {
+  display: inline-flex;
+  max-width: 14rem;
+  align-items: center;
+  gap: 0.5rem;
+  border: 1px solid color-mix(in srgb, var(--gold, #c9a8ef) 35%, transparent);
+  background: color-mix(in srgb, var(--surface-2, #16121f) 92%, transparent);
+  color: var(--foreground, #ebe6f4);
+  padding: 0.4rem 0.7rem;
+  border-radius: 0.7rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.account-chip:hover,
+.account-menu:focus-within .account-chip,
+.account-menu.is-open .account-chip {
+  border-color: color-mix(in srgb, var(--gold, #c9a8ef) 60%, transparent);
+  color: var(--gold-light, #e4d4f7);
+}
+
+.account-menu-panel {
+  position: absolute;
+  right: 0;
+  top: calc(100% - 0.15rem);
+  z-index: 50;
+  width: 16.5rem;
+  padding-top: 0.55rem;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(4px);
+  transition: opacity 0.12s ease, transform 0.12s ease, visibility 0.12s;
+}
+
+.account-menu:hover .account-menu-panel,
+.account-menu:focus-within .account-menu-panel,
+.account-menu.is-open .account-menu-panel {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.account-menu-card {
+  border: 1px solid color-mix(in srgb, var(--gold, #c9a8ef) 28%, #2a2436);
+  background: #120e1a;
+  border-radius: 0.9rem;
+  box-shadow: 0 16px 40px rgba(8, 6, 14, 0.55);
+  padding: 0.85rem 0.85rem 0.7rem;
+}
+
+.account-menu-link,
+.account-menu-btn {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.65rem;
+  padding: 0.55rem 0.7rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.account-menu-link {
+  border: 1px solid color-mix(in srgb, var(--gold, #c9a8ef) 30%, transparent);
+  color: var(--foreground, #ebe6f4);
+  background: color-mix(in srgb, var(--surface-2, #1a1624) 80%, transparent);
+}
+
+.account-menu-link:hover {
+  border-color: color-mix(in srgb, var(--gold, #c9a8ef) 55%, transparent);
+  color: var(--gold-light, #e4d4f7);
+}
+
+.account-menu-btn {
+  margin-top: 0.4rem;
+  border: 0;
+  background: transparent;
+  color: var(--ash-light, #b9b0c7);
+}
+
+.account-menu-btn:hover {
+  color: var(--foreground, #ebe6f4);
+}
+
+.header-download {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  border-radius: 0.7rem;
+  border: 1px solid color-mix(in srgb, var(--gold, #c9a8ef) 45%, transparent);
+  background: color-mix(in srgb, #2a1f3d 88%, #c9a8ef);
+  color: #f4eefb;
+  padding: 0.45rem 0.8rem;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.header-download:disabled {
+  opacity: 0.72;
+  cursor: not-allowed;
+}
