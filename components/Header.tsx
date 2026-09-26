@@ -12,6 +12,7 @@ import { LocaleSwitcher } from "./LocaleSwitcher";
 import { RoleBadge } from "./RoleBadge";
 import { EtherDrop } from "./EtherDrop";
 import { StubBadge } from "./StubBadge";
+import { SkinHead } from "./SkinHead";
 
 type Props = {
   locale: Locale;
@@ -30,15 +31,6 @@ function DonateRune({ size = 40 }: { size?: number }) {
         <path pathLength={100} d="M27 50 L20 56" />
       </svg>
     </span>
-  );
-}
-
-function CabinetSeal() {
-  return (
-    <svg viewBox="0 0 24 24" className="cabinet-seal" width="16" height="16" aria-hidden>
-      <circle cx="12" cy="12" r="8" pathLength={100} />
-      <circle cx="12" cy="12" r="2.2" />
-    </svg>
   );
 }
 
@@ -66,7 +58,6 @@ function CabinetEntry({
 }) {
   return (
     <Link href={`/${locale}/cabinet`} onClick={onNavigate} aria-label={dict.nav.cabinet} title={dict.nav.cabinet} className={`cabinet-btn inline-flex max-w-[14rem] items-center justify-center gap-2 px-3.5 py-2 text-sm font-bold tracking-wide min-w-[6.75rem] ${className}`}>
-      <CabinetSeal />
       <span className="sr-only">{dict.nav.cabinet}</span>
     </Link>
   );
@@ -103,7 +94,7 @@ function AccountCard({
     <div className="account-menu-card">
       <div className="account-head">
         <span className="account-head-mark">
-          <CabinetSeal />
+          <SkinHead src={user.skinUrl} size={36} />
         </span>
         <div className="min-w-0">
           <p className="truncate font-display text-base font-bold text-foreground">{user.username}</p>
@@ -165,9 +156,9 @@ function AccountMenu({
   return (
     <div className="relative hidden sm:block" onMouseEnter={show} onMouseLeave={hideSoon}>
       <button type="button" className="account-chip" aria-haspopup="menu" aria-expanded={open} onClick={() => setOpen((v) => !v)} onFocus={show}>
-        <CabinetSeal />
+        <SkinHead src={user.skinUrl} size={26} />
         <span className="min-w-0 truncate">{user.username}</span>
-        <span aria-hidden className="text-[0.65rem] text-ash-light">▾</span>
+        <span aria-hidden className="text-[0.7rem] text-ash-light">{open ? "\u25b2" : "\u25bc"}</span>
       </button>
       {open && (
         <div className="absolute right-0 top-full z-[80] w-[17.5rem] pt-2" role="menu">
