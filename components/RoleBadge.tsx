@@ -25,6 +25,7 @@ function CreatorLamp() {
       className="role-lamp"
     >
       <path
+        className="role-lamp-flame"
         d="M8 2.1c.65 1 .85 1.65.85 2.35A1.5 1.5 0 1 1 6.6 4.1c0-.55.28-1.2 1.4-2"
         fill="currentColor"
       />

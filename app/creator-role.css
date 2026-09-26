@@ -42,11 +42,63 @@
   box-shadow:
     inset 0 1px 0 color-mix(in srgb, #fff 10%, transparent),
     var(--glow-creator-sm);
+  animation: creator-glow 3.4s ease-in-out infinite;
 }
 
 .role-lamp {
   flex-shrink: 0;
   display: block;
+}
+
+.role-lamp-flame {
+  transform-origin: 8px 5px;
+  animation: lamp-flicker 2.6s ease-in-out infinite;
+}
+
+@keyframes lamp-flicker {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  7% {
+    opacity: 0.55;
+    transform: scale(0.86, 0.92);
+  }
+  11% {
+    opacity: 1;
+    transform: scale(1.04, 1.08);
+  }
+  38% {
+    opacity: 0.82;
+    transform: scale(0.96, 1);
+  }
+  42% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  71% {
+    opacity: 0.4;
+    transform: scale(0.8, 0.88);
+  }
+  76% {
+    opacity: 1;
+    transform: scale(1.06, 1.1);
+  }
+}
+
+@keyframes creator-glow {
+  0%,
+  100% {
+    box-shadow:
+      inset 0 1px 0 color-mix(in srgb, #fff 10%, transparent),
+      0 0 18px color-mix(in srgb, var(--accent-creator) 32%, transparent);
+  }
+  50% {
+    box-shadow:
+      inset 0 1px 0 color-mix(in srgb, #fff 14%, transparent),
+      0 0 28px color-mix(in srgb, var(--accent-creator) 55%, transparent);
+  }
 }
 
 .cabinet-btn-creator {
@@ -66,4 +118,11 @@
   color: var(--accent-skin);
   background: color-mix(in srgb, var(--accent-skin) 14%, transparent);
   box-shadow: inset 0 1px 0 color-mix(in srgb, #fff 6%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .role-badge-creator,
+  .role-lamp-flame {
+    animation: none;
+  }
 }
