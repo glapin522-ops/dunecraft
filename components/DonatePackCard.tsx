@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Button } from "@/components/Button";
 import { Card } from "@/components/Card";
 import { StubBadge } from "@/components/StubBadge";
@@ -34,8 +35,12 @@ export function DonatePackCard({ pack, locale, dict, compact = false }: Props) {
           <StubBadge label={dict.donate.buyDisabled} />
         </Button>
       </Card>
-      <span className="donate-slide-go" aria-hidden>
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+      <Link
+        href={`/${locale}/donate#donate-packs`}
+        className="donate-slide-go"
+        aria-label={dict.donate.title}
+      >
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
           <path
             d="M5 12h12m0 0l-5-5m5 5l-5 5"
             stroke="currentColor"
@@ -44,7 +49,7 @@ export function DonatePackCard({ pack, locale, dict, compact = false }: Props) {
             strokeLinejoin="round"
           />
         </svg>
-      </span>
+      </Link>
     </div>
   );
 }
