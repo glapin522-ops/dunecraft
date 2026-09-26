@@ -19,7 +19,7 @@ type Props = {
   dict: Dictionary;
 };
 
-const navKeys = ["home", "news", "donate", "rules", "faq", "contacts"] as const;
+const navKeys = ["home", "news", "donate", "faq", "contacts"] as const;
 
 function DonateRune({ size = 40 }: { size?: number }) {
   return (
