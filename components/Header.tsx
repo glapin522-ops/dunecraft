@@ -20,6 +20,7 @@ type Props = {
 };
 
 const navKeys = ["home", "news", "donate", "faq", "contacts"] as const;
+export const AUTH_EVENT = "dunecraft:auth";
 
 function DonateRune({ size = 40 }: { size?: number }) {
   return (
@@ -176,7 +177,7 @@ export function Header({ locale, dict }: Props) {
 
   useEffect(() => {
     const controller = new AbortController();
-    void (async () => {
+    async function load() {
       try {
         const res = await fetch("/api/auth/me", { credentials: "same-origin", signal: controller.signal });
         if (!res.ok) {
@@ -188,8 +189,16 @@ export function Header({ locale, dict }: Props) {
       } catch {
         if (!controller.signal.aborted) setUser(null);
       }
-    })();
-    return () => controller.abort();
+    }
+    void load();
+    function onAuth() {
+      void load();
+    }
+    window.addEventListener(AUTH_EVENT, onAuth);
+    return () => {
+      controller.abort();
+      window.removeEventListener(AUTH_EVENT, onAuth);
+    };
   }, [pathname]);
 
   async function logout() {
@@ -199,6 +208,7 @@ export function Header({ locale, dict }: Props) {
       /* ignore */
     }
     setUser(null);
+    window.dispatchEvent(new Event(AUTH_EVENT));
   }
 
   return (
