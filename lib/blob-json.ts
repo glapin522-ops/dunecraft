@@ -6,8 +6,8 @@ import {
 } from "@vercel/blob";
 
 /**
- * Public blobs are cached at the edge for at least a minute.
- * `?t=` on the CDN URL does not bypass that. `get(..., { useCache: false })` reads origin.
+ * Public blobs are cached at the edge if cacheControlMaxAge > 0.
+ * Role/email writes must be visible on the next admin read.
  */
 export async function readPublicJson<T>(
   pathname: string,
@@ -37,7 +37,7 @@ export async function writePublicJson(
     addRandomSuffix: false,
     allowOverwrite: true,
     contentType: "application/json",
-    cacheControlMaxAge: 60,
+    cacheControlMaxAge: 0,
   });
 }
 
