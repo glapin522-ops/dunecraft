@@ -37,37 +37,38 @@
 h2 > span:first-child {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   border: 0 !important;
-  border-radius: 999px;
-  padding: 0.28rem 0.78rem;
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 0.06em;
+  border-radius: 999px !important;
+  padding: 0.38rem 0.95rem !important;
+  font-size: 12px !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.08em;
+  line-height: 1;
   text-transform: uppercase;
+  color: #fff !important;
 }
 
 #donate-packs .donate-shop-tile:nth-child(1) > span:nth-of-type(2),
 .pack-pill-wanderer,
 [data-pack="wanderer"] h2 > span:first-child,
 [data-pack="wanderer"] .donate-shop-bar > span:first-child {
-  background: #e07838 !important;
-  color: #1a1008 !important;
+  background: #f59e0b !important;
 }
 
 #donate-packs .donate-shop-tile:nth-child(2) > span:nth-of-type(2),
 .pack-pill-pathfinder,
 [data-pack="pathfinder"] h2 > span:first-child,
 [data-pack="pathfinder"] .donate-shop-bar > span:first-child {
-  background: #c9a8ef !important;
-  color: #160e22 !important;
+  background: #8b5cf6 !important;
 }
 
 #donate-packs .donate-shop-tile:nth-child(3) > span:nth-of-type(2),
 .pack-pill-chronicler,
 [data-pack="chronicler"] h2 > span:first-child,
 [data-pack="chronicler"] .donate-shop-bar > span:first-child {
-  background: #67b8ff !important;
-  color: #071018 !important;
+  background: #22d3ee !important;
+  color: #041016 !important;
 }
 
 .pack-rune {
@@ -86,17 +87,17 @@ h2 > span:first-child {
 }
 
 .pack-rune-wanderer path {
-  stroke: #e07838;
+  stroke: #f59e0b;
   animation-delay: 0s;
 }
 
 .pack-rune-pathfinder path {
-  stroke: #c9a8ef;
+  stroke: #8b5cf6;
   animation-delay: 0.45s;
 }
 
 .pack-rune-chronicler path {
-  stroke: #67b8ff;
+  stroke: #22d3ee;
   animation-delay: 0.9s;
 }
 
