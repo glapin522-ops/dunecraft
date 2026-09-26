@@ -17,6 +17,8 @@ type Props = {
   setPassword: (v: string) => void;
   registerPasswordConfirm: string;
   setRegisterPasswordConfirm: (v: string) => void;
+  registerEmail: string;
+  setRegisterEmail: (v: string) => void;
   error: string;
   busy: boolean;
   onSubmit: (e: FormEvent) => void;
@@ -32,6 +34,8 @@ export function CabinetAuthCard({
   setPassword,
   registerPasswordConfirm,
   setRegisterPasswordConfirm,
+  registerEmail,
+  setRegisterEmail,
   error,
   busy,
   onSubmit,
@@ -53,6 +57,12 @@ export function CabinetAuthCard({
             <span className="text-ash">{c.username}</span>
             <input name="username" autoComplete="username" value={username} onChange={(e) => setUsername(e.target.value)} className="mt-1 min-w-0 w-full rounded-md border border-border bg-surface px-3 py-2 text-foreground" placeholder="Steve" required minLength={mode === "register" ? 4 : undefined} maxLength={24} pattern={mode === "register" ? "[a-zA-Z][a-zA-Z0-9]{3,23}" : undefined} title={c.usernameHint} />
           </label>
+          {mode === "register" && (
+            <label className="block text-sm">
+              <span className="text-ash">{c.emailLabel}</span>
+              <input name="email" type="email" autoComplete="email" value={registerEmail} onChange={(e) => setRegisterEmail(e.target.value)} className="mt-1 min-w-0 w-full rounded-md border border-border bg-surface px-3 py-2 text-foreground" placeholder={c.emailPlaceholder} required />
+            </label>
+          )}
           <label className="block text-sm">
             <span className="text-ash">{c.password}</span>
             <input name="password" type="password" autoComplete={mode === "login" ? "current-password" : "new-password"} value={password} onChange={(e) => setPassword(e.target.value)} className="mt-1 min-w-0 w-full rounded-md border border-border bg-surface px-3 py-2 text-foreground" placeholder="••••••••" required minLength={mode === "register" ? 8 : undefined} />
@@ -67,6 +77,7 @@ export function CabinetAuthCard({
             <div className="space-y-1 text-xs text-muted">
               <p>{c.usernameHint}</p>
               <p>{c.passwordHint}</p>
+              <p>{c.registerEmailHint}</p>
             </div>
           )}
           {error && <p className="text-sm text-red-400" role="alert">{error}</p>}
