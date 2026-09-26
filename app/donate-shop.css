@@ -14,13 +14,12 @@
   height: 8.5rem;
   display: grid;
   place-items: center;
+  overflow: hidden;
   border-radius: 1.15rem;
   border: 1px solid var(--border);
-  background: color-mix(in srgb, var(--surface-2) 88%, #0a0812);
-  font-family: var(--font-display), var(--font-unbounded), sans-serif;
-  font-size: 2.4rem;
-  font-weight: 800;
-  color: var(--gold-light);
+  background:
+    radial-gradient(ellipse 70% 60% at 50% 40%, color-mix(in srgb, var(--gold) 14%, transparent), transparent 70%),
+    color-mix(in srgb, var(--surface-2) 88%, #0a0812);
   transition: box-shadow 0.22s ease, border-color 0.22s ease, transform 0.22s ease;
 }
 
@@ -30,6 +29,58 @@
     0 0 0 3px color-mix(in srgb, var(--gold) 28%, transparent),
     0 0 28px color-mix(in srgb, var(--gold) 32%, transparent);
   transform: translateY(-2px);
+}
+
+.pack-rune {
+  overflow: visible;
+  filter: drop-shadow(0 0 10px color-mix(in srgb, var(--gold) 45%, transparent));
+}
+
+.pack-rune path {
+  fill: none;
+  stroke: var(--gold-light);
+  stroke-width: 2.15;
+  stroke-linecap: square;
+  stroke-linejoin: miter;
+  stroke-dasharray: 100;
+  animation: pack-rune-trace 3.4s ease-in-out infinite;
+}
+
+.pack-rune-wanderer {
+  color: var(--ember);
+}
+.pack-rune-wanderer path {
+  stroke: var(--ember);
+  animation-delay: 0s;
+}
+
+.pack-rune-pathfinder path {
+  stroke: var(--gold-light);
+  animation-delay: 0.45s;
+}
+
+.pack-rune-chronicler path {
+  stroke: var(--accent-skin);
+  animation-delay: 0.9s;
+}
+
+@keyframes pack-rune-trace {
+  0% {
+    stroke-dashoffset: 100;
+    opacity: 0.28;
+  }
+  38% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  62% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  100% {
+    stroke-dashoffset: -100;
+    opacity: 0.28;
+  }
 }
 
 .donate-shop-bar {
@@ -50,5 +101,12 @@
   .donate-shop-face {
     transition: none;
     transform: none;
+  }
+
+  .pack-rune path {
+    animation: none;
+    stroke-dasharray: none;
+    stroke-dashoffset: 0;
+    opacity: 1;
   }
 }
