@@ -25,6 +25,10 @@ function hasBlob(): boolean {
   return Boolean(process.env.BLOB_READ_WRITE_TOKEN?.trim());
 }
 
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 async function readLocal(): Promise<Store> {
   try {
     const raw = await fs.readFile(LOCAL_PATH, "utf8");
@@ -44,8 +48,9 @@ async function readBlob(): Promise<Store> {
   const { blobs } = await list({ prefix: BLOB_PATHNAME, limit: 10 });
   const hit = blobs.find((b) => b.pathname === BLOB_PATHNAME) ?? blobs[0];
   if (!hit) return { tokens: [] };
+  const sep = hit.url.includes("?") ? "&" : "?";
   const res = await fetch(
-    `${hit.url}${hit.url.includes("?") ? "&" : "?"}t=${Date.now()}`,
+    hit.url + sep + "t=" + Date.now(),
     { cache: "no-store" },
   );
   if (!res.ok) return { tokens: [] };
@@ -84,6 +89,8 @@ async function save(store: Store): Promise<void> {
   if (hasBlob()) {
     try {
       await writeBlob(store);
+      // Mirror locally so a transient blob-read miss still sees the token.
+      await writeLocal(store).catch(() => undefined);
       return;
     } catch (err) {
       console.error("[auth-tokens] blob write failed", err);
@@ -125,6 +132,24 @@ export async function takeAuthToken(
     return null;
   }
   return hit;
+}
+
+/** Bounded re-read when the first lookup misses (blob lag after putAuthToken). */
+export async function takeAuthTokenUntil(
+  username: string,
+  purpose: AuthTokenRecord["purpose"],
+  opts?: { attempts?: number; delayMs?: number },
+): Promise<AuthTokenRecord | null> {
+  const attempts = opts?.attempts ?? 5;
+  const delayMs = opts?.delayMs ?? 200;
+  let hit = await takeAuthToken(username, purpose);
+  if (hit) return hit;
+  for (let i = 1; i < attempts; i++) {
+    await sleep(delayMs);
+    hit = await takeAuthToken(username, purpose);
+    if (hit) return hit;
+  }
+  return null;
 }
 
 export async function removeAuthToken(

@@ -9,19 +9,26 @@ import {
   listAllNews,
   listPublishedNews,
   type NewsInput,
+  type NewsListItem,
 } from "@/lib/news-store";
 import { appendAdminLog } from "@/lib/admin-logs-store";
+
+function stripBodies(posts: Awaited<ReturnType<typeof listAllNews>>): NewsListItem[] {
+  return posts.map(({ body: _body, ...rest }) => rest);
+}
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const all = searchParams.get("all") === "1";
+  const summary = searchParams.get("summary") === "1";
   if (all) {
     const session = await getSession();
     if (!canManageNews(session)) {
       return NextResponse.json({ error: "forbidden" }, { status: 403 });
     }
     const posts = await listAllNews();
-    return NextResponse.json({ posts }, { headers: { "Cache-Control": "no-store" } });
+    const payload = summary ? stripBodies(posts) : posts;
+    return NextResponse.json({ posts: payload }, { headers: { "Cache-Control": "no-store" } });
   }
   const posts = await listPublishedNews();
   return NextResponse.json({ posts }, { headers: { "Cache-Control": "no-store" } });

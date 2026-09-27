@@ -3,9 +3,11 @@ import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { BackToTop } from "@/components/BackToTop";
+import { CtaThemeProvider } from "@/components/CtaThemeProvider";
 import { getDictionary } from "@/lib/dictionaries";
 import { display } from "@/lib/fonts/unbounded";
-import { sans } from "@/lib/fonts/manrope";
+import { sans } from "@/lib/fonts/ubuntu";
 import { mono } from "@/lib/fonts/jetbrains";
 import { isLocale, locales, type Locale } from "@/lib/i18n";
 
@@ -50,9 +52,12 @@ export default async function LocaleLayout({ children, params }: Props) {
       className={`${display.variable} ${sans.variable} ${mono.variable} h-full`}
     >
       <body className="flex min-h-full flex-col font-sans antialiased">
-        <Header locale={locale} dict={dict} />
-        <main className="flex-1">{children}</main>
-        <Footer locale={locale} dict={dict} />
+        <CtaThemeProvider>
+          <Header locale={locale} dict={dict} />
+          <main className="flex-1">{children}</main>
+          <Footer locale={locale} dict={dict} />
+          <BackToTop label={dict.common.backToTop} />
+        </CtaThemeProvider>
       </body>
     </html>
   );

@@ -10,7 +10,7 @@
     "donate": "Donate",
     "cabinet": "Cabinet",
     "rules": "Rules",
-    "faq": "FAQ",
+    "faq": "Help",
     "contacts": "Contacts",
     "discord": "Discord",
     "admin": "Creator",
@@ -29,14 +29,15 @@
     "online": "Online",
     "disabled": "unavailable",
     "seeAll": "See all",
-    "learnMore": "Learn more"
+    "learnMore": "Learn more",
+    "backToTop": "Back to top"
   },
   "home": {
     "heroTitle": "DuneCraft",
     "heroTagline": "A dark mid-fantasy RPG world",
-    "heroLead": "Lore and gameplay are still being built. Follow the news and cabinet — IP and Discord arrive closer to launch.",
-    "newsTitle": "Studio news",
-    "newsLead": "Pinned and recent notes about development.",
+    "heroLead": "Lore and gameplay are in development. News and Discord closer to launch.",
+    "newsTitle": "Project news",
+    "newsLead": "Each season at wipe we publish a full update rundown. This is where you can catch every change.",
     "donateTitle": "Support the project",
     "donateLead": "Stub packs. Purchases open when the server launches.",
     "ctaTitle": "Stay in touch",
@@ -53,7 +54,7 @@
   },
   "news": {
     "title": "News",
-    "lead": "Development notes for DuneCraft. No fake online numbers or metrics here.",
+    "lead": "Each season at wipe we publish a full update rundown. This is where you can catch every change.",
     "empty": "No news yet.",
     "notFound": "News post not found",
     "backToList": "Back to news"
@@ -250,6 +251,9 @@
     "logMessage": "Message",
     "logsLoadError": "Could not load logs",
     "logsRefresh": "Refresh",
+    "logsSearch": "Search",
+    "logsSearchPlaceholder": "Username, kind, text, IP…",
+    "logsSearchEmpty": "Nothing matched your search.",
     "logsEmpty": "No entries yet.",
     "loginBanned": "This account is banned",
     "playersSelectHint": "Click a player to open the edit and moderation panel.",
@@ -341,23 +345,33 @@
     "logsFilterAccount": "Account data",
     "logsFilterModeration": "Punishments",
     "logsFilterNews": "News",
-    "logsFilterEmpty": "No entries in this category yet."
+    "logsFilterEmpty": "No entries in this category yet.",
+    "logKindLoginFailed": "Failed login",
+    "logKindLoginBlockedBan": "Login blocked (ban)",
+    "logKindLoginSuccess": "Successful login",
+    "logKindPasswordChangeSelf": "Password change",
+    "logKindEmailBindSelf": "Email bind",
+    "logKindEmailChangeSelf": "Email change",
+    "logKindTotpEnable": "2FA enabled",
+    "logKindTotpDisable": "2FA disabled",
+    "logKindLogout": "Logout"
   },
   "rules": {
     "title": "Rules",
     "lead": "Draft server rules. The final edition will ship at launch."
   },
   "faq": {
-    "title": "FAQ & knowledge",
-    "lead": "Common questions, guides, and server system notes. Search by text and tags.",
-    "searchPlaceholder": "Search FAQ, guides, and systems…",
+    "title": "Knowledge base & rules",
+    "lead": "Server rules, common questions, guides, and systems. Search by text and tags.",
+    "searchPlaceholder": "Search rules, FAQ, guides…",
     "all": "All",
     "kindFaq": "FAQ",
     "kindGuide": "Guides",
     "kindSystem": "Server systems",
     "empty": "No entries yet.",
     "noResults": "Nothing found. Try another query or category.",
-    "comingSoon": "This section will grow. A Blob CMS can replace the static file later."
+    "comingSoon": "This section will grow. A Blob CMS can replace the static file later.",
+    "kindRules": "Server rules"
   },
   "contacts": {
     "title": "Contacts",
@@ -386,6 +400,22 @@
     "ban": "Ban (stub)",
     "mute": "Mute (stub)",
     "actionDone": "Action logged locally (demo)"
+  },
+  "settings": {
+    "menuLabel": "Settings",
+    "title": "Settings",
+    "navButtons": "Button theme",
+    "navSoonSkin": "Avatar & skin",
+    "navSoonSecurity": "Security",
+    "buttonsTitle": "Button theme",
+    "buttonsLead": "Color for gold CTAs: Top up, launcher, and similar buttons.",
+    "apply": "Apply",
+    "preview": "Preview",
+    "comingSoon": "Soon",
+    "navAccount": "Account settings",
+    "accountTitle": "Account settings",
+    "loginRequired": "Sign in to change email, password, and 2FA.",
+    "goCabinet": "Go to sign in"
   },
   "footer": {
     "tagline": "A dark mid-fantasy RPG Minecraft server",

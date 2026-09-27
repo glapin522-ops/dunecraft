@@ -11,36 +11,50 @@ import type { SessionUser } from "@/lib/auth/types";
 import { currencyForm } from "@/lib/currency-form";
 import type { Dictionary } from "@/lib/dictionaries";
 import type { Locale } from "@/lib/i18n";
+import { AUTH_EVENT } from "@/lib/auth-event";
 
 type Props = {
   locale: Locale;
   dict: Dictionary;
   packs: DonatePack[];
+  initialUser?: SessionUser | null;
 };
 
 function pillClass(id: string) {
   return `pack-pill pack-pill-${id}`;
 }
 
-export function DonateShop({ locale, dict, packs }: Props) {
+export function DonateShop({ locale, dict, packs, initialUser = null }: Props) {
   const featured = packs.find((p) => p.featured)?.id ?? packs[0]?.id ?? "";
   const [activeId, setActiveId] = useState(featured);
-  const [user, setUser] = useState<SessionUser | null>(null);
+  const [user, setUser] = useState<SessionUser | null>(initialUser);
   const active = packs.find((p) => p.id === activeId) ?? packs[0];
 
   useEffect(() => {
+    setUser(initialUser);
+  }, [initialUser]);
+
+  useEffect(() => {
     const controller = new AbortController();
-    void (async () => {
+    async function load() {
       try {
         const res = await fetch("/api/auth/me", { credentials: "same-origin", signal: controller.signal });
         if (!res.ok) return;
         const data = (await res.json()) as { user?: SessionUser | null };
-        setUser(data.user ?? null);
+        if (!controller.signal.aborted) setUser(data.user ?? null);
       } catch {
-        /* ignore */
+        /* keep SSR user */
       }
-    })();
-    return () => controller.abort();
+    }
+    void load();
+    function onAuth() {
+      void load();
+    }
+    window.addEventListener(AUTH_EVENT, onAuth);
+    return () => {
+      controller.abort();
+      window.removeEventListener(AUTH_EVENT, onAuth);
+    };
   }, []);
 
   const etherWord = currencyForm(user?.balance ?? 0, locale, {

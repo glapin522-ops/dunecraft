@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, type FormEvent } from "react";
+import { useRouter } from "next/navigation";
 import { Button } from "./Button";
 import { Card } from "./Card";
 import { CreatorNewsPanel } from "./CreatorNewsPanel";
@@ -8,7 +9,6 @@ import { CreatorPlayersPanel } from "./CreatorPlayersPanel";
 import { CreatorLogsPanel } from "./CreatorLogsPanel";
 import { CabinetDashboard } from "./CabinetDashboard";
 import { CabinetAuthCard, CabinetTwoFaCard } from "./CabinetAuthCard";
-import { CabinetSecurityPanel } from "./CabinetSecurityPanel";
 import type { Dictionary } from "@/lib/dictionaries";
 import type { Locale } from "@/lib/i18n";
 import {
@@ -17,12 +17,17 @@ import {
   canViewAdminLogs,
   type SessionUser,
 } from "@/lib/auth/types";
+import { AUTH_EVENT } from "@/lib/auth-event";
 
 type Props = { dict: Dictionary; locale: Locale; initialUser: SessionUser | null };
 type Tab = "overview" | "news" | "players" | "logs";
 const TABS: Tab[] = ["overview", "news", "players", "logs"];
 const TAB_KEY = "dunecraft.cabinet.tab";
 type ProfileUser = SessionUser & { seedOnly?: boolean };
+
+function notifyAuth() {
+  window.dispatchEvent(new Event(AUTH_EVENT));
+}
 
 function isTab(v: string | null | undefined): v is Tab {
   return Boolean(v && (TABS as string[]).includes(v));
@@ -60,7 +65,7 @@ function clearTab() {
   } catch { /* ignore */ }
 }
 
-function mapError(dict: Dictionary, code: string | undefined): string {
+export function mapError(dict: Dictionary, code: string | undefined): string {
   const c = dict.cabinet;
   const table: Record<string, string> = {
     invalid_credentials: c.loginError,
@@ -86,6 +91,7 @@ function mapError(dict: Dictionary, code: string | undefined): string {
 }
 
 export function CabinetClient({ dict, locale, initialUser }: Props) {
+  const router = useRouter();
   const [user, setUser] = useState<ProfileUser | null>(initialUser);
   const [mode, setMode] = useState<"login" | "register">("login");
   const [username, setUsername] = useState("");
@@ -118,6 +124,41 @@ export function CabinetClient({ dict, locale, initialUser }: Props) {
   }
 
   useEffect(() => setUser(initialUser), [initialUser]);
+
+  useEffect(() => {
+    function onAuth() {
+      void (async () => {
+        try {
+          const res = await fetch("/api/auth/me", { credentials: "same-origin" });
+          if (!res.ok) {
+            setUser(null);
+            setPending2fa(false);
+            setTotpSetup(null);
+            setSecMsg("");
+            setTabState("overview");
+            clearTab();
+            return;
+          }
+          const data = (await res.json()) as { user?: ProfileUser | null };
+          if (!data.user) {
+            setUser(null);
+            setPending2fa(false);
+            setTotpSetup(null);
+            setSecMsg("");
+            setTabState("overview");
+            clearTab();
+            return;
+          }
+          setUser(data.user);
+          if (data.user.email) setEmailInput(data.user.email);
+        } catch {
+          /* ignore network blips */
+        }
+      })();
+    }
+    window.addEventListener(AUTH_EVENT, onAuth);
+    return () => window.removeEventListener(AUTH_EVENT, onAuth);
+  }, []);
 
   useEffect(() => {
     if (!user) return;
@@ -162,7 +203,21 @@ export function CabinetClient({ dict, locale, initialUser }: Props) {
     e.preventDefault();
     setBusy(true);
     setError("");
-    if (mode === "register" && password !== registerPasswordConfirm) {
+    // Browser autofill often paints the inputs without firing onChange, so React
+    // state can still be empty on the first submit — read live DOM values.
+    const form = e.currentTarget as HTMLFormElement;
+    const fd = new FormData(form);
+    const u = String(fd.get("username") ?? "").trim();
+    const p = String(fd.get("password") ?? "");
+    const email = String(fd.get("email") ?? "").trim();
+    const pwConfirm = String(fd.get("passwordConfirm") ?? "");
+    setUsername(u);
+    setPassword(p);
+    if (mode === "register") {
+      setRegisterEmail(email);
+      setRegisterPasswordConfirm(pwConfirm);
+    }
+    if (mode === "register" && p !== pwConfirm) {
       setError(c.passwordMismatch);
       setBusy(false);
       return;
@@ -171,10 +226,10 @@ export function CabinetClient({ dict, locale, initialUser }: Props) {
       const { res, data } = await postJson(
         mode === "login" ? "/api/auth/login" : "/api/auth/register",
         {
-          username,
-          password,
+          username: u,
+          password: p,
           ...(mode === "register"
-            ? { passwordConfirm: registerPasswordConfirm, email: registerEmail }
+            ? { passwordConfirm: pwConfirm, email }
             : {}),
         },
       );
@@ -190,6 +245,7 @@ export function CabinetClient({ dict, locale, initialUser }: Props) {
       }
       setUser(data.user as SessionUser);
       setPassword("");
+      notifyAuth();
       if (mode === "register") {
         const sentEmail = typeof data.email === "string" ? data.email : registerEmail;
         if (sentEmail) setEmailInput(sentEmail);
@@ -218,6 +274,7 @@ export function CabinetClient({ dict, locale, initialUser }: Props) {
       setPending2fa(false);
       setUser(data.user as SessionUser);
       setTotpLoginCode("");
+      notifyAuth();
       setTab("overview");
     } catch {
       setError(c.errorGeneric);
@@ -236,6 +293,8 @@ export function CabinetClient({ dict, locale, initialUser }: Props) {
       setPending2fa(false);
       setTotpSetup(null);
       setSecMsg("");
+      notifyAuth();
+      router.refresh();
     } finally {
       setBusy(false);
     }
@@ -348,15 +407,18 @@ export function CabinetClient({ dict, locale, initialUser }: Props) {
       {((!canNews && !canPlayers && !canLogs) || tab === "overview") && (
         <>
           <CabinetDashboard user={user} dict={dict} locale={locale} onLogout={() => void logout()} logoutBusy={busy} onUser={setUser} />
-          <Card>
+          <Card tone="quiet">
             <h2 className="text-lg font-semibold">{c.purchases}</h2>
             <p className="mt-3 text-sm text-ash">{c.purchasesEmpty}</p>
             <p className="mt-4 text-xs text-muted">{c.stubNote}</p>
           </Card>
-          <CabinetSecurityPanel dict={dict} user={user} busy={busy} secMsg={secMsg} emailInput={emailInput} setEmailInput={setEmailInput} emailCode={emailCode} setEmailCode={setEmailCode} emailDevCode={emailDevCode} emailAwaitingCode={emailAwaitingCode} requestEmailCode={() => void requestEmailCode()} confirmEmailCode={() => void confirmEmailCode()} pwNew={pwNew} setPwNew={setPwNew} pwConfirm={pwConfirm} setPwConfirm={setPwConfirm} pwCode={pwCode} setPwCode={setPwCode} pwDevCode={pwDevCode} pwAwaitingCode={pwAwaitingCode} requestPasswordCode={() => void requestPasswordCode()} confirmPasswordChange={() => void confirmPasswordChange()} totpSetup={totpSetup} setTotpSetup={setTotpSetup} totpCode={totpCode} setTotpCode={setTotpCode} totpDisableCode={totpDisableCode} setTotpDisableCode={setTotpDisableCode} startTotpSetup={() => void startTotpSetup()} confirmTotpEnable={() => void confirmTotpEnable()} disableTotp={() => void disableTotp()} />
         </>
       )}
-      {canNews && tab === "news" && <CreatorNewsPanel dict={dict} locale={locale} />}
+      {canNews && (
+        <div hidden={tab !== "news"} aria-hidden={tab !== "news"}>
+          <CreatorNewsPanel dict={dict} locale={locale} />
+        </div>
+      )}
       {canPlayers && tab === "players" && <CreatorPlayersPanel dict={dict} currentUsername={user.username} />}
       {canLogs && tab === "logs" && <CreatorLogsPanel dict={dict} />}
     </div>

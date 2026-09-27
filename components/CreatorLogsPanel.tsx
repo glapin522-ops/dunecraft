@@ -13,7 +13,20 @@ type LogCategory = "all" | "balance" | "account" | "moderation" | "news";
 
 const CATEGORY_KINDS: Record<Exclude<LogCategory, "all">, readonly AdminLogKind[]> = {
   balance: ["balance_grant", "balance_set"],
-  account: ["role_change", "password_reset", "email_change_admin"],
+  account: [
+    "role_change",
+    "password_reset",
+    "email_change_admin",
+    "login_failed",
+    "login_blocked_ban",
+    "login_success",
+    "password_change_self",
+    "email_bind_self",
+    "email_change_self",
+    "totp_enable",
+    "totp_disable",
+    "logout",
+  ],
   moderation: ["ban", "unban", "mute", "unmute", "account_delete"],
   news: ["news_publish", "news_unpublish", "news_create", "news_delete"],
 };
@@ -48,6 +61,24 @@ function kindLabel(c: Dictionary["cabinet"], kind: AdminLogKind): string {
       return c.logKindUnmute;
     case "account_delete":
       return c.logKindAccountDelete;
+    case "login_failed":
+      return c.logKindLoginFailed;
+    case "login_blocked_ban":
+      return c.logKindLoginBlockedBan;
+    case "login_success":
+      return c.logKindLoginSuccess;
+    case "password_change_self":
+      return c.logKindPasswordChangeSelf;
+    case "email_bind_self":
+      return c.logKindEmailBindSelf;
+    case "email_change_self":
+      return c.logKindEmailChangeSelf;
+    case "totp_enable":
+      return c.logKindTotpEnable;
+    case "totp_disable":
+      return c.logKindTotpDisable;
+    case "logout":
+      return c.logKindLogout;
     default:
       return kind;
   }
@@ -127,6 +158,7 @@ export function CreatorLogsPanel({ dict }: Props) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<"forbidden" | "generic" | null>(null);
   const [category, setCategory] = useState<LogCategory>("all");
+  const [searchQuery, setSearchQuery] = useState("");
   const [profileUser, setProfileUser] = useState<string | null>(null);
 
   async function reloadLogs(signal?: AbortSignal) {
@@ -163,10 +195,32 @@ export function CreatorLogsPanel({ dict }: Props) {
   }, []);
 
   const filtered = useMemo(() => {
-    if (category === "all") return logs;
-    const kinds = new Set<AdminLogKind>(CATEGORY_KINDS[category]);
-    return logs.filter((entry) => kinds.has(entry.kind));
-  }, [logs, category]);
+    const q = searchQuery.trim().toLowerCase();
+    const byCategory =
+      category === "all"
+        ? logs
+        : logs.filter((entry) =>
+            (CATEGORY_KINDS[category] as readonly AdminLogKind[]).includes(
+              entry.kind,
+            ),
+          );
+    if (!q) return byCategory;
+    return byCategory.filter((entry) => {
+      const haystack = [
+        entry.actor,
+        entry.message,
+        entry.kind,
+        kindLabel(c, entry.kind),
+        logTarget(entry) ?? "",
+        ...Object.values(entry.meta ?? {}).map((v) =>
+          v === null || v === undefined ? "" : String(v),
+        ),
+      ]
+        .join(" ")
+        .toLowerCase();
+      return haystack.includes(q);
+    });
+  }, [logs, category, searchQuery, c]);
 
   const counts = useMemo(() => {
     const result: Record<LogCategory, number> = {
@@ -235,6 +289,20 @@ export function CreatorLogsPanel({ dict }: Props) {
         })}
       </div>
 
+      <div className="mt-3 max-w-md">
+        <label htmlFor="creator-logs-search" className="mb-1.5 block text-sm text-ash">
+          {c.logsSearch}
+        </label>
+        <input
+          id="creator-logs-search"
+          type="search"
+          value={searchQuery}
+          onChange={(event) => setSearchQuery(event.target.value)}
+          placeholder={c.logsSearchPlaceholder}
+          className="block w-full rounded-md border border-border bg-surface px-3 py-2 text-sm"
+        />
+      </div>
+
       {error ? (
         <p className="mt-3 text-sm text-red-400" role="alert">
           {error === "forbidden" ? c.errorForbidden : c.logsLoadError}
@@ -251,7 +319,7 @@ export function CreatorLogsPanel({ dict }: Props) {
         </ul>
       ) : filtered.length === 0 ? (
         <p className="mt-3 rounded-lg border border-dashed border-border bg-surface px-3 py-2 text-sm text-muted">
-          {c.logsFilterEmpty}
+          {searchQuery.trim() ? c.logsSearchEmpty : c.logsFilterEmpty}
         </p>
       ) : (
         <ul className="mt-3 max-h-[32rem] space-y-2 overflow-y-auto text-sm">

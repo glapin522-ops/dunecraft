@@ -1,4 +1,4 @@
-import { put, list } from "@vercel/blob";
+import { readPublicJson, writePublicJson } from "./blob-json";
 import { promises as fs } from "fs";
 import path from "path";
 import { seedNewsPosts } from "@/content/news";
@@ -20,6 +20,9 @@ export type NewsPost = {
   createdAt: string;
   updatedAt: string;
 };
+
+/** List row for cabinet summary responses — body may be omitted. */
+export type NewsListItem = Omit<NewsPost, "body"> & { body?: Localized };
 
 export type NewsInput = {
   slug?: string;
@@ -82,23 +85,12 @@ async function writeLocal(posts: NewsPost[]): Promise<void> {
 }
 
 async function readBlob(): Promise<NewsPost[] | null> {
-  const { blobs } = await list({ prefix: BLOB_PATHNAME, limit: 10 });
-  const hit = blobs.find((b) => b.pathname === BLOB_PATHNAME) ?? blobs[0];
-  if (!hit) return null;
-  const res = await fetch(`${hit.url}${hit.url.includes("?") ? "&" : "?"}t=${Date.now()}`, { cache: "no-store" });
-  if (!res.ok) return null;
-  const parsed = (await res.json()) as NewsPost[];
-  return Array.isArray(parsed) ? parsed : null;
+  const { data } = await readPublicJson<NewsPost[]>(BLOB_PATHNAME);
+  return Array.isArray(data) ? data : null;
 }
 
 async function writeBlob(posts: NewsPost[]): Promise<void> {
-  await put(BLOB_PATHNAME, JSON.stringify(posts, null, 2), {
-    access: "public",
-    addRandomSuffix: false,
-    allowOverwrite: true,
-    contentType: "application/json",
-    cacheControlMaxAge: 0,
-  });
+  await writePublicJson(BLOB_PATHNAME, posts);
 }
 
 async function persist(posts: NewsPost[]): Promise<void> {

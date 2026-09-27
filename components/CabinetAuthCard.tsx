@@ -1,6 +1,6 @@
 "use client";
 
-import { type FormEvent } from "react";
+import { useEffect, useRef, type FormEvent } from "react";
 import { Button } from "./Button";
 import { Card } from "./Card";
 import type { Dictionary } from "@/lib/dictionaries";
@@ -41,9 +41,37 @@ export function CabinetAuthCard({
   onSubmit,
 }: Props) {
   const c = dict.cabinet;
+  const formRef = useRef<HTMLFormElement>(null);
+
+  useEffect(() => {
+    function syncFromDom() {
+      const form = formRef.current;
+      if (!form) return;
+      const u = form.elements.namedItem("username") as HTMLInputElement | null;
+      const p = form.elements.namedItem("password") as HTMLInputElement | null;
+      if (u?.value && u.value !== username) setUsername(u.value);
+      if (p?.value && p.value !== password) setPassword(p.value);
+      if (mode === "register") {
+        const em = form.elements.namedItem("email") as HTMLInputElement | null;
+        const pc = form.elements.namedItem("passwordConfirm") as HTMLInputElement | null;
+        if (em?.value && em.value !== registerEmail) setRegisterEmail(em.value);
+        if (pc?.value && pc.value !== registerPasswordConfirm) setRegisterPasswordConfirm(pc.value);
+      }
+    }
+    syncFromDom();
+    const t1 = window.setTimeout(syncFromDom, 50);
+    const t2 = window.setTimeout(syncFromDom, 300);
+    const t3 = window.setTimeout(syncFromDom, 1000);
+    return () => {
+      window.clearTimeout(t1);
+      window.clearTimeout(t2);
+      window.clearTimeout(t3);
+    };
+  }, [mode]);
+
   return (
     <div className="mx-auto max-w-md space-y-4">
-      <Card>
+      <Card tone="raised">
         <div className="mb-4 flex gap-2">
           <Button variant={mode === "login" ? "primary" : "ghost"} onClick={() => setMode("login")} className="flex-1">
             {c.login}
@@ -52,10 +80,10 @@ export function CabinetAuthCard({
             {c.register}
           </Button>
         </div>
-        <form className="space-y-3" method="post" action="/api/auth/login" onSubmit={onSubmit}>
+        <form ref={formRef} className="space-y-3" method="post" action="/api/auth/login" onSubmit={onSubmit}>
           <label className="block text-sm">
             <span className="text-ash">{c.username}</span>
-            <input name="username" autoComplete="username" value={username} onChange={(e) => setUsername(e.target.value)} className="mt-1 min-w-0 w-full rounded-md border border-border bg-surface px-3 py-2 text-foreground" placeholder="Steve" required minLength={mode === "register" ? 4 : undefined} maxLength={24} pattern={mode === "register" ? "[a-zA-Z][a-zA-Z0-9]{3,23}" : undefined} title={c.usernameHint} />
+            <input name="username" autoComplete="username" value={username} onChange={(e) => setUsername(e.target.value)} onInput={(e) => setUsername((e.target as HTMLInputElement).value)} className="mt-1 min-w-0 w-full rounded-md border border-border bg-surface px-3 py-2 text-foreground" placeholder="Steve" required minLength={mode === "register" ? 4 : undefined} maxLength={24} pattern={mode === "register" ? "[a-zA-Z][a-zA-Z0-9]{3,23}" : undefined} title={c.usernameHint} />
           </label>
           {mode === "register" && (
             <label className="block text-sm">
@@ -65,7 +93,7 @@ export function CabinetAuthCard({
           )}
           <label className="block text-sm">
             <span className="text-ash">{c.password}</span>
-            <input name="password" type="password" autoComplete={mode === "login" ? "current-password" : "new-password"} value={password} onChange={(e) => setPassword(e.target.value)} className="mt-1 min-w-0 w-full rounded-md border border-border bg-surface px-3 py-2 text-foreground" placeholder="••••••••" required minLength={mode === "register" ? 8 : undefined} />
+            <input name="password" type="password" autoComplete={mode === "login" ? "current-password" : "new-password"} value={password} onChange={(e) => setPassword(e.target.value)} onInput={(e) => setPassword((e.target as HTMLInputElement).value)} className="mt-1 min-w-0 w-full rounded-md border border-border bg-surface px-3 py-2 text-foreground" placeholder="••••••••" required minLength={mode === "register" ? 8 : undefined} />
           </label>
           {mode === "register" && (
             <label className="block text-sm">
@@ -103,7 +131,7 @@ export function CabinetTwoFaCard({ dict, code, setCode, error, busy, onSubmit, o
   const c = dict.cabinet;
   return (
     <div className="mx-auto max-w-md space-y-4">
-      <Card>
+      <Card tone="raised">
         <h2 className="text-lg font-semibold">{c.login2faTitle}</h2>
         <p className="mt-2 text-sm text-muted">{c.login2faLead}</p>
         <form className="mt-4 space-y-3" method="post" action="/api/auth/login/2fa" onSubmit={onSubmit}>

@@ -5,7 +5,7 @@
 import { getClientIp, getUserAgent } from "../client-ip";
 import { lookupGeo } from "../geoip";
 import type { GeoInfo, LoginHistoryEntry, StoredUser } from "./types";
-import { findUserByUsername, saveUser } from "../users-store";
+import { patchUser } from "../users-store";
 
 const MAX_LOGIN_HISTORY = 15;
 
@@ -23,9 +23,6 @@ export async function recordAuthNetwork(
   kind: "register" | "login",
 ): Promise<void> {
   try {
-    const stored = await findUserByUsername(username);
-    if (!stored) return;
-
     const ip = getClientIp(request);
     if (!ip) return;
 
@@ -43,13 +40,13 @@ export async function recordAuthNetwork(
       geo: geo ?? undefined,
     };
 
-    if (kind === "register") {
-      stored.registrationIp = ip;
-      stored.registrationGeo = geo;
-    }
-
-    stored.loginHistory = pushLoginHistory(stored, entry);
-    await saveUser(stored);
+    await patchUser(username, (stored) => {
+      if (kind === "register") {
+        stored.registrationIp = ip;
+        stored.registrationGeo = geo;
+      }
+      stored.loginHistory = pushLoginHistory(stored, entry);
+    });
   } catch (err) {
     console.error("[login-audit]", kind, username, err);
   }

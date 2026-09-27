@@ -6,7 +6,7 @@ import { Card } from "./Card";
 import { StubBadge } from "./StubBadge";
 import type { Dictionary } from "@/lib/dictionaries";
 import type { Locale } from "@/lib/i18n";
-import type { NewsPost, NewsStatus } from "@/lib/news-store";
+import type { NewsListItem, NewsPost, NewsStatus } from "@/lib/news-store";
 
 type Props = { dict: Dictionary; locale: Locale };
 
@@ -39,7 +39,7 @@ const emptyForm = (): FormState => ({
   coverImageUrl: "",
 });
 
-function fromPost(p: NewsPost): FormState {
+function fromPost(p: NewsPost | NewsListItem): FormState {
   return {
     id: p.id,
     slug: p.slug,
@@ -50,15 +50,20 @@ function fromPost(p: NewsPost): FormState {
     titleEn: p.title.en,
     excerptRu: p.excerpt.ru,
     excerptEn: p.excerpt.en,
-    bodyRu: p.body.ru,
-    bodyEn: p.body.en,
+    bodyRu: p.body?.ru ?? "",
+    bodyEn: p.body?.en ?? "",
     coverImageUrl: p.coverImageUrl || "",
   };
 }
 
+/** True when list item still carries a body object (non-summary). */
+function bodyPresent(p: NewsListItem): boolean {
+  return p.body != null && typeof p.body.ru === "string" && typeof p.body.en === "string";
+}
+
 export function CreatorNewsPanel({ dict, locale }: Props) {
   const c = dict.cabinet;
-  const [posts, setPosts] = useState<NewsPost[]>([]);
+  const [posts, setPosts] = useState<NewsListItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState(false);
   const [form, setForm] = useState<FormState>(emptyForm);
@@ -68,9 +73,11 @@ export function CreatorNewsPanel({ dict, locale }: Props) {
   const load = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await fetch("/api/news?all=1", { credentials: "same-origin" });
+      const res = await fetch("/api/news?all=1&summary=1", {
+        credentials: "same-origin",
+      });
       if (!res.ok) throw new Error("load");
-      const data = (await res.json()) as { posts: NewsPost[] };
+      const data = (await res.json()) as { posts: NewsListItem[] };
       setPosts(data.posts);
     } catch {
       setMsg(c.errorGeneric);
@@ -89,10 +96,27 @@ export function CreatorNewsPanel({ dict, locale }: Props) {
     setMsg("");
   }
 
-  function openEdit(p: NewsPost) {
-    setForm(fromPost(p));
-    setEditing(true);
+  async function openEdit(p: NewsListItem) {
     setMsg("");
+    if (bodyPresent(p)) {
+      setForm(fromPost(p));
+      setEditing(true);
+      return;
+    }
+    setBusy(true);
+    try {
+      const res = await fetch(`/api/news/${p.id}`, {
+        credentials: "same-origin",
+      });
+      if (!res.ok) throw new Error("load");
+      const data = (await res.json()) as { post: NewsPost };
+      setForm(fromPost(data.post));
+      setEditing(true);
+    } catch {
+      setMsg(c.errorGeneric);
+    } finally {
+      setBusy(false);
+    }
   }
 
   async function save(e: FormEvent) {
@@ -360,7 +384,7 @@ export function CreatorNewsPanel({ dict, locale }: Props) {
                   <Button
                     variant="secondary"
                     disabled={busy}
-                    onClick={() => openEdit(p)}
+                    onClick={() => void openEdit(p)}
                   >
                     {c.newsEdit}
                   </Button>

@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import type { Locale } from "@/lib/i18n";
 import type { Dictionary } from "@/lib/dictionaries";
@@ -13,15 +13,14 @@ import { RoleBadge } from "./RoleBadge";
 import { EtherDrop } from "./EtherDrop";
 import { StubBadge } from "./StubBadge";
 import { SkinHead } from "./SkinHead";
+import { AUTH_EVENT } from "@/lib/auth-event";
 
 type Props = {
   locale: Locale;
   dict: Dictionary;
 };
 
-const navKeys = ["home", "news", "donate", "faq", "contacts"] as const;
-export const AUTH_EVENT = "dunecraft:auth";
-
+const navKeys = ["home", "news", "donate", "faq"] as const;
 function DonateRune({ size = 40 }: { size?: number }) {
   return (
     <span className="donate-bob" aria-hidden>
@@ -57,9 +56,16 @@ function CabinetEntry({
   className?: string;
   onNavigate?: () => void;
 }) {
+  const label = dict.cabinet.login;
   return (
-    <Link href={`/${locale}/cabinet`} onClick={onNavigate} aria-label={dict.nav.cabinet} title={dict.nav.cabinet} className={`cabinet-btn inline-flex max-w-[14rem] items-center justify-center gap-2 px-3.5 py-2 text-sm font-bold tracking-wide min-w-[6.75rem] ${className}`}>
-      <span className="sr-only">{dict.nav.cabinet}</span>
+    <Link
+      href={`/${locale}/cabinet`}
+      onClick={onNavigate}
+      aria-label={label}
+      title={label}
+      className={`header-login-btn inline-flex max-w-[14rem] items-center justify-center gap-2 px-3.5 py-2 text-sm font-bold tracking-wide min-w-[6.75rem] ${className}`}
+    >
+      {label}
     </Link>
   );
 }
@@ -98,7 +104,9 @@ function AccountCard({
           <SkinHead src={user.skinUrl} size={36} />
         </span>
         <div className="min-w-0">
-          <p className="truncate font-display text-base font-bold text-foreground">{user.username}</p>
+          <Link href={`/${locale}/cabinet`} className="account-head-nick truncate font-display text-base font-bold text-foreground" onClick={onClose}>
+            {user.username}
+          </Link>
           <div className="mt-1">
             <RoleBadge role={user.role} dict={dict} />
           </div>
@@ -114,11 +122,8 @@ function AccountCard({
           {dict.cabinet.headerTopUp}
         </Link>
       </div>
-      <Link href={`/${locale}/donate`} className="account-menu-link" onClick={onClose}>
-        {dict.cabinet.headerPrivileges}
-      </Link>
-      <Link href={`/${locale}/cabinet`} className="account-menu-link" onClick={onClose}>
-        {dict.nav.cabinet}
+      <Link href={`/${locale}/settings`} className="account-menu-link" onClick={onClose}>
+        {dict.settings.menuLabel}
       </Link>
       <button type="button" className="account-menu-btn" onClick={onLogout}>
         {dict.cabinet.headerLogout}
@@ -156,11 +161,30 @@ function AccountMenu({
   }
   return (
     <div className="relative hidden sm:block" onMouseEnter={show} onMouseLeave={hideSoon}>
-      <button type="button" className="account-chip" aria-haspopup="menu" aria-expanded={open} onClick={() => setOpen((v) => !v)} onFocus={show}>
-        <SkinHead src={user.skinUrl} size={26} />
-        <span className="min-w-0 truncate">{user.username}</span>
-        <span aria-hidden className="text-[0.7rem] text-ash-light">{open ? "\u25b2" : "\u25bc"}</span>
-      </button>
+      <div className="account-chip">
+        <button
+          type="button"
+          className="account-chip-link min-w-0"
+          aria-haspopup="menu"
+          aria-expanded={open}
+          aria-label={dict.nav.cabinet}
+          onClick={() => setOpen((v) => !v)}
+        >
+          <SkinHead src={user.skinUrl} size={26} />
+          <span className="min-w-0 truncate">{user.username}</span>
+        </button>
+        <button
+          type="button"
+          className="account-chip-toggle"
+          aria-haspopup="menu"
+          aria-expanded={open}
+          aria-label={open ? "Close account menu" : "Open account menu"}
+          onClick={() => setOpen((v) => !v)}
+          onFocus={show}
+        >
+          <span aria-hidden className="text-[0.7rem] text-ash-light">{open ? "\u25b2" : "\u25bc"}</span>
+        </button>
+      </div>
       {open && (
         <div className="absolute right-0 top-full z-[80] w-[17.5rem] pt-2" role="menu">
           <AccountCard locale={locale} dict={dict} user={user} onLogout={onLogout} onClose={() => setOpen(false)} />
@@ -173,6 +197,7 @@ function AccountMenu({
 export function Header({ locale, dict }: Props) {
   const [open, setOpen] = useState(false);
   const [user, setUser] = useState<SessionUser | null>(null);
+  const router = useRouter();
   const pathname = usePathname() || `/${locale}`;
 
   useEffect(() => {
@@ -208,41 +233,43 @@ export function Header({ locale, dict }: Props) {
       /* ignore */
     }
     setUser(null);
+    setOpen(false);
     window.dispatchEvent(new Event(AUTH_EVENT));
+    router.refresh();
   }
 
   return (
-    <header className="sticky top-0 z-50 overflow-visible border-b border-border bg-black/95 backdrop-blur-md">
-      <div className="mx-auto flex min-w-0 max-w-6xl items-center justify-between gap-3 overflow-visible px-4 py-4 sm:py-5">
-        <Link href={`/${locale}`} className="group flex min-w-0 shrink items-center gap-3 sm:gap-3.5">
-          <span className="relative flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-gold/35 bg-void shadow-[0_0_22px_rgba(155,126,201,0.32)] transition group-hover:border-gold/60 group-hover:shadow-[0_0_28px_rgba(201,168,239,0.45)] sm:h-16 sm:w-16">
+    <header className="site-header relative z-50 overflow-visible">
+      <div className="site-header-inner mx-auto flex min-w-0 max-w-6xl items-center justify-between gap-3 overflow-visible px-4 py-3.5 sm:py-4">
+        <Link href={`/${locale}`} className="group flex min-w-0 shrink items-center gap-2.5 sm:gap-3">
+          <span className="site-header-logo relative flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden sm:h-14 sm:w-14">
             <Image src="/logo-dc.png" alt="" width={64} height={64} sizes="64px" quality={80} className="h-full w-full object-contain" priority />
           </span>
-          <span className="min-w-0 truncate font-display text-lg font-bold tracking-wide text-foreground transition group-hover:text-gold-light sm:text-xl">DuneCraft</span>
+          <span className="site-header-brand min-w-0 truncate font-display text-lg font-bold tracking-wide sm:text-xl">DuneCraft</span>
         </Link>
-        <nav className="hidden items-center gap-1 lg:flex" aria-label="Main">
+        <nav className="site-header-nav hidden items-center gap-0.5 lg:flex" aria-label="Main">
           {navKeys.map((key) => {
             const active = isActive(pathname, locale, key);
             if (key === "donate") {
               return (
-                <Link key={key} href={hrefFor(locale, key)} aria-current={active ? "page" : undefined} className={`donate-link rounded-lg px-3 py-2 text-sm font-bold tracking-wide ${active ? "donate-link-active bg-moss/30" : "hover:bg-surface-2/90"}`}>
+                <Link key={key} href={hrefFor(locale, key)} aria-current={active ? "page" : undefined} className={`donate-link site-nav-link ${active ? "donate-link-active site-nav-link-active" : ""}`}>
                   <DonateRune size={30} />
                   {dict.nav[key]}
                 </Link>
               );
             }
             return (
-              <Link key={key} href={hrefFor(locale, key)} aria-current={active ? "page" : undefined} className={`rounded-lg px-3 py-2 text-sm font-bold tracking-wide transition-colors ${active ? "nav-live" : "text-ash-light hover:bg-surface-2/90 hover:text-foreground"}`}>
+              <Link key={key} href={hrefFor(locale, key)} aria-current={active ? "page" : undefined} className={`site-nav-link ${active ? "site-nav-link-active nav-live" : ""}`}>
                 {dict.nav[key]}
               </Link>
             );
           })}
         </nav>
-        <div className="relative z-50 flex shrink-0 items-center gap-2 overflow-visible sm:gap-2.5">
+        <div className="site-header-actions relative z-50 flex shrink-0 items-center gap-2 overflow-visible sm:gap-2.5">
           <LocaleSwitcher locale={locale} labels={{ ru: dict.common.localeRu, en: dict.common.localeEn }} />
           {user ? <AccountMenu locale={locale} dict={dict} user={user} onLogout={() => void logout()} /> : <CabinetEntry locale={locale} dict={dict} className="hidden sm:inline-flex" />}
           <DownloadStub dict={dict} />
-          <button type="button" className="inline-flex items-center justify-center rounded-lg border border-border bg-surface-2 p-2.5 text-ash-light hover:border-gold/35 hover:text-gold-light lg:hidden" aria-expanded={open} aria-controls="mobile-nav" onClick={() => setOpen((v) => !v)}>
+          <button type="button" className="site-header-burger inline-flex items-center justify-center p-2.5 text-ash-light lg:hidden" aria-expanded={open} aria-controls="mobile-nav" onClick={() => setOpen((v) => !v)}>
             <span className="sr-only">Menu</span>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden>
               {open ? <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" strokeWidth="2.25" strokeLinecap="round" /> : <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" strokeWidth="2.25" strokeLinecap="round" />}
@@ -251,7 +278,7 @@ export function Header({ locale, dict }: Props) {
         </div>
       </div>
       {open && (
-        <nav id="mobile-nav" className="border-t border-border bg-surface px-4 py-3 lg:hidden" aria-label="Mobile">
+        <nav id="mobile-nav" className="site-header-mobile border-t px-4 py-3 lg:hidden" aria-label="Mobile">
           <ul className="flex flex-col gap-1">
             {navKeys.map((key) => {
               const active = isActive(pathname, locale, key);

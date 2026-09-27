@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getSession } from "@/lib/auth/session";
 import { toSessionUser } from "@/lib/auth/types";
-import { findUserByUsername, saveUser } from "@/lib/users-store";
+import { findUserByUsername, patchUser } from "@/lib/users-store";
 import {
   isCosmeticKind,
   saveCosmeticFile,
@@ -16,13 +16,11 @@ async function persistUrl(
   kind: CosmeticKind,
   url: string | null,
 ) {
-  const stored = await findUserByUsername(username);
-  if (!stored) return null;
-  const next = {
-    ...stored,
-    ...(kind === "skin" ? { skinUrl: url } : { capeUrl: url }),
-  };
-  await saveUser(next);
+  const next = await patchUser(username, (stored) => {
+    if (kind === "skin") stored.skinUrl = url;
+    else stored.capeUrl = url;
+  });
+  if (!next) return null;
   return toSessionUser(next);
 }
 

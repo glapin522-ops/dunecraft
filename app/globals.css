@@ -27,6 +27,12 @@
   /* Warm edge for the one public CTA. Not a page wash. */
   --ember: #e07a4a;
 
+  /* CTA button theme (user-configurable via Settings) */
+  --cta: #e2c9a4;
+  --cta-mid: #c9a05a;
+  --cta-deep: #a57b38;
+  --cta-text: #1a1208;
+
   /* Glass (kept for hero CTAs / rare overlays — prefer .panel-solid in ЛК) */
   --glass-bg: color-mix(in srgb, var(--surface) 55%, transparent);
   --glass-bg-strong: color-mix(in srgb, var(--surface-2) 72%, transparent);
@@ -136,6 +142,88 @@ h1 {
     0 12px 32px color-mix(in srgb, #000000 55%, transparent);
 }
 
+/* --- Panel tones (2–3 shapes, not twenty clones) --- */
+.panel-feature {
+  background: var(--surface-3);
+  border: 1px solid color-mix(in srgb, var(--gold) 38%, var(--border));
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, #ffffff 7%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--gold) 12%, transparent),
+    0 14px 36px color-mix(in srgb, #000000 55%, transparent);
+}
+
+.panel-quiet {
+  background: color-mix(in srgb, var(--surface-2) 88%, transparent);
+  border: 1px solid color-mix(in srgb, var(--border) 70%, transparent);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, #ffffff 3%, transparent);
+}
+
+/* --- Button roles: gold = CTA; primary = action; secondary/ghost = quiet; danger = exit/ban --- */
+.btn-role-gold {
+  border-radius: 9999px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--cta-text);
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--cta) 92%, #fff),
+    var(--cta-mid)
+  );
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, #fff 45%, transparent),
+    0 6px 18px color-mix(in srgb, var(--cta) 28%, transparent);
+}
+
+.btn-role-gold:hover:not(:disabled) {
+  filter: brightness(1.06);
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, #fff 50%, transparent),
+    var(--glow-gold-sm);
+}
+
+.btn-role-primary {
+  border-radius: 0.75rem;
+  font-weight: 650;
+  box-shadow: inset 0 1px 0 color-mix(in srgb, #fff 10%, transparent);
+}
+
+.btn-role-secondary {
+  border-radius: 0.5rem;
+  font-weight: 500;
+  box-shadow: none;
+}
+
+.btn-role-ghost {
+  border-radius: 0.5rem;
+  font-weight: 500;
+  box-shadow: none;
+}
+
+.btn-role-danger {
+  border-radius: 0.5rem;
+  font-weight: 600;
+  box-shadow: none;
+}
+
+.btn-role-danger:hover:not(:disabled) {
+  box-shadow: var(--glow-danger-sm);
+}
+
+/* Ether top-up fill (alias of balance accent) */
+.btn-fill-ether {
+  color: #062018;
+  background: var(--accent-balance);
+  border: 1px solid color-mix(in srgb, #fff 24%, var(--accent-balance));
+  box-shadow: inset 0 1px 0 color-mix(in srgb, #fff 35%, transparent);
+}
+
+.glow-btn.btn-fill-ether:hover:not(:disabled) {
+  background: color-mix(in srgb, var(--accent-balance) 82%, #fff);
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, #fff 42%, transparent),
+    var(--glow-balance-sm);
+}
+
 /* --- Glass panel (hero overlays only — prefer .panel-solid in ЛК) --- */
 .glass {
   background: var(--glass-bg);
@@ -208,6 +296,25 @@ h1 {
   cursor: not-allowed;
 }
 
+.hero-launcher-cta {
+  border-radius: 999px;
+  border: 1px solid var(--cta);
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--cta) 85%, #fff) 0%,
+    var(--cta-mid) 48%,
+    var(--cta-deep) 100%
+  );
+  box-shadow: 0 0 0 1px rgba(10, 8, 18, 0.25), 0 0 22px color-mix(in srgb, var(--cta) 28%, transparent);
+  color: var(--cta-text);
+}
+.hero-launcher-cta:disabled {
+  cursor: not-allowed;
+  opacity: 1;
+  color: var(--cta-text);
+}
+
+
 .btn-fill-ember {
   color: #1a0d08;
   background: var(--ember);
@@ -251,6 +358,20 @@ h1 {
   50% {
     transform: translateX(-50%) translateY(-5px);
   }
+}
+
+.header-login-btn {
+  border-radius: 0.5rem;
+  border: 1px solid color-mix(in srgb, var(--border) 90%, transparent);
+  background: transparent;
+  color: var(--ash-light, #b9b0c7);
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.header-login-btn:hover {
+  border-color: color-mix(in srgb, var(--gold) 45%, var(--border));
+  background: color-mix(in srgb, var(--gold) 12%, var(--surface-2));
+  color: var(--foreground);
 }
 
 .cabinet-btn {
@@ -533,4 +654,48 @@ h1 {
   width: 100% !important;
   height: 100% !important;
   pointer-events: none !important;
+}
+
+
+
+/* Thin hairline + single center rune (replaces diamond) */
+.section-divider-line {
+  position: relative;
+  z-index: 4;
+  height: 0;
+  margin: 0;
+  border: 0;
+  pointer-events: none;
+}
+.section-divider-line::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    color-mix(in srgb, var(--gold, #c9a8ef) 28%, transparent) 8%,
+    color-mix(in srgb, var(--gold, #c9a8ef) 38%, transparent) calc(50% - 16px),
+    transparent calc(50% - 12px),
+    transparent calc(50% + 12px),
+    color-mix(in srgb, var(--gold, #c9a8ef) 38%, transparent) calc(50% + 16px),
+    color-mix(in srgb, var(--gold, #c9a8ef) 28%, transparent) 92%,
+    transparent 100%
+  );
+}
+.section-divider-rune {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 20px;
+  height: 20px;
+  transform: translate(-50%, -50%);
+  object-fit: contain;
+  opacity: 0.7;
+  filter: drop-shadow(0 0 6px color-mix(in srgb, var(--gold, #c9a8ef) 45%, transparent));
+  pointer-events: none;
+  user-select: none;
 }

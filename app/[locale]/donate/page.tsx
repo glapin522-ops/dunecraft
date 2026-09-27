@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { DonateBg } from "@/components/DonateBg";
 import { DonateShop } from "@/components/DonateShop";
 import { donatePacks } from "@/content/donate";
+import { getSession } from "@/lib/auth/session";
 import { getDictionary } from "@/lib/dictionaries";
 import { isLocale, type Locale } from "@/lib/i18n";
 
@@ -20,6 +21,7 @@ export default async function DonatePage({ params }: Props) {
   if (!isLocale(raw)) notFound();
   const locale = raw;
   const dict = getDictionary(locale);
+  const user = await getSession();
 
   return (
     <div className="relative overflow-hidden">
@@ -39,7 +41,7 @@ export default async function DonatePage({ params }: Props) {
       />
 
       <div className="relative mx-auto max-w-6xl px-4 py-12 md:py-16">
-        <DonateShop locale={locale} dict={dict} packs={donatePacks} />
+        <DonateShop locale={locale} dict={dict} packs={donatePacks} initialUser={user} />
       </div>
     </div>
   );

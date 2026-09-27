@@ -5,7 +5,7 @@
 
 import { ruleSections } from "./rules";
 
-export type KnowledgeKind = "faq" | "guide" | "system";
+export type KnowledgeKind = "rules" | "faq" | "guide" | "system";
 
 export type KnowledgeEntry = {
   id: string;
@@ -18,7 +18,7 @@ export type KnowledgeEntry = {
 
 const ruleFaqEntries: KnowledgeEntry[] = ruleSections.map((section) => ({
   id: `faq-rules-${section.id}`,
-  kind: "faq",
+  kind: "rules",
   tags: ["правила", "rules", section.id, section.title.ru, section.title.en],
   title: {
     ru: `Правила: ${section.title.ru}`,
@@ -105,7 +105,7 @@ export const knowledgeEntries: KnowledgeEntry[] = [
   },
   {
     id: "faq-rules",
-    kind: "faq",
+    kind: "rules",
     tags: ["правила", "rules", "бан", "мут", "чат"],
     title: {
       ru: "Где почитать правила сервера?",

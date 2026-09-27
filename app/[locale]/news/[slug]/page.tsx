@@ -1,14 +1,17 @@
 import Link from "next/link";
+import { cache } from "react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { PageAtmosphere } from "@/components/PageAtmosphere";
 import { MarkdownBody } from "@/components/MarkdownBody";
 import { StubBadge } from "@/components/StubBadge";
-import { getNewsBySlug } from "@/lib/news-store";
+import { getNewsBySlug as fetchNewsBySlug } from "@/lib/news-store";
 import { getDictionary } from "@/lib/dictionaries";
 import { isLocale, type Locale } from "@/lib/i18n";
 
 export const dynamic = "force-dynamic";
+
+const getNewsBySlug = cache((slug: string) => fetchNewsBySlug(slug));
 
 type Props = { params: Promise<{ locale: string; slug: string }> };
 

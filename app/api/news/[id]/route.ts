@@ -11,6 +11,22 @@ import { appendAdminLog } from "@/lib/admin-logs-store";
 
 type Ctx = { params: Promise<{ id: string }> };
 
+export async function GET(_request: Request, ctx: Ctx) {
+  const session = await getSession();
+  if (!canManageNews(session)) {
+    return NextResponse.json({ error: "forbidden" }, { status: 403 });
+  }
+  const { id } = await ctx.params;
+  const post = await getNewsById(id);
+  if (!post) {
+    return NextResponse.json({ error: "not_found" }, { status: 404 });
+  }
+  return NextResponse.json(
+    { post },
+    { headers: { "Cache-Control": "no-store" } },
+  );
+}
+
 export async function PATCH(request: Request, ctx: Ctx) {
   const session = await getSession();
   if (!canManageNews(session)) {

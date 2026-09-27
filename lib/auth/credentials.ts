@@ -3,7 +3,7 @@ import { timingSafeEqual } from "crypto";
 import type { Role, SessionUser, StoredUser } from "./types";
 import { toSessionUser } from "./types";
 import { validateRegistration, validatePassword } from "./validation";
-import { findUserByEmail, findUserByUsername, listUsers, saveUser } from "../users-store";
+import { findUserByEmail, findUserByUsername, listUsers, patchUser, saveUser } from "../users-store";
 import { isValidEmail } from "../email";
 
 function safeEqualString(a: string, b: string): boolean {
@@ -165,12 +165,13 @@ export async function updatePasswordHash(
 ): Promise<{ ok: true } | { ok: false; error: string }> {
   const policy = validatePassword(newPassword);
   if (policy) return { ok: false, error: policy };
-  const user = await findUserByUsername(username);
-  if (!user) return { ok: false, error: "not_found" };
-  user.passwordHash = await bcrypt.hash(newPassword, 10);
-  user.emailCodeHash = null;
-  user.emailCodeExpiresAt = null;
-  user.emailCodePurpose = null;
-  await saveUser(user);
+  const passwordHash = await bcrypt.hash(newPassword, 10);
+  const updated = await patchUser(username, (user) => {
+    user.passwordHash = passwordHash;
+    user.emailCodeHash = null;
+    user.emailCodeExpiresAt = null;
+    user.emailCodePurpose = null;
+  });
+  if (!updated) return { ok: false, error: "not_found" };
   return { ok: true };
 }

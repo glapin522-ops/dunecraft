@@ -32,7 +32,7 @@ function KindBadge({
   labels,
 }: {
   kind: KnowledgeKind;
-  labels: { faq: string; guide: string; system: string };
+  labels: { rules: string; faq: string; guide: string; system: string };
 }) {
   const label =
     kind === "faq" ? labels.faq : kind === "guide" ? labels.guide : labels.system;
@@ -108,6 +108,7 @@ export function FaqClient({ locale, dict, entries }: Props) {
   const faq = dict.faq;
 
   const kindLabels = {
+    rules: faq.kindRules,
     faq: faq.kindFaq,
     guide: faq.kindGuide,
     system: faq.kindSystem,
@@ -115,6 +116,7 @@ export function FaqClient({ locale, dict, entries }: Props) {
 
   const chips: { id: CategoryFilter; label: string }[] = [
     { id: "all", label: faq.all },
+    { id: "rules", label: faq.kindRules },
     { id: "faq", label: faq.kindFaq },
     { id: "guide", label: faq.kindGuide },
     { id: "system", label: faq.kindSystem },

@@ -14,7 +14,12 @@ import type { SessionUser } from "@/lib/auth/types";
 
 const PlayerSkinView = dynamic(
   () => import("./PlayerSkinView").then((m) => m.PlayerSkinView),
-  { ssr: false },
+  {
+    ssr: false,
+    loading: () => (
+      <div className="h-full min-h-[16rem] animate-pulse bg-surface/40" aria-hidden />
+    ),
+  },
 );
 
 type Props = {
@@ -94,7 +99,7 @@ export function CabinetDashboard({
       <div className="grid min-w-0 gap-4 min-[56rem]:grid-cols-[minmax(10rem,0.34fr)_minmax(0,1fr)] min-[56rem]:items-stretch min-[56rem]:gap-4 min-[72rem]:gap-6">
         <div
           id="cabinet-model-viewport"
-          className="order-1 relative flex min-h-[16rem] w-full flex-col overflow-hidden rounded-3xl border border-[color:var(--glass-stroke-gold)] bg-surface shadow-[var(--glow-gold-sm)] min-[56rem]:order-none min-[56rem]:min-h-0 min-[56rem]:h-full"
+          className="order-1 relative flex min-h-[16rem] w-full flex-col overflow-hidden rounded-2xl border border-[color:var(--glass-stroke-gold)] bg-surface shadow-[var(--glow-gold-sm)] min-[56rem]:order-none min-[56rem]:min-h-0 min-[56rem]:h-full"
         >
           <div
             className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_40%,color-mix(in_srgb,var(--moss)_45%,transparent),transparent_70%)]"
@@ -113,7 +118,7 @@ export function CabinetDashboard({
         </div>
 
         <div className="order-2 flex min-w-0 flex-col gap-4 min-[56rem]:order-none">
-          <div className="panel-solid relative min-w-0 overflow-hidden rounded-3xl p-4 sm:p-5">
+          <div className="panel-solid-raised relative min-w-0 overflow-hidden rounded-2xl p-4 sm:p-5">
             <p className="text-xs uppercase tracking-wide text-ash">{c.yourGroup}</p>
             <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
               <RoleBadge role={viewUser.role} dict={dict} />
@@ -124,7 +129,7 @@ export function CabinetDashboard({
               ) : (
                 <Link
                   href={donateHref}
-                  className="glow-btn glow-btn-upgrade inline-flex items-center justify-center gap-1 rounded-2xl border border-[color-mix(in_srgb,var(--accent-upgrade)_45%,var(--border))] bg-[color-mix(in_srgb,var(--accent-upgrade)_16%,var(--surface-3))] px-4 py-2 text-sm font-semibold text-[color:var(--accent-upgrade)] shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] transition-colors hover:bg-[color-mix(in_srgb,var(--accent-upgrade)_26%,var(--surface-3))]"
+                  className="glow-btn glow-btn-upgrade inline-flex items-center justify-center gap-1 rounded-lg border border-[color-mix(in_srgb,var(--accent-upgrade)_45%,var(--border))] bg-[color-mix(in_srgb,var(--accent-upgrade)_16%,var(--surface-3))] px-4 py-2 text-sm font-semibold text-[color:var(--accent-upgrade)] shadow-[inset_0_1px_0_rgba(255,255,255,0.06)] transition-colors hover:bg-[color-mix(in_srgb,var(--accent-upgrade)_26%,var(--surface-3))]"
                 >
                   {c.upgradeGroup}
                 </Link>
@@ -133,7 +138,7 @@ export function CabinetDashboard({
           </div>
 
           <div className="grid min-w-0 gap-4 sm:grid-cols-2">
-            <div className="panel-solid flex min-w-0 flex-col items-center rounded-3xl p-4 sm:p-5">
+            <div className="panel-solid-deep flex min-w-0 flex-col items-center rounded-xl p-4 sm:p-5">
               <div className="relative flex h-24 w-24 items-center justify-center">
                 <div className="pointer-events-none absolute inset-[-20%] rounded-full bg-[conic-gradient(from_180deg,color-mix(in_srgb,var(--ember)_50%,transparent),color-mix(in_srgb,var(--gold)_35%,transparent),color-mix(in_srgb,var(--ember)_40%,transparent))] opacity-70 blur-md" aria-hidden />
                 <div className="relative flex h-20 w-20 items-center justify-center rounded-full border border-[color-mix(in_srgb,var(--ember)_55%,var(--border))] bg-surface shadow-[0_0_24px_color-mix(in_srgb,var(--ember)_35%,transparent)]">
@@ -146,14 +151,14 @@ export function CabinetDashboard({
               </div>
               <button
                 type="button"
-                className="glow-btn btn-fill-ember mt-4 inline-flex w-full items-center justify-center gap-2 rounded-2xl px-4 py-2.5 text-sm font-semibold"
+                className="glow-btn btn-fill-ember mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold"
                 onClick={() => setStudioOpen(true)}
               >
                 {c.setupSkinCape}
               </button>
             </div>
 
-            <div className="panel-solid flex min-w-0 flex-col rounded-3xl p-4 sm:p-5">
+            <div className="panel-feature flex min-w-0 flex-col rounded-2xl p-4 sm:p-5">
               <div className="flex items-center gap-2.5">
                 <span className="text-4xl font-bold leading-none tabular-nums text-foreground">{balance}</span>
                 <span className="ether-name">{etherWord}</span>
@@ -165,7 +170,7 @@ export function CabinetDashboard({
               <div className="mt-auto pt-4">
                 <Link
                   href={donateHref}
-                  className="glow-btn btn-fill-ether inline-flex w-full items-center justify-center rounded-2xl px-4 py-2.5 text-sm font-semibold"
+                  className="glow-btn btn-fill-ether inline-flex w-full items-center justify-center rounded-full px-4 py-2.5 text-sm font-semibold"
                 >
                   {c.topUpBalance}
                 </Link>
@@ -173,7 +178,7 @@ export function CabinetDashboard({
             </div>
           </div>
 
-          <Button variant="secondary" className="w-full rounded-2xl py-3" disabled={logoutBusy} onClick={onLogout}>
+          <Button variant="danger" className="w-full py-3" disabled={logoutBusy} onClick={onLogout}>
             {c.logoutAccount}
           </Button>
         </div>

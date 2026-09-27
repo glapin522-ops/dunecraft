@@ -16,7 +16,16 @@ export type AdminLogKind =
   | "unban"
   | "mute"
   | "unmute"
-  | "account_delete";
+  | "account_delete"
+  | "login_failed"
+  | "login_blocked_ban"
+  | "login_success"
+  | "password_change_self"
+  | "email_bind_self"
+  | "email_change_self"
+  | "totp_enable"
+  | "totp_disable"
+  | "logout";
 
 export type AdminLogEntry = {
   id: string;
@@ -111,6 +120,13 @@ export async function appendAdminLog(
   throw lastError instanceof Error
     ? lastError
     : new Error("appendAdminLog failed");
+}
+
+/** Fire-and-forget append — never throws to callers (auth must stay available). */
+export function safeAppendAdminLog(input: AppendAdminLogInput): void {
+  void appendAdminLog(input).catch((err) => {
+    console.error("[admin-logs] safe append failed", err);
+  });
 }
 
 export async function listAdminLogs(opts?: {
