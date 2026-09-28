@@ -6,15 +6,49 @@ import { recordAuthNetwork } from "@/lib/auth/login-audit";
 import { safeAppendAdminLog } from "@/lib/admin-logs-store";
 import { getClientIp } from "@/lib/client-ip";
 
+function publicOrigin(request: Request): string {
+  const forwardedHost = request.headers.get("x-forwarded-host")?.split(",")[0]?.trim();
+  const host = forwardedHost || request.headers.get("host")?.split(",")[0]?.trim();
+  const proto = (request.headers.get("x-forwarded-proto")?.split(",")[0]?.trim() || "https");
+  if (host && !host.startsWith("localhost") && !host.startsWith("127.")) {
+    return `${proto}://${host}`;
+  }
+  const referer = request.headers.get("referer");
+  if (referer) {
+    try {
+      return new URL(referer).origin;
+    } catch {
+      /* ignore */
+    }
+  }
+  return new URL(request.url).origin;
+}
+
+
 export async function POST(request: Request) {
   try {
-    const body = (await request.json()) as {
-      username?: string;
-      password?: string;
-    };
-    const username = body.username?.trim() ?? "";
-    const password = body.password ?? "";
+    const contentType = request.headers.get("content-type") ?? "";
+    const wantsHtmlRedirect = !contentType.includes("application/json");
+    let username = "";
+    let password = "";
+    if (contentType.includes("application/json")) {
+      const body = (await request.json()) as {
+        username?: string;
+        password?: string;
+      };
+      username = body.username?.trim() ?? "";
+      password = body.password ?? "";
+    } else {
+      const form = await request.formData();
+      username = String(form.get("username") ?? "").trim();
+      password = String(form.get("password") ?? "");
+    }
     if (!username || !password) {
+      if (wantsHtmlRedirect) {
+        const url = new URL("/ru/cabinet", publicOrigin(request));
+        url.searchParams.set("login", "fail");
+        return NextResponse.redirect(url);
+      }
       return NextResponse.json(
         { error: "missing_fields" },
         { status: 400 },
@@ -33,6 +67,11 @@ export async function POST(request: Request) {
           reason: "invalid_credentials",
         },
       });
+      if (wantsHtmlRedirect) {
+        const url = new URL("/ru/cabinet", publicOrigin(request));
+        url.searchParams.set("login", "fail");
+        return NextResponse.redirect(url);
+      }
       return NextResponse.json({ error: "invalid_credentials" }, { status: 401 });
     }
 
@@ -48,6 +87,11 @@ export async function POST(request: Request) {
           bannedUntil: result.stored.bannedUntil ?? null,
         },
       });
+      if (wantsHtmlRedirect) {
+        const url = new URL("/ru/cabinet", publicOrigin(request));
+        url.searchParams.set("login", "banned");
+        return NextResponse.redirect(url);
+      }
       return NextResponse.json(
         {
           error: "banned",
@@ -60,6 +104,11 @@ export async function POST(request: Request) {
 
     if (result.needs2fa) {
       await setPending2faCookie(result.user.username, result.user.role);
+      if (wantsHtmlRedirect) {
+        const url = new URL("/ru/cabinet", publicOrigin(request));
+        url.searchParams.set("login", "2fa");
+        return NextResponse.redirect(url);
+      }
       return NextResponse.json({
         requires2fa: true,
         username: result.user.username,
@@ -78,6 +127,9 @@ export async function POST(request: Request) {
         via: "password",
       },
     });
+    if (wantsHtmlRedirect) {
+      return NextResponse.redirect(new URL("/ru/cabinet", publicOrigin(request)));
+    }
     return NextResponse.json({ user: result.user });
   } catch (err) {
     console.error("[auth/login]", err);

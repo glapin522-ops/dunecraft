@@ -1,5 +1,4 @@
 import Image from "next/image";
-import { StubBadge } from "./StubBadge";
 
 type Props = {
   title: string;
@@ -7,7 +6,10 @@ type Props = {
   buttonLabel: string;
   soon: string;
   className?: string;
+  href?: string;
 };
+
+const DEFAULT_DISCORD = "https://discord.gg/FJKwr5nR8Z";
 
 export function DiscordInvite({
   title,
@@ -15,6 +17,7 @@ export function DiscordInvite({
   buttonLabel,
   soon,
   className = "",
+  href = DEFAULT_DISCORD,
 }: Props) {
   return (
     <div
@@ -52,15 +55,14 @@ export function DiscordInvite({
           </h2>
           <p className="mt-3 text-sm text-muted sm:text-base">{lead}</p>
         </div>
-        <button
-          type="button"
-          disabled
-          aria-disabled="true"
-          className="glow-btn glass inline-flex w-full max-w-xs items-center justify-center gap-2 rounded-xl border border-gold/35 bg-gold/15 px-6 py-3.5 text-base font-bold tracking-wide text-gold-light opacity-80 sm:w-auto"
+        <a
+          href={href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="glow-btn glass inline-flex w-full max-w-xs items-center justify-center gap-2 rounded-xl border border-gold/35 bg-gold/15 px-6 py-3.5 text-base font-bold tracking-wide text-gold-light sm:w-auto"
         >
           {buttonLabel}
-          <StubBadge label={soon} />
-        </button>
+        </a>
       </div>
     </div>
   );

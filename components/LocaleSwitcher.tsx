@@ -9,9 +9,11 @@ import { locales } from "@/lib/i18n";
 type Props = {
   locale: Locale;
   labels: { ru: string; en: string };
+  /** Open the list upward (footer). Default: downward. */
+  menuUp?: boolean;
 };
 
-export function LocaleSwitcher({ locale, labels }: Props) {
+export function LocaleSwitcher({ locale, labels, menuUp = false }: Props) {
   const pathname = usePathname() || "/";
   const segments = pathname.split("/");
   const rest = segments.slice(2).join("/");
@@ -39,8 +41,11 @@ export function LocaleSwitcher({ locale, labels }: Props) {
     setOpen(false);
   }, [pathname]);
 
+  const caretOpen = menuUp ? "\u25bc" : "\u25b2";
+  const caretClosed = menuUp ? "\u25b2" : "\u25bc";
+
   return (
-    <div ref={rootRef} className="locale-switch relative">
+    <div ref={rootRef} className={`locale-switch relative${menuUp ? " locale-switch-up" : ""}`}>
       <button
         type="button"
         className="locale-switch-btn"
@@ -51,11 +56,16 @@ export function LocaleSwitcher({ locale, labels }: Props) {
       >
         <span className="locale-switch-code">{labels[locale]}</span>
         <span aria-hidden className="locale-switch-caret">
-          {open ? "\u25b2" : "\u25bc"}
+          {open ? caretOpen : caretClosed}
         </span>
       </button>
       {open && (
-        <ul id={listId} className="locale-switch-menu" role="listbox" aria-label="Language">
+        <ul
+          id={listId}
+          className={`locale-switch-menu${menuUp ? " is-up" : ""}`}
+          role="listbox"
+          aria-label="Language"
+        >
           {locales.map((loc) => {
             const href = rest ? `/${loc}/${rest}` : `/${loc}`;
             const active = loc === locale;

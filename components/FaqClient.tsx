@@ -51,7 +51,7 @@ function KnowledgeItem({
 }: {
   entry: KnowledgeEntry;
   locale: Locale;
-  kindLabels: { faq: string; guide: string; system: string };
+  kindLabels: { rules: string; faq: string; guide: string; system: string };
   defaultOpen: boolean;
 }) {
   const [open, setOpen] = useState(defaultOpen);

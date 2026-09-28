@@ -41,10 +41,10 @@
     "donateTitle": "Support the project",
     "donateLead": "Stub packs. Purchases open when the server launches.",
     "ctaTitle": "Stay in touch",
-    "ctaLead": "The cabinet is already in the header. VK, Telegram, and Discord open closer to release.",
+    "ctaLead": "The cabinet is already in the header. Discord is open; VK and Telegram closer to release.",
     "ctaNews": "To news",
     "discordTitle": "DuneCraft Discord",
-    "discordLead": "Server community — news, lore, and voice. The invite opens closer to launch.",
+    "discordLead": "Server community — news, lore, and voice. Join via the invite.",
     "discordCta": "Open Discord",
     "launcherCta": "Download launcher",
     "socialVk": "VK",
@@ -380,7 +380,7 @@
     "email": "Email",
     "telegram": "Telegram",
     "soon": "Coming soon",
-    "discordLead": "Community in the DuneCraft world style. Invite comes later."
+    "discordLead": "Community in the DuneCraft world style. Join via the invite."
   },
   "admin": {
     "title": "Creator",

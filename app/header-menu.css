@@ -394,3 +394,10 @@
   background: color-mix(in srgb, var(--accent-skin, #9b7ec9) 20%, transparent);
   color: var(--accent-skin, #9b7ec9);
 }
+
+.locale-switch-menu.is-up {
+  top: auto;
+  bottom: calc(100% + 0.35rem);
+  box-shadow: 0 -12px 28px rgba(8, 6, 14, 0.5);
+}
+

@@ -8,7 +8,6 @@ import type { Locale } from "@/lib/i18n";
 import type { Dictionary } from "@/lib/dictionaries";
 import type { SessionUser } from "@/lib/auth/types";
 import { currencyForm } from "@/lib/currency-form";
-import { LocaleSwitcher } from "./LocaleSwitcher";
 import { RoleBadge } from "./RoleBadge";
 import { EtherDrop } from "./EtherDrop";
 import { StubBadge } from "./StubBadge";
@@ -266,7 +265,6 @@ export function Header({ locale, dict }: Props) {
           })}
         </nav>
         <div className="site-header-actions relative z-50 flex shrink-0 items-center gap-2 overflow-visible sm:gap-2.5">
-          <LocaleSwitcher locale={locale} labels={{ ru: dict.common.localeRu, en: dict.common.localeEn }} />
           {user ? <AccountMenu locale={locale} dict={dict} user={user} onLogout={() => void logout()} /> : <CabinetEntry locale={locale} dict={dict} className="hidden sm:inline-flex" />}
           <DownloadStub dict={dict} />
           <button type="button" className="site-header-burger inline-flex items-center justify-center p-2.5 text-ash-light lg:hidden" aria-expanded={open} aria-controls="mobile-nav" onClick={() => setOpen((v) => !v)}>
